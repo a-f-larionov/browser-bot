@@ -1,12 +1,11 @@
 package taplinkbot.service;
 
 import org.springframework.stereotype.Service;
-import taplinkbot.bot.BotSemaphore;
+import taplinkbot.bot.Semaphore;
 import taplinkbot.bot.CanvasRuComActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.telegram.TelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +17,7 @@ public class ManagerService {
     private TelegramBot telegram;
 
     @Autowired
-    private BotSemaphore semaphore;
+    private Semaphore semaphore;
 
     @Autowired
     private CanvasRuComActions actions;

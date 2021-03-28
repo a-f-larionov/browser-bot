@@ -55,26 +55,6 @@ public class CanvasScheduler {
         }
     }
 
-    /*
-    @Scheduled(cron = "0 0  00,03,06,09,12,15,18,21 * * 1-4")
-    @Scheduled(cron = "0 0  00,03,06,09,12,15,18    * * 5")
-    public void weekdayA() {
-        setNewManager(Manager.WeekdayA);
-    }
-
-    @Scheduled(cron = "0 0  01,04,07,10,13,16,19,22 * * 1-4")
-    @Scheduled(cron = "0 0  01,04,07,10,13,16       * * 5")
-    public void weekdayB() {
-        setNewManager(Manager.WeekdayB);
-    }
-
-    @Scheduled(cron = "0 0  02,05,08,11,14,17,20,23 * * 1-4")
-    @Scheduled(cron = "0 0  02,05,08,11,14,17       * * 5")
-    public void weekdayC() {
-        setNewManager(Manager.WeekdayC);
-    }
-*/
-
     public boolean isActive() {
         return stateService.schedulerIsActive();
     }

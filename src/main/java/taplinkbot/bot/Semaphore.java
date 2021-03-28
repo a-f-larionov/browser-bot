@@ -1,15 +1,11 @@
 package taplinkbot.bot;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BotSemaphore {
+public class Semaphore {
 
     private boolean locked = false;
-
-    @Autowired
-    private DriverWrapper wrapper;
 
     public boolean lock() {
         if (locked) return false;

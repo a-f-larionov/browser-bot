@@ -12,7 +12,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import taplinkbot.schedulers.interavaled.IntervaledTrigger;
 
 /**
- *
+ * Обработка телеграмм бота.
+ * Парсит команды.
  */
 @Component
 public class
@@ -24,8 +25,6 @@ TelegramBot extends TelegramLongPollingBot {
 
     private final String alertChatId;
 
-    public final static String noArgumentValue = "нет аргумента";
-
     @Autowired
     private TelegramCommands commands;
 
@@ -34,6 +33,12 @@ TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private IntervaledTrigger trigger;
+
+    @Autowired
+    private Parser parser;
+
+    @Autowired
+    private Accessor accessor;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -47,38 +52,29 @@ TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Обработка сообщения.
+     *
+     * @param text
+     * @param chatId
+     * @todo вынести проверку прав
+     * @todo вынести парсинг команды
+     */
     private void processMessage(String text, String chatId) {
 
-        // larionov chatId: "149798103"
-        // fedor chatId: "1033005248"
+        Message message = parser.parse(text, chatId);
 
-        if (chatId.equals("-1001232151616") ||
-                chatId.equals("-439603549") ||
-                chatId.equals("149798103")
-        ) {
-
-            text = text.replace("@tap_link_bot", "");
-            text = text.replace("  ", " ");
-            text = text.replace("  ", " ");
-            text = text.replace("  ", " ");
-
-            String args[] = text.split(" ");
-            System.out.println("text" + text + ",len:" + args.length);
-
-            if (args.length > 0) System.out.println(args[0]);
-            if (args.length > 1) System.out.println(args[1]);
-            if (args.length > 2) System.out.println(args[2]);
-
-
-            if (args.length == 0) sendMessage("Неверная команда. Смотри /help", chatId);
-            if (args.length == 1) processCommand(args[0], noArgumentValue, noArgumentValue, chatId);
-            if (args.length == 2) processCommand(args[0], args[1], noArgumentValue, chatId);
-            if (args.length == 3) processCommand(args[0], args[1], args[2], chatId);
-
-        } else {
+        if (!accessor.check(message)) {
             sendMessage("Привет, я бот, и доступен лишь ограниченым способам связи.", chatId);
             System.out.println("Сообщение не обработано`" + text + "` от:" + chatId);
+            return;
         }
+
+        if (message.args.length == 0) sendMessage("Неверная команда. Смотри /help", chatId);
+
+        String[] args = Message.getPadArgs(message);
+        
+        processCommand(args[0], args[1], args[2], message.chatId);
     }
 
     private void processCommand(String command, String argument1, String argument2, String chatId) {

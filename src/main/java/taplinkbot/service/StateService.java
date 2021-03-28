@@ -28,7 +28,8 @@ public class StateService {
     }
 
     private State getStateByName(String name) {
-        State state = stateRepository.findByName(name);
+        State state;
+        state = stateRepository.findByName(name);
         if (state == null) {
             state = new State(name);
             stateRepository.save(state);

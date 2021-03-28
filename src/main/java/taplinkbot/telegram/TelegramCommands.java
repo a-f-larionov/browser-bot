@@ -44,7 +44,7 @@ public class TelegramCommands {
 
     public void start(String chatId, String argument) {
 
-        if (argument == TelegramBot.noArgumentValue) {
+        if (argument.equals(Message.noArgumentValue)) {
             canvasScheduler.start();
             sayStatus(chatId);
         } else {

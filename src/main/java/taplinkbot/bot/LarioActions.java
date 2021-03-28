@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class LarioActions {
 
     @Autowired
-    private BotSemaphore semaphore;
+    private Semaphore semaphore;
 
     @Autowired
     private TelegramBot telegram;

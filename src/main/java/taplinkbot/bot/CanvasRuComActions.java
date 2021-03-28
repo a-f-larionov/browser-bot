@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CanvasRuComActions {
 
     @Autowired
-    private BotSemaphore semaphore;
+    private Semaphore semaphore;
 
     @Autowired
     private TelegramBot telegram;
@@ -50,7 +50,7 @@ public class CanvasRuComActions {
                 checkThePage(phoneNumber);
                 if (stepsInfo) telegram.info("Проверка завершена", wrapper.takeSreenshot());
             } else {
-                telegram.alert( "Бот заблокирован, попробуйте позже.");
+                telegram.alert("Бот заблокирован, попробуйте позже.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public class CanvasRuComActions {
 
             wrapper.humanComment("Обращение к элементы заголовка профиля canvas ru com. Для проверки порядка профилей");
             //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
-              we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
+            we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
 
             if (we.getText().equals("canvas.ru.com\nТекущий профиль")) {
                 //telegram.info("Профиль canvas.ru.com УЖЕ является текущем.");
@@ -134,7 +134,7 @@ public class CanvasRuComActions {
         }
     }
 
-    private void enterLogin() throws Exception {
+    private void enterLogin() {
         wrapper.humanComment("Обращение к полю ввода логина");
         we = wrapper.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[1]/div/input"));
 
@@ -142,7 +142,7 @@ public class CanvasRuComActions {
         we.sendKeys(env.getProperty("taplink.canvas.username"));
     }
 
-    private void enterPassword() throws Exception {
+    private void enterPassword() {
         wrapper.humanComment("Обращение к поле ввода пароля");
         we = wrapper.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[2]/div[2]/input"));
 
@@ -176,9 +176,6 @@ public class CanvasRuComActions {
             wrapper.get(url);
 
             wrapper.humanComment("Обращение к блоку WhatsUp.");
-            //                                 /html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div[7]/div/div/div[2]/div/div/a
-            //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div[7]/div/div/div[2]/div/div/a"));
-            //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
             we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
 
             if (!we.isDisplayed()) {
@@ -236,8 +233,6 @@ public class CanvasRuComActions {
             wrapper.get(canvasRuComUrl);
 
             wrapper.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
-            //we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
-            //we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div[7]/div/div/div/div/a"));
             we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {

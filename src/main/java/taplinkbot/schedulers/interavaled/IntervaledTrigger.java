@@ -49,14 +49,10 @@ public class IntervaledTrigger {
                 Calendar.THURSDAY
         };
         // Mon day, Tues day, Wednes day, Thurs day
-        if (Arrays.stream(daysMonToThur).anyMatch(d -> d == getDayOfWeek(0))) {
-            return true;
-        }
-        if (getDayOfWeek(0) == Calendar.FRIDAY &&
-                (getHours(0) < 19)
-        ) {
-            return true;
-        }
+        if (Arrays.stream(daysMonToThur).anyMatch(d -> d == getDayOfWeek(0))) return true;
+
+        if (getDayOfWeek(0) == Calendar.FRIDAY && (getHours(0) < 19)) return true;
+
         return false;
     }
 

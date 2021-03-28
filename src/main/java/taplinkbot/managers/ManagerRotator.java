@@ -28,8 +28,7 @@ public class ManagerRotator {
 
         stateService.setManagerLastIndex(lastIndex);
 
-        Manager manager = managers[lastIndex];
-        return manager;
+        return managers[lastIndex];
     }
 
     public void setIndex(int i) {
