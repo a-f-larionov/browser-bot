@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "taplink.username",
+      "type": "java.lang.String",
+      "description": "Description for taplink.username."
+    }
+  ]
+}
