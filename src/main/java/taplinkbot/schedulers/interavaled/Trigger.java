@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
-public class IntervaledTrigger {
+public class Trigger {
 
     @Autowired
     private StateService stateService;

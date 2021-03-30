@@ -1,5 +1,7 @@
 package taplinkbot.bot;
 
+import taplinkbot.entities.PhoneLogger;
+import taplinkbot.repositories.PhoneLoggerRepository;
 import taplinkbot.telegram.TelegramBot;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -20,9 +22,14 @@ public class CanvasRuComActions {
     private DriverWrapper wrapper;
 
     @Autowired
+    private PhoneLoggerRepository phoneLoggerRepository;
+
+    @Autowired
     private Environment env;
 
     private WebElement we;
+
+    String canvasRuComUrl = "https://canvas.ru.com/";
 
     public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
 
@@ -220,8 +227,7 @@ public class CanvasRuComActions {
         }
     }
 
-    public void checkThePage(String phoneNumber) throws Exception {
-        String canvasRuComUrl = "https://canvas.ru.com/";
+    private void checkThePage(String phoneNumber) throws Exception {
 
         try {
             if (!phoneNumber.matches("^\\+7\\d{10}$")) {
@@ -267,6 +273,59 @@ public class CanvasRuComActions {
             e.printStackTrace();
             telegram.alert("Ну удалось проверить страницу ТапЛинк `" + canvasRuComUrl + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
             throw e;
+        }
+    }
+
+    public void checkCanvas() {
+
+
+        try {
+            String phone = getNumber();
+
+            phoneLoggerRepository.save(new PhoneLogger(phone));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String getNumber() throws Exception {
+
+        try {
+            if (semaphore.lock()) {
+                wrapper.humanComment("Открытие страницы:" + canvasRuComUrl);
+                wrapper.get(canvasRuComUrl);
+
+                wrapper.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
+                we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
+
+                if (!we.getText().equals("Узнать цену в WhatsApp")) {
+                    telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                    throw new Exception("see telegram alerts");
+                }
+                if (!we.isDisplayed()) {
+                    telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                    throw new Exception("see telegram alerts");
+                }
+
+                // удаляем знак '+' из номера
+                String hrefFact = we.getAttribute("href");
+
+                hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
+                hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
+                return hrefFact;
+            } else {
+                telegram.alert("Бот заблокирован, попробуйте позже.");
+                return "Бот заблокирован, попробуйте позже.";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + canvasRuComUrl + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
+            throw e;
+        } finally {
+            semaphore.unlock();
         }
     }
 }

@@ -17,17 +17,30 @@ public class ManagerRotator {
     private StateService stateService;
 
     public Manager getNextManager() {
+        System.out.println("++++++++getNextManager");
+        incrementIndex();
 
+        return getCurrentManager();
+    }
+
+    private void incrementIndex() {
+        System.out.println("++++++++incrementIndex");
         int lastIndex = stateService.getManagerLastIndex();
-
+        System.out.println("++++++++ " + lastIndex);
         lastIndex++;
 
         if (lastIndex >= managers.length) {
             lastIndex = 0;
         }
 
+        System.out.println("++++++++ " + lastIndex);
         stateService.setManagerLastIndex(lastIndex);
+    }
 
+    public Manager getCurrentManager() {
+        System.out.println("++++++++getCurrentManager");
+        int lastIndex = stateService.getManagerLastIndex();
+        System.out.println("++++++++ " + lastIndex);
         return managers[lastIndex];
     }
 

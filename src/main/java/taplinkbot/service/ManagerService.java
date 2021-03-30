@@ -24,8 +24,7 @@ public class ManagerService {
 
     public void setNewManager(Manager manager) {
 
-        String pattern = " HH:mm:ss d m";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss d m");
         String date = simpleDateFormat.format(new Date());
         System.out.println(date + manager.getComment() + " " + manager.getPhone());
 

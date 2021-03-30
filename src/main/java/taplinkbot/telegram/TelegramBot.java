@@ -1,5 +1,7 @@
 package taplinkbot.telegram;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import taplinkbot.schedulers.interavaled.IntervaledTrigger;
+import taplinkbot.schedulers.interavaled.Trigger;
+import taplinkbot.service.StateService;
 
 /**
  * Обработка телеграмм бота.
@@ -19,6 +22,8 @@ import taplinkbot.schedulers.interavaled.IntervaledTrigger;
 public class
 TelegramBot extends TelegramLongPollingBot {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     private final String botToken;
 
     private final String infoChatId;
@@ -26,19 +31,22 @@ TelegramBot extends TelegramLongPollingBot {
     private final String alertChatId;
 
     @Autowired
-    private TelegramCommands commands;
+    private Commands commands;
 
     @Autowired
     Environment env;
 
     @Autowired
-    private IntervaledTrigger trigger;
+    private Trigger trigger;
 
     @Autowired
     private Parser parser;
 
     @Autowired
     private Accessor accessor;
+
+    @Autowired
+    private StateService stateService;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -57,27 +65,41 @@ TelegramBot extends TelegramLongPollingBot {
      *
      * @param text
      * @param chatId
-     * @todo вынести проверку прав
-     * @todo вынести парсинг команды
+     * @todo вынести проверку прав паттерны?
+     * @todo вынести парсинг команды паттерны?
      */
     private void processMessage(String text, String chatId) {
 
-        Message message = parser.parse(text, chatId);
+        try {
+            Message msg = parser.parse(text, chatId);
+            //@todo logger
+            System.out.println(msg);
 
-        if (!accessor.check(message)) {
-            sendMessage("Привет, я бот, и доступен лишь ограниченым способам связи.", chatId);
-            System.out.println("Сообщение не обработано`" + text + "` от:" + chatId);
-            return;
+            if (!accessor.check(msg)) throw new ClientRequestException("Нет доступа");
+
+            String[] args = Message.getFilledArgs(msg);
+
+            stateService.setBotContext(msg.botContext);
+
+            processCommand(msg.cammand, args[2], args[3], msg.chatId);
+
+        } catch (ClientRequestException e) {
+            System.out.println("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
+            sendMessage(e.getMessage(), chatId);
+        } finally {
+            stateService.setBotContext(null);
         }
-
-        if (message.args.length == 0) sendMessage("Неверная команда. Смотри /help", chatId);
-
-        String[] args = Message.getPadArgs(message);
-        
-        processCommand(args[0], args[1], args[2], message.chatId);
     }
 
-    private void processCommand(String command, String argument1, String argument2, String chatId) {
+    /**
+     * @param command
+     * @param context
+     * @param arg1
+     * @param arg2
+     * @param chatId
+     * @todo spring command router?
+     */
+    private void processCommand(String command, String arg1, String arg2, String chatId) {
 
         switch (command) {
 
@@ -85,7 +107,7 @@ TelegramBot extends TelegramLongPollingBot {
                 commands.help(chatId);
                 break;
             case "/start":
-                commands.start(chatId, argument1);
+                commands.start(chatId, arg1);
                 break;
             case "/stop":
                 commands.stop(chatId);
@@ -94,7 +116,11 @@ TelegramBot extends TelegramLongPollingBot {
                 commands.status(chatId);
                 break;
             case "/set_number":
-                commands.setNumber(argument1, chatId);
+                commands.setNumber(arg1, chatId);
+                break;
+
+            case "/get_number":
+                commands.getNumber(chatId);
                 break;
 
 
@@ -124,11 +150,11 @@ TelegramBot extends TelegramLongPollingBot {
                 break;
 
             case "/holidays_add":
-                commands.holiDayAdd(chatId, argument1, argument2);
+                commands.holiDayAdd(chatId, arg1, arg2);
                 break;
 
             case "/holidays_remove":
-                commands.holiDayRemove(chatId, argument1);
+                commands.holiDayRemove(chatId, arg1);
                 break;
 
             case "/holidays_list":
@@ -141,7 +167,7 @@ TelegramBot extends TelegramLongPollingBot {
                 break;
 
             case "/set_manager_index":
-                commands.setManagerIndex(argument1, chatId);
+                commands.setManagerIndex(arg1, chatId);
                 break;
             case "/get_state":
                 commands.getState(chatId);
@@ -149,7 +175,7 @@ TelegramBot extends TelegramLongPollingBot {
             case "/check_date":
 
                 sendMessage(
-                        trigger.checkDate(argument1)
+                        trigger.checkDate(arg1)
                         , chatId);
                 break;
 

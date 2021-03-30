@@ -3,10 +3,8 @@ package taplinkbot.telegram;
 import taplinkbot.bot.CanvasRuComActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.schedulers.interavaled.IntervaledTrigger;
+import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.HolidayService;
-import taplinkbot.service.ManagerService;
-import taplinkbot.schedulers.CanvasScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import taplinkbot.service.StateService;
@@ -17,13 +15,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-public class TelegramCommands {
+public class Commands {
 
     @Autowired
     private TelegramBot telegram;
-
-    @Autowired
-    private CanvasScheduler canvasScheduler;
 
     @Autowired
     private ManagerRotator managerRotator;
@@ -38,14 +33,14 @@ public class TelegramCommands {
     private HolidayService holidayService;
 
     @Autowired
-    private IntervaledTrigger intervaledTrigger;
+    private Trigger trigger;
 
     private boolean functionalHolidays = false;
 
     public void start(String chatId, String argument) {
 
         if (argument.equals(Message.noArgumentValue)) {
-            canvasScheduler.start();
+            stateService.schedulerSetActive(true);
             sayStatus(chatId);
         } else {
 
@@ -64,22 +59,22 @@ public class TelegramCommands {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        //telegram.info("Проверка таймаута. Запрос минут назад: " + minutes);
+
                         telegram.info("Расписание запущено по таймаута. Запрос минут назад: " + minutes);
-                        //sayStatus(chatId);
                         System.out.println("finish");
-                        canvasScheduler.start();
+                        stateService.schedulerSetActive(true);
                     }
                 });
 
             } catch (NumberFormatException e) {
-                telegram.sendMessage("Не верный аргумент, должно быть целлое число минут. Передано `" + argument + "`", chatId);
+                telegram.sendMessage("Не верный аргумент, " +
+                        "должно быть целлое число минут. Передано `" + argument + "`", chatId);
             }
         }
     }
 
     public void stop(String chatId) {
-        canvasScheduler.stop();
+        stateService.schedulerSetActive(false);
         sayStatus(chatId);
     }
 
@@ -97,14 +92,29 @@ public class TelegramCommands {
         canvasRuComActions.authAndUpdatePhone(phoneNumber, true, true);
     }
 
+    public void getNumber(String chatId) {
+
+        String phoneNumber = null;
+        try {
+
+            phoneNumber = canvasRuComActions.getNumber();
+            telegram.sendMessage("Номер телефона: " + phoneNumber, chatId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void sayStatus(String chatId) {
         String message;
 
-        message = "\r\nРасписание: \t" + (canvasScheduler.isActive() ? "включено" : "выключено");
+        message = "\r\nРасписание: \t" + (stateService.schedulerIsActive() ? "включено" : "выключено");
         message += "\r\nВО ВСЕ ДНИ без исключения: \t" + (stateService.allowEveryDay() ? "да" : "нет");
         message += "\r\nВ будние дни: \t\t\t" + (stateService.allowWeekDays() ? "да" : "нет");
         message += "\r\nВ быходные дни: \t\t\t" + (stateService.allowWeekEnds() ? "да" : "нет");
-        message += "\r\nВ праздники(не рабочие):\t\t" + (stateService.allowHoliDays() ? "да" : "нет");
+
+        if (functionalHolidays)
+            message += "\r\nВ праздники(не рабочие):\t\t" + (stateService.allowHoliDays() ? "да" : "нет");
 
         telegram.sendMessage(message, chatId);
     }
@@ -121,11 +131,11 @@ public class TelegramCommands {
             msg += " \r\nis every day: " + (stateService.allowEveryDay() ? "y" : "n");
 
             msg += "\r\n";
-            msg += "\r\n elapsed time: " + intervaledTrigger.getElapsedTime(c.getTimeInMillis());
+            msg += "\r\n elapsed time: " + trigger.getElapsedTime(c.getTimeInMillis());
 
-            msg += "\r\n inFromTo: " + (intervaledTrigger.allowRun() ? "y" : "n");
-            msg += "\r\n timeIsLeft: " + (intervaledTrigger.isIntervalLeft(c.getTimeInMillis()) ? "y" : "n");
-            msg += "\r\n isFittedInterval: " + (intervaledTrigger.isBeginOfInterval(c.getTimeInMillis()) ? "y" : "n");
+            msg += "\r\n inFromTo: " + (trigger.allowRun() ? "y" : "n");
+            msg += "\r\n timeIsLeft: " + (trigger.isIntervalLeft(c.getTimeInMillis()) ? "y" : "n");
+            msg += "\r\n isFittedInterval: " + (trigger.isBeginOfInterval(c.getTimeInMillis()) ? "y" : "n");
 
             telegram.sendMessage(msg, chatId);
         } else {

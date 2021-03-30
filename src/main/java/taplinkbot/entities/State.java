@@ -1,5 +1,7 @@
 package taplinkbot.entities;
 
+import taplinkbot.telegram.BotContext;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +28,7 @@ public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private long id;
 
     private String name;
 
@@ -36,8 +38,11 @@ public class State {
 
     private boolean booleanValue;
 
-    public State(String name) {
+    private BotContext botContext;
+
+    public State(String name, BotContext botContext) {
         this.name = name;
+        this.botContext = botContext;
     }
 
     public State() {
@@ -70,7 +75,7 @@ public class State {
         this.longValue = longValue;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 

@@ -1,30 +1,34 @@
 package taplinkbot.telegram;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Parser {
 
-    public Message parse(String text, String chatId) {
+    public Message parse(String text, String chatId) throws ClientRequestException {
 
         Message msg = new Message();
 
-        msg.rawText = text;
+        msg.args = text.replace("@tap_link_bot", "")
+                .replace("  ", " ")
+                .replace("  ", " ")
+                .replace("  ", " ")
+                .replace("  ", " ")
+                .split(" ");
+
+        if (msg.args.length == 0) throw new ClientRequestException("Неверная команда. см. /help");
+        if (msg.args.length < 2) throw new ClientRequestException("Не указан аргумент кабинета. /command [кабинет]." + BotContext.getValuesCommaString());
+
+        msg.sourceText = text;
         msg.chatId = chatId;
+        msg.cammand = msg.args[0];
+        msg.botContext = BotContext.getByString(msg.args[1]);
 
-        text = text.replace("@tap_link_bot", "");
-        text = text.replace("  ", " ");
-        text = text.replace("  ", " ");
-        text = text.replace("  ", " ");
 
-        msg.args = text.split(" ");
+        if (msg.botContext == null) throw new ClientRequestException("Не удалось определить кабинет." +
 
-        System.out.println("text" + text + ",len:" + msg.args.length);
-
-        if (msg.args.length > 0) System.out.println(msg.args[0]);
-        if (msg.args.length > 1) System.out.println(msg.args[1]);
-        if (msg.args.length > 2) System.out.println(msg.args[2]);
+                BotContext.getValuesCommaString()
+        );
 
         return msg;
     }

@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
+import taplinkbot.telegram.BotContext;
 
 @Service
 public class StateService {
 
     @Autowired
     private StateRepository stateRepository;
+
+    private BotContext botContext;
 
     public void schedulerSetActive(boolean value) {
         setBooleanValue(State.STATE_SCHEDULER_ACTIVE, value);
@@ -29,9 +32,9 @@ public class StateService {
 
     private State getStateByName(String name) {
         State state;
-        state = stateRepository.findByName(name);
+        state = stateRepository.findByNameAndBotContext(name, botContext);
         if (state == null) {
-            state = new State(name);
+            state = new State(name, botContext);
             stateRepository.save(state);
         }
         return state;
@@ -77,6 +80,7 @@ public class StateService {
 
     /**
      * Интервал в миллисекундах
+     *
      * @return
      */
     public long getManagerInterval() {
@@ -119,5 +123,14 @@ public class StateService {
 
     public boolean allowHoliDays() {
         return getBooleanValue(State.STATE_ALLOW_HOLIDAYS);
+    }
+
+    public void setBotContext(BotContext botContext) {
+
+        this.botContext = botContext;
+    }
+
+    public BotContext getBotContext() {
+        return botContext;
     }
 }
