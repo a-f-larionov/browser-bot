@@ -15,7 +15,7 @@
     <description>TapLinkBot</description>
     <properties>
         <java.version>1.8</java.version>
-        <spring-boot.run.jvmArguments>-Duser.timezone=UTC+3</spring-boot.run.jvmArguments>
+        <spring-boot.run.jvmArguments>-Duser.timezone=GMT+3</spring-boot.run.jvmArguments>
     </properties>
     <dependencies>
         <dependency>

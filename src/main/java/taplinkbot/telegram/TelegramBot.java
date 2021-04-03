@@ -93,7 +93,6 @@ TelegramBot extends TelegramLongPollingBot {
 
     /**
      * @param command
-     * @param context
      * @param arg1
      * @param arg2
      * @param chatId
@@ -198,9 +197,9 @@ TelegramBot extends TelegramLongPollingBot {
     public TelegramBot(Environment env) {
         super();
 
-        this.botToken = env.getProperty("telegram.lario.botToken");
-        this.infoChatId = env.getProperty("telegram.lario.infoChatId");
-        this.alertChatId = env.getProperty("telegram.lario.alertChatId");
+        this.botToken = env.getProperty("telegram.botToken");
+        this.infoChatId = env.getProperty("telegram.infoChatId");
+        this.alertChatId = env.getProperty("telegram.alertChatId");
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(this);
@@ -211,11 +210,13 @@ TelegramBot extends TelegramLongPollingBot {
     }
 
     public void alert(String s) {
-        sendMessage(s, alertChatId);
+        System.out.println("AAAAAAAAAAAAAAAAAA" + s);
+        //sendMessage(s, alertChatId);
     }
 
     public void alert(String s, String url) {
-        sendMessage(s + " " + url, alertChatId);
+        System.out.println("AAAAAAAAAAAAAAAAAA" + s + " " + url);
+        //sendMessage(s + " " + url, alertChatId);
     }
 
     public void info(String s) {

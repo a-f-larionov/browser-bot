@@ -23,15 +23,35 @@ public class ManagerRotator {
         return getCurrentManager();
     }
 
+    public Manager getPrevManager() {
+        System.out.println("++++++++getPrevManager");
+
+        decrementIndex();
+
+        return getCurrentManager();
+    }
+
     private void incrementIndex() {
         System.out.println("++++++++incrementIndex");
         int lastIndex = stateService.getManagerLastIndex();
         System.out.println("++++++++ " + lastIndex);
         lastIndex++;
 
-        if (lastIndex >= managers.length) {
-            lastIndex = 0;
-        }
+        if (lastIndex >= managers.length) lastIndex = 0;
+
+
+        System.out.println("++++++++ " + lastIndex);
+        stateService.setManagerLastIndex(lastIndex);
+    }
+
+    private void decrementIndex() {
+        System.out.println("++++++++decrementIndex");
+        int lastIndex = stateService.getManagerLastIndex();
+        System.out.println("++++++++ " + lastIndex);
+        lastIndex--;
+
+        if (lastIndex == -1) lastIndex = 0;
+
 
         System.out.println("++++++++ " + lastIndex);
         stateService.setManagerLastIndex(lastIndex);

@@ -1,9 +1,9 @@
 package taplinkbot.schedulers;
 
+import taplinkbot.bot.Cabinet2Actions;
 import taplinkbot.bot.CanvasRuComActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.service.ManagerService;
 import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.StateService;
 import taplinkbot.telegram.BotContext;
@@ -34,15 +34,15 @@ public class Scheduler {
     private ManagerRotator rotator;
 
     @Autowired
-    private ManagerService managerService;
+    private CanvasRuComActions canvasRuComActions;
 
     @Autowired
-    private CanvasRuComActions canvasRuComActions;
+    private Cabinet2Actions cabinet2Actions;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void intervaled() {
 
-        onIdlePinger();
+       // onIdlePinger();
 
         onIdleCanvasRuCom();
 
@@ -80,7 +80,7 @@ public class Scheduler {
 
                 log.info("Установка менеджера(canvas.ru.com):" + manager.getDescription());
 
-                setNewManager(manager);
+                setNewManager(manager, canvasRuComActions);
 
                 log.info("Установка менеджера(canvas.ru.com):" + manager.getDescription());
             }
@@ -101,31 +101,39 @@ public class Scheduler {
 
                 System.out.println("Is it time to change!");
 
-                Manager manager = rotator.getCurrentManager();
+                Manager manager = rotator.getNextManager();
 
                 trigger.updateLastTime();
 
                 log.info("Установка менеджера(cabinet2):" + manager.getDescription());
 
-                setNewManager(manager);
+                String phone = cabinet2Actions.getNumber();
+
+                log.info("phone number:" + phone);
+                //setNewManager(manager, cabinet2Actions);
+
+                manager = rotator.getPrevManager();
 
                 log.info("Установка менеджера(cabinet2):" + manager.getDescription());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             stateService.setBotContext(null);
         }
     }
 
-    private void setNewManager(Manager manager) {
+    private void setNewManager(Manager manager, CanvasRuComActions actions) {
         System.out.println("Scheduler setNewManager");
         if (!stateService.schedulerIsActive()) {
-            telegram.info("Расписание выключено, действие отменено:     " + manager.getDescription());
+            telegram.info("Расписание выключено, действие отменено: " + manager.getDescription() + stateService.getBotContext().name);
             return;
         } else {
-            telegram.info("Смена номера: " + stateService.getBotContext().stringNames[0] + " " + manager.getDescription());
-            managerService.setNewManager(manager);
+            telegram.info("Смена номера: " + stateService.getBotContext().name + " " + manager.getDescription());
+            actions.authAndUpdatePhone(manager.getPhone(), false, true);
         }
     }
+
 
     private void checkCanvas() {
         if (!stateService.schedulerIsActive()) return;
