@@ -16,6 +16,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class Trigger {
 
+    private static final Logger log = LoggerFactory.getLogger(Trigger.class);
+
     private final StateService stateService;
 
     private final HolidayService holidayService;
@@ -32,8 +34,6 @@ public class Trigger {
             Calendar.SUNDAY,
             Calendar.SATURDAY
     };
-
-    final private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public boolean allowRun() {
 
@@ -104,7 +104,7 @@ public class Trigger {
         int countIntervals = (int) (getMillisFromStartDay(millis) / stateService.getManagerInterval());
         long offset = getMillisFromStartDay(millis) - (countIntervals * stateService.getManagerInterval());
 
-        System.out.println(
+        log.info(
                 "mils" + getMillisFromStartDay(millis) + "\t" +
                         "countIntervals: " + countIntervals + "\t" +
                         "interval" + stateService.getManagerInterval() + "\t" +

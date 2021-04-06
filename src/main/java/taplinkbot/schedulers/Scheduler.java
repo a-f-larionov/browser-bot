@@ -23,7 +23,7 @@ import java.util.Calendar;
 @RequiredArgsConstructor
 public class Scheduler {
 
-    final private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
 
     private final TelegramBot telegram;
 
@@ -70,7 +70,7 @@ public class Scheduler {
 
             if (cond.isItTimeToChange) {
 
-                System.out.println("Is it time to change!");
+                log.info("Is it time to change!");
 
                 Manager manager = rotator.getNextManager();
 
@@ -97,7 +97,7 @@ public class Scheduler {
 
             if (cond.isItTimeToChange) {
 
-                System.out.println("Is it time to change!");
+                log.info("Is it time to change!");
 
                 Manager manager = rotator.getNextManager();
 
@@ -122,7 +122,7 @@ public class Scheduler {
     }
 
     private void setNewManager(Manager manager, CanvasRuComActions actions) {
-        System.out.println("Scheduler setNewManager");
+        log.info("Scheduler setNewManager");
         if (!stateService.schedulerIsActive()) {
             telegram.info("Расписание выключено, действие отменено: " + manager.getDescription() + stateService.getBotContext().name);
             return;
@@ -138,7 +138,7 @@ public class Scheduler {
 
         canvasRuComActions.checkCanvas();
 
-        System.out.println("pinger on idle");
+        log.info("pinger on idle");
     }
 }
 

@@ -1,12 +1,16 @@
 package taplinkbot.managers;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import taplinkbot.service.StateService;
 
 @Component
 @RequiredArgsConstructor
 public class ManagerRotator {
+
+    private static final Logger log = LoggerFactory.getLogger(ManagerRotator.class);
 
     private Manager[] managers = {
             Manager.Manager9206,
@@ -17,14 +21,14 @@ public class ManagerRotator {
     private final StateService stateService;
 
     public Manager getNextManager() {
-        System.out.println("++++++++getNextManager");
+        log.info("++++++++getNextManager");
         incrementIndex();
 
         return getCurrentManager();
     }
 
     public Manager getPrevManager() {
-        System.out.println("++++++++getPrevManager");
+        log.info("++++++++getPrevManager");
 
         decrementIndex();
 
@@ -32,35 +36,34 @@ public class ManagerRotator {
     }
 
     private void incrementIndex() {
-        System.out.println("++++++++incrementIndex");
+        log.info("++++++++incrementIndex");
         int lastIndex = stateService.getManagerLastIndex();
-        System.out.println("++++++++ " + lastIndex);
+        log.info("++++++++ " + lastIndex);
         lastIndex++;
 
         if (lastIndex >= managers.length) lastIndex = 0;
 
-
-        System.out.println("++++++++ " + lastIndex);
+        log.info("++++++++ " + lastIndex);
         stateService.setManagerLastIndex(lastIndex);
     }
 
     private void decrementIndex() {
-        System.out.println("++++++++decrementIndex");
+        log.info("++++++++decrementIndex");
         int lastIndex = stateService.getManagerLastIndex();
-        System.out.println("++++++++ " + lastIndex);
+        log.info("++++++++ " + lastIndex);
         lastIndex--;
 
         if (lastIndex == -1) lastIndex = 0;
 
 
-        System.out.println("++++++++ " + lastIndex);
+        log.info("++++++++ " + lastIndex);
         stateService.setManagerLastIndex(lastIndex);
     }
 
     public Manager getCurrentManager() {
-        System.out.println("++++++++getCurrentManager");
+        log.info("++++++++getCurrentManager");
         int lastIndex = stateService.getManagerLastIndex();
-        System.out.println("++++++++ " + lastIndex);
+        log.info("++++++++ " + lastIndex);
         return managers[lastIndex];
     }
 

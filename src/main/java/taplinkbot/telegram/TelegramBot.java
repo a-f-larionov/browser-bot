@@ -1,5 +1,6 @@
 package taplinkbot.telegram;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,10 @@ import javax.annotation.PostConstruct;
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TelegramBot.class);
 
     private String botToken;
 
@@ -37,20 +39,15 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Autowired
     private Commands commands;
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
-    @Autowired
-    private Trigger trigger;
+    private final Trigger trigger;
 
-    @Autowired
-    private Parser parser;
+    private final Parser parser;
 
-    @Autowired
-    private Accessor accessor;
+    private final Accessor accessor;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
     @PostConstruct
     public void init() {
@@ -67,9 +64,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public TelegramBot() {
+    /*public TelegramBot() {
         super();
-    }
+    }*/
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -96,7 +93,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             Message msg = parser.parse(text, chatId);
             //@todo logger
-            System.out.println(msg);
+            log.info(msg.toString());
 
             if (!accessor.check(msg)) throw new ClientRequestException("Нет доступа");
 
@@ -107,7 +104,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             processCommand(msg.cammand, args[2], args[3], msg.chatId);
 
         } catch (ClientRequestException e) {
-            System.out.println("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
+            log.info("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
             sendMessage(e.getMessage(), chatId);
         } finally {
             stateService.setBotContext(null);
@@ -218,12 +215,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     public void alert(String s) {
-        System.out.println("ALERT: " + s);
+        log.info("ALERT: " + s);
         sendMessage(s, alertChatId);
     }
 
     public void alert(String s, String url) {
-        System.out.println("ALERT: " + s + " " + url);
+        log.info("ALERT: " + s + " " + url);
         sendMessage(s + " " + url, alertChatId);
     }
 
@@ -236,7 +233,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     protected void sendMessage(String text, String chatId) {
-        System.out.println("Send message:`" + text + "` " + chatId);
+        log.info("Send message:`" + text + "` " + chatId);
         SendMessage m = new SendMessage();
         m.setChatId(chatId);
         m.setText(text);

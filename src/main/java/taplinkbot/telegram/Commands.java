@@ -1,6 +1,8 @@
 package taplinkbot.telegram;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,25 +20,22 @@ import java.util.concurrent.Executors;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@RequiredArgsConstructor
 public class Commands {
 
-    @Autowired
-    private TelegramBot telegram;
+    private static final Logger log = LoggerFactory.getLogger(Commands.class);
 
-    @Autowired
-    private ManagerRotator managerRotator;
+    private final TelegramBot telegram;
 
-    @Autowired
-    private StateService stateService;
+    private final ManagerRotator managerRotator;
 
-    @Autowired
-    private CanvasRuComActions canvasRuComActions;
+    private final StateService stateService;
 
-    @Autowired
-    private HolidayService holidayService;
+    private final CanvasRuComActions canvasRuComActions;
 
-    @Autowired
-    private Trigger trigger;
+    private final HolidayService holidayService;
+
+    private final Trigger trigger;
 
     private boolean functionalHolidays = false;
 
@@ -49,8 +48,8 @@ public class Commands {
 
             try {
                 long minutes = Long.parseLong(argument);
-                System.out.println(minutes);
-                System.out.println("argument" + argument);
+                log.info(Long.toString(minutes));
+                log.info("argument" + argument);
 
                 ExecutorService service = Executors.newCachedThreadPool();
                 telegram.sendMessage("Расписание будет запущено, через " + minutes + " минут(у,ы).", chatId);
@@ -64,7 +63,7 @@ public class Commands {
                         }
 
                         telegram.info("Расписание запущено по таймаута. Запрос минут назад: " + minutes);
-                        System.out.println("finish");
+                        log.info("finish");
                         stateService.schedulerSetActive(true);
                     }
                 });
@@ -142,7 +141,7 @@ public class Commands {
 
             telegram.sendMessage(msg, chatId);
         } else {
-            System.out.println("get_state from:" + chatId);
+            log.info("get_state from:" + chatId);
         }
     }
 

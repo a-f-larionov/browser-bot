@@ -27,6 +27,10 @@ public class Message {
         return args;
     }
 
+    /**
+     * @todo use @ToString from lombok
+     * @return
+     */
     @Override
     public String toString() {
 
