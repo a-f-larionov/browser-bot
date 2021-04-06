@@ -1,12 +1,15 @@
 package taplinkbot.telegram;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import taplinkbot.bot.CanvasRuComActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.HolidayService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import taplinkbot.service.StateService;
 
 import java.text.SimpleDateFormat;
@@ -15,25 +18,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@RequiredArgsConstructor
 public class Commands {
 
     @Autowired
     private TelegramBot telegram;
 
-    @Autowired
-    private ManagerRotator managerRotator;
+    private final ManagerRotator managerRotator;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
-    @Autowired
-    private CanvasRuComActions canvasRuComActions;
+    private final CanvasRuComActions canvasRuComActions;
 
-    @Autowired
-    private HolidayService holidayService;
+    private final HolidayService holidayService;
 
-    @Autowired
-    private Trigger trigger;
+    private final Trigger trigger;
 
     private boolean functionalHolidays = false;
 

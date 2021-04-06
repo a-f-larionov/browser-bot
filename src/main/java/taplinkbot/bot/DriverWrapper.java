@@ -1,13 +1,12 @@
 package taplinkbot.bot;
 
 import org.apache.commons.io.FileUtils;
-import taplinkbot.telegram.TelegramBot;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import taplinkbot.telegram.TelegramBot;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +19,7 @@ import java.util.Set;
 @Component
 public class DriverWrapper implements WebDriver {
 
-    @Autowired
-    private TelegramBot telegram;
+    private final TelegramBot telegram;
 
     private RemoteWebDriver driver;
 
@@ -29,10 +27,13 @@ public class DriverWrapper implements WebDriver {
 
     /**
      * Настройка драйвера
+     *
+     * @todo try getBean ChromeDriver()
      */
-    public DriverWrapper() {
+    public DriverWrapper(TelegramBot telegram) {
         super();
 
+        this.telegram = telegram;
         driver = getDriver();
     }
 

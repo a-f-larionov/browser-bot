@@ -1,6 +1,6 @@
 package taplinkbot.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import taplinkbot.entities.Holiday;
 import taplinkbot.repositories.HolidayRepository;
@@ -9,10 +9,10 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class HolidayService {
 
-    @Autowired
-    private HolidayRepository holidayRepository;
+    private final HolidayRepository holidayRepository;
 
     public boolean existsByMills(long mills) {
 

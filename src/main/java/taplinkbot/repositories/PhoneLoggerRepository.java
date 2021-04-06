@@ -5,6 +5,4 @@ import taplinkbot.entities.PhoneLogger;
 
 public interface PhoneLoggerRepository extends CrudRepository<PhoneLogger, Long> {
 
-
-
 }

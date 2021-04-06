@@ -1,5 +1,12 @@
 package taplinkbot.schedulers;
 
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import taplinkbot.bot.Cabinet2Actions;
 import taplinkbot.bot.CanvasRuComActions;
 import taplinkbot.managers.Manager;
@@ -8,41 +15,32 @@ import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.StateService;
 import taplinkbot.telegram.BotContext;
 import taplinkbot.telegram.TelegramBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 
 @Component
+@Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@RequiredArgsConstructor
 public class Scheduler {
 
     final private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private TelegramBot telegram;
+    private final TelegramBot telegram;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
-    @Autowired
-    private Trigger trigger;
+    private final Trigger trigger;
 
-    @Autowired
-    private ManagerRotator rotator;
+    private final ManagerRotator rotator;
 
-    @Autowired
-    private CanvasRuComActions canvasRuComActions;
+    private final CanvasRuComActions canvasRuComActions;
 
-    @Autowired
-    private Cabinet2Actions cabinet2Actions;
+    private final Cabinet2Actions cabinet2Actions;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void intervaled() {
 
-       // onIdlePinger();
+        // onIdlePinger();
 
         onIdleCanvasRuCom();
 

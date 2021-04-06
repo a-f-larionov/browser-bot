@@ -1,8 +1,10 @@
 package taplinkbot.telegram;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,39 +16,55 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.StateService;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Обработка телеграмм бота.
  * Парсит команды.
  */
 @Component
-public class
-TelegramBot extends TelegramLongPollingBot {
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@RequiredArgsConstructor
+public class TelegramBot extends TelegramLongPollingBot {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private final String botToken;
+    private String botToken;
 
-    private final String infoChatId;
+    private String infoChatId;
 
-    private final String alertChatId;
+    private String alertChatId;
 
-    @Autowired
-    private Commands commands;
+    private final Commands commands;
 
-    @Autowired
-    Environment env;
+    private final Environment env;
 
-    @Autowired
-    private Trigger trigger;
+    private final Trigger trigger;
 
-    @Autowired
-    private Parser parser;
+    private final Parser parser;
 
-    @Autowired
-    private Accessor accessor;
+    private final Accessor accessor;
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
+
+    @PostConstruct
+    public void init() {
+        this.botToken = env.getProperty("telegram.botToken");
+        this.infoChatId = env.getProperty("telegram.infoChatId");
+        this.alertChatId = env.getProperty("telegram.alertChatId");
+
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            botsApi.registerBot(this);
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*    public TelegramBot() {
+        super();
+    }*/
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -194,29 +212,14 @@ TelegramBot extends TelegramLongPollingBot {
         return botToken;
     }
 
-    public TelegramBot(Environment env) {
-        super();
-
-        this.botToken = env.getProperty("telegram.botToken");
-        this.infoChatId = env.getProperty("telegram.infoChatId");
-        this.alertChatId = env.getProperty("telegram.alertChatId");
-        try {
-            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(this);
-
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void alert(String s) {
-        System.out.println("AAAAAAAAAAAAAAAAAA" + s);
-        //sendMessage(s, alertChatId);
+        System.out.println("ALERT: " + s);
+        sendMessage(s, alertChatId);
     }
 
     public void alert(String s, String url) {
-        System.out.println("AAAAAAAAAAAAAAAAAA" + s + " " + url);
-        //sendMessage(s + " " + url, alertChatId);
+        System.out.println("ALERT: " + s + " " + url);
+        sendMessage(s + " " + url, alertChatId);
     }
 
     public void info(String s) {

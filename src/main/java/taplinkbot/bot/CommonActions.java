@@ -1,8 +1,8 @@
 package taplinkbot.bot;
 
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import taplinkbot.entities.PhoneLogger;
@@ -10,26 +10,22 @@ import taplinkbot.repositories.PhoneLoggerRepository;
 import taplinkbot.service.StateService;
 import taplinkbot.telegram.TelegramBot;
 
+
 @Component
+@RequiredArgsConstructor
 public class CommonActions {
 
-    @Autowired
-    private Semaphore semaphore;
+    protected final Semaphore semaphore;
 
-    @Autowired
-    private TelegramBot telegram;
+    protected final TelegramBot telegram;
 
-    @Autowired
-    private DriverWrapper wrapper;
+    protected final DriverWrapper wrapper;
 
-    @Autowired
-    private StateService stateService;
+    protected final StateService stateService;
 
-    @Autowired
-    private PhoneLoggerRepository phoneLoggerRepository;
+    protected final PhoneLoggerRepository phoneLoggerRepository;
 
-    @Autowired
-    private Environment env;
+    protected final Environment env;
 
     private WebElement we;
 

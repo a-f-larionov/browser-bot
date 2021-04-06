@@ -1,8 +1,8 @@
 package taplinkbot.schedulers.interavaled;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import taplinkbot.service.HolidayService;
 import taplinkbot.service.StateService;
@@ -13,13 +13,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class Trigger {
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
-    @Autowired
-    private HolidayService holidayService;
+    private final HolidayService holidayService;
 
     final int[] weekdays = {
             Calendar.MONDAY,

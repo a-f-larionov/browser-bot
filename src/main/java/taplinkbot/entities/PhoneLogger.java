@@ -1,7 +1,6 @@
 package taplinkbot.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
-import taplinkbot.repositories.PhoneLoggerRepository;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

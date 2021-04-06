@@ -1,10 +1,11 @@
 package taplinkbot.managers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import taplinkbot.service.StateService;
 
 @Component
+@RequiredArgsConstructor
 public class ManagerRotator {
 
     private Manager[] managers = {
@@ -13,8 +14,7 @@ public class ManagerRotator {
             //Manager.Manager9434
     };
 
-    @Autowired
-    private StateService stateService;
+    private final StateService stateService;
 
     public Manager getNextManager() {
         System.out.println("++++++++getNextManager");

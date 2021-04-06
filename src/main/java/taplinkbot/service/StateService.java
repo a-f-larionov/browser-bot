@@ -1,16 +1,16 @@
 package taplinkbot.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
 import taplinkbot.telegram.BotContext;
 
 @Service
+@RequiredArgsConstructor
 public class StateService {
 
-    @Autowired
-    private StateRepository stateRepository;
+    private final StateRepository stateRepository;
 
     private BotContext botContext;
 

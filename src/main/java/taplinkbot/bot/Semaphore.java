@@ -17,6 +17,10 @@ public class Semaphore {
         locked = false;
     }
 
+    /**
+     * @todo remvoe unsed methods
+     * @return
+     */
     public boolean isntLocked() {
         return !locked;
     }
