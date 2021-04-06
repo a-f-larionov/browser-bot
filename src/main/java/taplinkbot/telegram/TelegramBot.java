@@ -1,8 +1,8 @@
 package taplinkbot.telegram;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -35,17 +34,23 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private String alertChatId;
 
-    private final Commands commands;
+    @Autowired
+    private Commands commands;
 
-    private final Environment env;
+    @Autowired
+    private Environment env;
 
-    private final Trigger trigger;
+    @Autowired
+    private Trigger trigger;
 
-    private final Parser parser;
+    @Autowired
+    private Parser parser;
 
-    private final Accessor accessor;
+    @Autowired
+    private Accessor accessor;
 
-    private final StateService stateService;
+    @Autowired
+    private StateService stateService;
 
     @PostConstruct
     public void init() {
@@ -62,9 +67,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-/*    public TelegramBot() {
+    public TelegramBot() {
         super();
-    }*/
+    }
 
     @Override
     public void onUpdateReceived(Update update) {

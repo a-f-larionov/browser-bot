@@ -1,6 +1,5 @@
 package taplinkbot.telegram;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,21 +18,25 @@ import java.util.concurrent.Executors;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-@RequiredArgsConstructor
 public class Commands {
 
     @Autowired
     private TelegramBot telegram;
 
-    private final ManagerRotator managerRotator;
+    @Autowired
+    private ManagerRotator managerRotator;
 
-    private final StateService stateService;
+    @Autowired
+    private StateService stateService;
 
-    private final CanvasRuComActions canvasRuComActions;
+    @Autowired
+    private CanvasRuComActions canvasRuComActions;
 
-    private final HolidayService holidayService;
+    @Autowired
+    private HolidayService holidayService;
 
-    private final Trigger trigger;
+    @Autowired
+    private Trigger trigger;
 
     private boolean functionalHolidays = false;
 
