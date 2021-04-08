@@ -15,7 +15,8 @@ public class ManagerRotator {
     private Manager[] managers = {
             Manager.Manager9206,
             Manager.Manager3990,
-            //Manager.Manager9434
+            Manager.Manager9434,
+            Manager.Manager0307,
     };
 
     private final StateService stateService;

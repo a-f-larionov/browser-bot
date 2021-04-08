@@ -2,12 +2,11 @@ package taplinkbot.telegram;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public enum BotContext {
 
-    CanvasRuCom("canvas", "c"),
-    Cabinet2("cabinet2", "cabinet2"),
+    Canvas("canvas", "c"),
+    LadyArt("ladyart", "l"),
     Ping("ping", "p");
 
     public final String name;

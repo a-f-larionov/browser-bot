@@ -1,5 +1,6 @@
 package taplinkbot.bot;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,7 +14,7 @@ import taplinkbot.telegram.TelegramBot;
 
 @Component
 @RequiredArgsConstructor
-public class CommonActions {
+abstract public class CommonActions {
 
     protected final Semaphore semaphore;
 
@@ -29,7 +30,9 @@ public class CommonActions {
 
     private WebElement we;
 
-    String canvasRuComUrl = "https://canvas.ru.com/";
+    abstract protected Profile getProfile();
+
+    abstract protected String getPageUrl();
 
     public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
 
@@ -46,12 +49,13 @@ public class CommonActions {
                 if (stepsInfo) telegram.info("Авторизация успешна", wrapper.takeSreenshot());
 
                 if (stepsInfo) telegram.info("Смена профиля");
-                changeProfileToCanvasRuCom();
+                changeProfile(getProfile());
 
                 if (stepsInfo) telegram.info("Установка номера" + phoneNumber);
                 setPhoneNumber(phoneNumber, imShure);
 
-                if (stepsInfo) telegram.info("Проверка страницы TapLink CanvasRuCom");
+                if (stepsInfo) telegram.info("Проверка страницы TapLink" + stateService.getBotContext().name);
+
                 checkThePage(phoneNumber);
                 if (stepsInfo) telegram.info("Проверка завершена", wrapper.takeSreenshot());
             } else {
@@ -65,7 +69,20 @@ public class CommonActions {
         }
     }
 
-    private void changeProfileToCanvasRuCom() throws Exception {
+    @Getter
+    enum Profile {
+        Canvas("canvas.ru.com"),
+        LadyArt("lady-art.art");
+
+        private String htmlText;
+
+        Profile(String htmlText) {
+            this.htmlText = htmlText;
+        }
+
+    }
+
+    private void changeProfile(Profile profile) throws Exception {
 
         try {
 
@@ -77,6 +94,8 @@ public class CommonActions {
             we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img"));
             we.click();
 
+
+            //@todo for what?
             Thread.sleep(5000);
 
             wrapper.humanComment("Обращение к элементу `Мой профили`");
@@ -87,29 +106,39 @@ public class CommonActions {
             }
             we.click();
 
-            wrapper.humanComment("Обращение к элементы заголовка профиля canvas ru com. Для проверки порядка профилей");
-            //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
-            we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
+            wrapper.humanComment("Обращение к элементы заголовка профиля " + profile.getHtmlText() + ". Для проверки порядка профилей");
 
-            if (we.getText().equals("canvas.ru.com\nТекущий профиль")) {
-                //telegram.info("Профиль canvas.ru.com УЖЕ является текущем.");
+            /**
+             *
+             */
+            //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
+            final String xpath = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/..";
+            we = wrapper.waitElement(By.xpath(xpath));
+            System.out.println(xpath);
+
+            System.out.println(we.getText());
+            System.out.println(we.getTagName());
+
+            if (we.getText().equals(profile.getHtmlText() + "\nТекущий профиль")) {
                 return;
             }
 
-            if (!we.getText().equals("canvas.ru.com")) {
-                telegram.alert("Не удалось найти элемент canvas.ru.com. " + we.getText());
+            if (!we.getText().equals(profile.getHtmlText())) {
+                telegram.alert("Не удалось найти элемент " + profile.getHtmlText() + ". " + we.getText());
                 throw new Exception("see telegram alerts");
             }
-
-            wrapper.humanComment("Обращение к элементы: кнопка переключение на профиль canvas ru com");
-            we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[2]/button"));
+////td/div[contains(text(),'lady-art.art')]/../../td/button
+            wrapper.humanComment("Обращение к элементы: кнопка переключение на профиль" + profile.getHtmlText());
+            final String xpathButton = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/../../td/button";
+            we = wrapper.waitElement(By.xpath(xpathButton));
             if (!we.getText().equals("Переключиться")) {
                 telegram.alert("Не удалось найти элемент `переключиться`. " + we.getText());
                 throw new Exception("see telegram alerts");
             }
             we.click();
-            telegram.info("Профиль canvas.ru.com ТЕПЕРЬ является текущий.");
+            telegram.info("Профиль " + profile.getHtmlText() + " ТЕПЕРЬ является текущий.");
 
+            //@todo for what?
             Thread.sleep(5000);
 
         } catch (Exception e) {
@@ -170,7 +199,11 @@ public class CommonActions {
     }
 
     private String getProp(String name) {
-        String propName = "taplink." + stateService.getBotContext().name + "." + name;
+        String propName = "taplink." +
+                stateService
+                        .getBotContext()
+                        .name
+                + "." + name;
         return env.getProperty(propName);
     }
 
@@ -278,18 +311,18 @@ public class CommonActions {
                 throw new Exception("see telegram alerts");
             }
 
-            wrapper.humanComment("Открытие страницы:" + canvasRuComUrl);
-            wrapper.get(canvasRuComUrl);
+            wrapper.humanComment("Открытие страницы:" + getPageUrl());
+            wrapper.get(getPageUrl());
 
             wrapper.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
             we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), wrapper.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
             if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), wrapper.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -301,7 +334,7 @@ public class CommonActions {
                 telegram.alert("Не нашелся блок Whatsup по признаку ссылки в href" +
                         "(ожидалось:'" + hrefExpect + "'," +
                         " фактически:'" + hrefFact + "')" +
-                        ", на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                        ", на странице " + getPageUrl(), wrapper.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -310,11 +343,11 @@ public class CommonActions {
             wrapper.humanComment("Ожидание нажатие на номер телефона.");
             Thread.sleep(45 * 1000);
 
-            telegram.info("Номер на странице " + canvasRuComUrl + " соответствует:" + phoneNumber, wrapper.takeSreenshot());
+            telegram.info("Номер на странице " + getPageUrl() + " соответствует:" + phoneNumber, wrapper.takeSreenshot());
 
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось проверить страницу ТапЛинк `" + canvasRuComUrl + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
+            telegram.alert("Ну удалось проверить страницу ТапЛинк `" + getPageUrl() + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
             throw e;
         }
     }
@@ -335,18 +368,18 @@ public class CommonActions {
 
         try {
             if (semaphore.lock()) {
-                wrapper.humanComment("Открытие страницы:" + canvasRuComUrl);
-                wrapper.get(canvasRuComUrl);
+                wrapper.humanComment("Открытие страницы:" + getPageUrl());
+                wrapper.get(getPageUrl());
 
                 wrapper.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
                 we = wrapper.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
                 if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                    telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                    telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), wrapper.takeSreenshot());
                     throw new Exception("see telegram alerts");
                 }
                 if (!we.isDisplayed()) {
-                    telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + canvasRuComUrl, wrapper.takeSreenshot());
+                    telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), wrapper.takeSreenshot());
                     throw new Exception("see telegram alerts");
                 }
 
@@ -363,7 +396,7 @@ public class CommonActions {
 
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + canvasRuComUrl + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
+            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + getPageUrl() + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
             throw e;
         } finally {
             semaphore.unlock();

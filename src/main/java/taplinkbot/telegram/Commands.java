@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.CanvasRuComActions;
+import taplinkbot.bot.CanvasActions;
+import taplinkbot.bot.CommonActions;
+import taplinkbot.bot.LadyArtActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
@@ -31,7 +33,9 @@ public class Commands {
 
     private final StateService stateService;
 
-    private final CanvasRuComActions canvasRuComActions;
+    private final CanvasActions canvasActions;
+
+    private final LadyArtActions ladyArtActions;
 
     private final HolidayService holidayService;
 
@@ -91,7 +95,22 @@ public class Commands {
         }
 
         telegram.sendMessage("Начинаю смену номера:" + phoneNumber, chatId);
-        canvasRuComActions.authAndUpdatePhone(phoneNumber, true, true);
+
+        getActions()
+                .authAndUpdatePhone(phoneNumber, true, true);
+    }
+
+    private CommonActions getActions() {
+
+        switch (stateService.getBotContext()) {
+            case Canvas:
+                return canvasActions;
+            case LadyArt:
+                return ladyArtActions;
+            default:
+                telegram.alert("Чтото не так: нет такого класса действий. Обратитесь к разработчику.");
+                return null;
+        }
     }
 
     public void getNumber(String chatId) {
@@ -99,7 +118,7 @@ public class Commands {
         String phoneNumber = null;
         try {
 
-            phoneNumber = canvasRuComActions.getNumber();
+            phoneNumber = getActions().getNumber();
             telegram.sendMessage("Номер телефона: " + phoneNumber, chatId);
 
         } catch (Exception e) {

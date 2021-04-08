@@ -7,8 +7,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Cabinet2Actions;
-import taplinkbot.bot.CanvasRuComActions;
+import taplinkbot.bot.CommonActions;
+import taplinkbot.bot.LadyArtActions;
+import taplinkbot.bot.CanvasActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
@@ -33,18 +34,23 @@ public class Scheduler {
 
     private final ManagerRotator rotator;
 
-    private final CanvasRuComActions canvasRuComActions;
+    private final CanvasActions canvasActions;
 
-    private final Cabinet2Actions cabinet2Actions;
+    private final LadyArtActions ladyArtActions;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void intervaled() {
 
+        if (stateService.getBotContext() != null) {
+            log.info("skip because bot context busy");
+            return;
+        }
+
         // onIdlePinger();
 
-        onIdleCanvasRuCom();
+        onIdleCanvas();
 
-        //onIdleCabinet2();
+        onIdleLadyArt();
     }
 
     private void onIdlePinger() {
@@ -60,9 +66,9 @@ public class Scheduler {
         }
     }
 
-    private void onIdleCanvasRuCom() {
+    private void onIdleCanvas() {
 
-        stateService.setBotContext(BotContext.CanvasRuCom);
+        stateService.setBotContext(BotContext.Canvas);
 
         Trigger.Conditions cond;
         try {
@@ -76,20 +82,19 @@ public class Scheduler {
 
                 trigger.updateLastTime();
 
-                log.info("Установка менеджера(canvas.ru.com):" + manager.getDescription());
+                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
 
-                setNewManager(manager, canvasRuComActions);
+                setNewManager(manager, canvasActions);
 
-                log.info("Установка менеджера(canvas.ru.com):" + manager.getDescription());
+                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
             }
         } finally {
             stateService.setBotContext(null);
         }
     }
 
-
-    private void onIdleCabinet2() {
-        stateService.setBotContext(BotContext.Cabinet2);
+    private void onIdleLadyArt() {
+        stateService.setBotContext(BotContext.LadyArt);
 
         Trigger.Conditions cond;
         try {
@@ -103,16 +108,13 @@ public class Scheduler {
 
                 trigger.updateLastTime();
 
-                log.info("Установка менеджера(cabinet2):" + manager.getDescription());
+                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
 
-                String phone = cabinet2Actions.getNumber();
+                String phone = ladyArtActions.getNumber();
 
-                log.info("phone number:" + phone);
-                //setNewManager(manager, cabinet2Actions);
+                setNewManager(manager, ladyArtActions);
 
-                manager = rotator.getPrevManager();
-
-                log.info("Установка менеджера(cabinet2):" + manager.getDescription());
+                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,7 +123,7 @@ public class Scheduler {
         }
     }
 
-    private void setNewManager(Manager manager, CanvasRuComActions actions) {
+    private void setNewManager(Manager manager, CommonActions actions) {
         log.info("Scheduler setNewManager");
         if (!stateService.schedulerIsActive()) {
             telegram.info("Расписание выключено, действие отменено: " + manager.getDescription() + stateService.getBotContext().name);
@@ -136,7 +138,7 @@ public class Scheduler {
     private void checkCanvas() {
         if (!stateService.schedulerIsActive()) return;
 
-        canvasRuComActions.checkCanvas();
+        canvasActions.checkCanvas();
 
         log.info("pinger on idle");
     }
