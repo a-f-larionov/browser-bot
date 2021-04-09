@@ -216,12 +216,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public void alert(String s) {
         log.info("ALERT: " + s);
-        sendMessage(s, alertChatId);
+        //sendMessage(s, alertChatId);
     }
 
     public void alert(String s, String url) {
         log.info("ALERT: " + s + " " + url);
-        sendMessage(s + " " + url, alertChatId);
+        //sendMessage(s + " " + url, alertChatId);
     }
 
     public void info(String s) {

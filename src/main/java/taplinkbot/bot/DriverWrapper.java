@@ -88,11 +88,11 @@ public class DriverWrapper implements WebDriver {
         } catch (NotFoundException e) {
             if (seconds <= 0) return findElement(by);
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
-            return waitElement(by, seconds - 3);
+            return waitElement(by, seconds - 1);
         }
     }
 

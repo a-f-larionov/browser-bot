@@ -108,10 +108,6 @@ abstract public class CommonActions {
 
             wrapper.humanComment("Обращение к элементы заголовка профиля " + profile.getHtmlText() + ". Для проверки порядка профилей");
 
-            /**
-             *
-             */
-            //we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[2]/div/div[2]/table/tbody/tr[3]/td[1]"));
             final String xpath = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/..";
             we = wrapper.waitElement(By.xpath(xpath));
             System.out.println(xpath);
@@ -127,7 +123,7 @@ abstract public class CommonActions {
                 telegram.alert("Не удалось найти элемент " + profile.getHtmlText() + ". " + we.getText());
                 throw new Exception("see telegram alerts");
             }
-////td/div[contains(text(),'lady-art.art')]/../../td/button
+
             wrapper.humanComment("Обращение к элементы: кнопка переключение на профиль" + profile.getHtmlText());
             final String xpathButton = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/../../td/button";
             we = wrapper.waitElement(By.xpath(xpathButton));
@@ -136,7 +132,6 @@ abstract public class CommonActions {
                 throw new Exception("see telegram alerts");
             }
             we.click();
-            telegram.info("Профиль " + profile.getHtmlText() + " ТЕПЕРЬ является текущий.");
 
             //@todo for what?
             Thread.sleep(5000);
@@ -153,7 +148,7 @@ abstract public class CommonActions {
             //@todo check if autorized - do not repeat it! or reset
 
             //@todo this account priznak
-            //if (checkIsAuthorized()) return;
+            if (checkIsAuthorized()) return;
 
             System.out.println("1");
             wrapper.reset();

@@ -46,7 +46,7 @@ public class Scheduler {
             return;
         }
 
-        // onIdlePinger();
+        onIdlePinger();
 
         onIdleCanvas();
 
