@@ -22,14 +22,13 @@ public class ManagerRotator {
     private final StateService stateService;
 
     public Manager getNextManager() {
-        log.info("++++++++getNextManager");
+
         incrementIndex();
 
         return getCurrentManager();
     }
 
     public Manager getPrevManager() {
-        log.info("++++++++getPrevManager");
 
         decrementIndex();
 

@@ -11,4 +11,4 @@ pkill java
 
 pkill chrome
 
-nohup java -jar target/taplinkbot-0.0.1-SNAPSHOT.jar >> java.log &
+nohup java -jar -Dspring.profiles.active=prod target/taplinkbot-0.0.1-SNAPSHOT.jar >>java.log &

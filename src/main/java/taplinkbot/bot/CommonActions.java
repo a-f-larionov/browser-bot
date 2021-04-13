@@ -137,7 +137,7 @@ abstract public class CommonActions {
             Thread.sleep(5000);
 
         } catch (Exception e) {
-            telegram.alert("Авторизация не удалась.", wrapper.takeSreenshot());
+            telegram.alert("Смена профиля не удалась.", wrapper.takeSreenshot());
             throw e;
         }
     }
@@ -234,7 +234,8 @@ abstract public class CommonActions {
         System.out.println(wrapper.takeSreenshot());
 
         try {
-            we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div/div[1]/div[2]/div/div/div/div[1]/div/p/div/div/div/div/input"), 3);
+            wrapper.skipOneAlert();
+            we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div/div[1]/div[2]/div/div/div/div[1]/div/p/div/div/div/div/input"), 5);
         } catch (Exception e) {
             return false;
         }
