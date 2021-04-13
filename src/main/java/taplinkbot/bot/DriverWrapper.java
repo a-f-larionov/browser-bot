@@ -101,7 +101,16 @@ public class DriverWrapper implements WebDriver {
         try {
             return driver.findElement(by);
         } catch (NotFoundException e) {
-            alert("Не удалось найти элемент. действие: " + lastHumanComment + ". Обратитесь к разработчику.");
+
+            if (skipOneAlert) {
+                skipOneAlert = false;
+            } else {
+                telegram.alert("Не удалось найти элемент. Действие: " + lastHumanComment
+                                + ". Обратитесь к разработчику. " + by.toString(),
+                        takeSreenshot()
+                );
+            }
+
             throw e;
         }
     }
@@ -150,10 +159,6 @@ public class DriverWrapper implements WebDriver {
         lastHumanComment = comment;
     }
 
-    private void alert(String message) {
-        telegram.alert(message, takeSreenshot());
-    }
-
     public String takeSreenshot() {
 
         String filesPath, url, fileName;
@@ -179,5 +184,11 @@ public class DriverWrapper implements WebDriver {
 
     public String getHumanComment() {
         return lastHumanComment;
+    }
+
+    private boolean skipOneAlert = false;
+
+    public void skipOneAlert() {
+        skipOneAlert = true;
     }
 }
