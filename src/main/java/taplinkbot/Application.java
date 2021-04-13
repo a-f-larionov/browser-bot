@@ -21,8 +21,19 @@ public class Application {
     }
 
     public Application(Environment env) {
-        log.info(env.getProperty("spring.config.activate.on-profile"));
-        log.info(env.getProperty("application.mode"));
+        String[] defaultProfiles = env.getDefaultProfiles();
+
+        String[] activeProfiles = env.getActiveProfiles();
+
+        log.info("default profiles");
+        for (String profile : defaultProfiles) {
+            log.info(profile);
+        }
+
+        log.info("active profiles");
+        for (String profile : activeProfiles) {
+            log.info(profile);
+        }
     }
 
     @PostConstruct
