@@ -1,8 +1,7 @@
 package taplinkbot.schedulers.interavaled;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.service.HolidayService;
 import taplinkbot.service.StateService;
@@ -14,9 +13,8 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Trigger {
-
-    private static final Logger log = LoggerFactory.getLogger(Trigger.class);
 
     private final StateService stateService;
 
@@ -200,13 +198,13 @@ public class Trigger {
      */
     private boolean isItDayActive(long mills) {
 
-        System.out.print("weekday, weekend, holiday, mills "
+        /*System.out.print("weekday, weekend, holiday, mills "
                 + isItWeekDay(mills) + " "
                 + isItWeekEnd(mills) + " "
                 + isItHoliDay(mills) + " "
                 + mills
                 + "\r\n"
-        );
+        );*/
 
         // Если выходной запрещен
 
@@ -251,7 +249,6 @@ public class Trigger {
             return msg;
 
         } catch (Exception e) {
-            //NumberFormatException
             return "some thing wrong yyyy/MM/dd_HH:mm";
         }
     }

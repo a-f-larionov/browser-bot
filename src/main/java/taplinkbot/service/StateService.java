@@ -1,8 +1,7 @@
 package taplinkbot.service;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
@@ -10,9 +9,8 @@ import taplinkbot.telegram.BotContext;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StateService {
-
-    private static final Logger log = LoggerFactory.getLogger(StateService.class);
 
     private final StateRepository stateRepository;
 
@@ -131,7 +129,10 @@ public class StateService {
 
     public void setBotContext(BotContext botContext) {
         if (botContext != null) {
-            log.info("bot context is busy!!!!");
+            log.info(
+                    "bot context is busy by:" + botContext.name
+                            + "!!! Requested: " + botContext.name
+            );
         }
 
         this.botContext = botContext;

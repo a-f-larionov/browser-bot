@@ -1,9 +1,7 @@
 package taplinkbot.telegram;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,6 +14,7 @@ import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.HolidayService;
 import taplinkbot.service.StateService;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
@@ -24,9 +23,8 @@ import java.util.concurrent.Executors;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
+@Slf4j
 public class Commands {
-
-    private static final Logger log = LoggerFactory.getLogger(Commands.class);
 
     private final TelegramBot telegram;
 
@@ -34,17 +32,20 @@ public class Commands {
 
     private final StateService stateService;
 
-    @Autowired
-    private CanvasActions canvasActions;
+    private final CanvasActions canvasActions;
 
-    @Autowired
-    private LadyArtActions ladyArtActions;
+    private final LadyArtActions ladyArtActions;
 
     private final HolidayService holidayService;
 
     private final Trigger trigger;
 
     private boolean functionalHolidays = false;
+
+    @PostConstruct
+    private void init() {
+        telegram.setCommands(this);
+    }
 
     public void start(String chatId, String argument) {
 
@@ -118,11 +119,13 @@ public class Commands {
 
     public void getNumber(String chatId) {
 
+        long start = System.currentTimeMillis();
         String phoneNumber = null;
         try {
 
             phoneNumber = getActions().getNumber();
-            telegram.sendMessage("Номер телефона: " + phoneNumber, chatId);
+            long finish = System.currentTimeMillis();
+            telegram.sendMessage("Номер телефона: " + phoneNumber + ", " + (finish - start) + " мсек.", chatId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,4 +283,5 @@ public class Commands {
 
         telegram.sendMessage(msg, chatId);
     }
+
 }

@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class PhoneLogger {
+public class PageLoads {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,16 +19,19 @@ public class PhoneLogger {
     @CreationTimestamp
     private LocalDateTime localDateTime;
 
-    private String phoneNumber;
+    private String url;
+
+    private long loadTime;
 
     private BotContext botContext;
 
-    public PhoneLogger(String phoneNumber, BotContext botContext) {
-        this.phoneNumber = phoneNumber;
-        this.botContext = botContext;
+    public PageLoads() {
+
     }
 
-    public PhoneLogger() {
-
+    public PageLoads(String url, long loadTime, BotContext botContext) {
+        this.loadTime = loadTime;
+        this.url = url;
+        this.botContext = botContext;
     }
 }

@@ -1,15 +1,16 @@
 package taplinkbot.schedulers;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.WebDriverException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.CommonActions;
-import taplinkbot.bot.LadyArtActions;
 import taplinkbot.bot.CanvasActions;
+import taplinkbot.bot.CommonActions;
+import taplinkbot.bot.DriverWrapper;
+import taplinkbot.bot.LadyArtActions;
 import taplinkbot.managers.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
@@ -22,9 +23,9 @@ import java.util.Calendar;
 @Component
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
+@Slf4j
 public class Scheduler {
 
-    private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
 
     private final TelegramBot telegram;
 
@@ -38,7 +39,10 @@ public class Scheduler {
 
     private final LadyArtActions ladyArtActions;
 
+    private final DriverWrapper driverWrapper;
+
     @Scheduled(cron = "0 * * * * 1-7")
+
     public void intervaled() {
 
         if (stateService.getBotContext() != null) {
@@ -46,21 +50,48 @@ public class Scheduler {
             return;
         }
 
-        onIdlePinger();
-
         onIdleCanvas();
 
         onIdleLadyArt();
+
+        onIdlePinger();
     }
 
     private void onIdlePinger() {
 
-        stateService.setBotContext(BotContext.Ping);
 
         try {
 
+            stateService.setBotContext(BotContext.Canvas);
             checkCanvas();
 
+        } catch (Exception e) {
+            if (e instanceof WebDriverException) {
+                log.info(e.getMessage());
+            }
+            log.info("exception___");
+            log.info(e.getMessage());
+            if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
+                //@todo
+                driverWrapper.reset();
+                log.info("driver reseted");
+            }
+            e.printStackTrace();
+            telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
+        } finally {
+            stateService.setBotContext(null);
+        }
+
+
+        try {
+
+            stateService.setBotContext(BotContext.LadyArt);
+            checkLadyArt();
+
+        } catch (Exception e) {
+            log.info("exception___");
+            e.printStackTrace();
+            telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
         } finally {
             stateService.setBotContext(null);
         }
@@ -135,10 +166,18 @@ public class Scheduler {
     }
 
 
-    private void checkCanvas() {
+    private void checkCanvas() throws Exception {
         if (!stateService.schedulerIsActive()) return;
 
-        canvasActions.checkCanvas();
+        canvasActions.checkPage();
+
+        log.info("pinger on idle");
+    }
+
+    private void checkLadyArt() throws Exception {
+        if (!stateService.schedulerIsActive()) return;
+
+        ladyArtActions.checkPage();
 
         log.info("pinger on idle");
     }

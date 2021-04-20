@@ -1,71 +1,112 @@
 package taplinkbot.bot;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import taplinkbot.entities.PageLoads;
+import taplinkbot.repositories.PageLoadsRepository;
+import taplinkbot.service.StateService;
+import taplinkbot.telegram.BotContext;
 import taplinkbot.telegram.TelegramBot;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * @link https://geekflare.com/install-chromium-ubuntu-centos/
  */
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class DriverWrapper implements WebDriver {
 
+    private final Environment env;
+
     private final TelegramBot telegram;
+
+    private final PageLoadsRepository pageLoadsRepository;
+
+    private final StateService stateService;
 
     private RemoteWebDriver driver;
 
     private String lastHumanComment;
+
 
     /**
      * Настройка драйвера
      *
      * @todo try getBean ChromeDriver()
      */
-    public DriverWrapper(TelegramBot telegram) {
-        super();
 
-        this.telegram = telegram;
+    @PostConstruct
+    public void init() {
         driver = getDriver();
+        log.info("DriverWrapper PostConstructor");
     }
 
     private ChromeDriver getDriver() {
-        System.setProperty("webdriver.chrome.driver", "/var/www/chromedriver/chromedriver");
+
+        assert env.getProperty("driver.path") != null;
+
+        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(env.getProperty("driver.path")));
 
         ChromeOptions options = new ChromeOptions();
+
         options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability("UNHANDLED_PROMPT_BEHAVIOUR", "ignore");
+        options.merge(capabilities);
+
         return new ChromeDriver(options);
     }
 
     @Override
-    public void get(String s) {
-        driver.get(s);
+    public void get(String url) {
+
+        assert driver != null;
+
+        long start = System.currentTimeMillis();
+        driver.get(url);
+        long finish = System.currentTimeMillis();
+
+
+        BotContext botContext = stateService.getBotContext();
+
+        pageLoadsRepository.save(new PageLoads(url, finish - start, botContext));
     }
 
     @Override
     public String getCurrentUrl() {
+        assert driver != null;
         return driver.getCurrentUrl();
     }
 
     @Override
     public String getTitle() {
+        assert driver != null;
         return driver.getTitle();
     }
 
     @Override
     public List<WebElement> findElements(By by) {
+        assert driver != null;
         return driver.findElements(by);
     }
 
@@ -83,6 +124,8 @@ public class DriverWrapper implements WebDriver {
      * @todo применить WebDriverWait
      */
     public WebElement waitElement(By by, int seconds) {
+        assert driver != null;
+
         try {
             return driver.findElement(by);
         } catch (NotFoundException e) {
@@ -178,6 +221,7 @@ public class DriverWrapper implements WebDriver {
     }
 
     public void reset() {
+        log.info("driver reseted");
         if (driver != null) driver.quit();
         driver = getDriver();
     }

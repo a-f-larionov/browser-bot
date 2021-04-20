@@ -2,6 +2,7 @@ package taplinkbot.bot;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.core.env.Environment;
@@ -14,6 +15,7 @@ import taplinkbot.telegram.TelegramBot;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 abstract public class CommonActions {
 
     protected final Semaphore semaphore;
@@ -35,6 +37,8 @@ abstract public class CommonActions {
     abstract protected String getPageUrl();
 
     public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
+
+        assert phoneNumber != null;
 
         if (!phoneNumber.matches("^\\+7\\d{10}$")) {
             telegram.info("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
@@ -71,6 +75,7 @@ abstract public class CommonActions {
 
     @Getter
     enum Profile {
+
         Canvas("canvas.ru.com"),
         LadyArt("lady-art.art");
 
@@ -84,6 +89,8 @@ abstract public class CommonActions {
 
     private void changeProfile(Profile profile) throws Exception {
 
+        assert profile != null;
+
         try {
 
             String url = "https://taplink.ru/profile/2988200/pages/";
@@ -93,7 +100,6 @@ abstract public class CommonActions {
             wrapper.humanComment("Обращение к всплывающему меню профиля");
             we = wrapper.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img"));
             we.click();
-
 
             //@todo for what?
             Thread.sleep(5000);
@@ -110,10 +116,10 @@ abstract public class CommonActions {
 
             final String xpath = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/..";
             we = wrapper.waitElement(By.xpath(xpath));
-            System.out.println(xpath);
+            log.info(xpath);
 
-            System.out.println(we.getText());
-            System.out.println(we.getTagName());
+            log.info(we.getText());
+            log.info(we.getTagName());
 
             if (we.getText().equals(profile.getHtmlText() + "\nТекущий профиль")) {
                 return;
@@ -137,12 +143,14 @@ abstract public class CommonActions {
             Thread.sleep(5000);
 
         } catch (Exception e) {
+
             telegram.alert("Смена профиля не удалась.", wrapper.takeSreenshot());
             throw e;
         }
     }
 
     private void authorize() {
+
         try {
 
             //@todo check if autorized - do not repeat it! or reset
@@ -150,28 +158,32 @@ abstract public class CommonActions {
             //@todo this account priznak
             if (checkIsAuthorized()) return;
 
-            System.out.println("1");
             wrapper.reset();
-            System.out.println("1");
+
             String url = "https://taplink.ru/profile/auth/signin/";
             wrapper.humanComment("Открытие страницы:" + url);
             wrapper.get(url);
-            System.out.println("5");
+
             enterLogin();
-            System.out.println("6");
+
             enterPassword();
-            System.out.println("8");
+
             authSubmit();
 
         } catch (Exception e) {
+
             telegram.alert("Авторизация не удалась.", wrapper.takeSreenshot());
             throw e;
         }
     }
 
+
     private void enterLogin() {
         wrapper.humanComment("Обращение к полю ввода логина");
+
         we = wrapper.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[1]/div/input"));
+
+        assert we != null;
 
         wrapper.humanComment("Ввод логина");
         we.sendKeys(getLogin());
@@ -180,6 +192,8 @@ abstract public class CommonActions {
     private void enterPassword() {
         wrapper.humanComment("Обращение к поле ввода пароля");
         we = wrapper.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[2]/div[2]/input"));
+
+        assert we != null;
 
         wrapper.humanComment("Ввод пароля");
         we.sendKeys(getPassword());
@@ -206,6 +220,8 @@ abstract public class CommonActions {
         wrapper.humanComment("Обращение к кнопки авторизации");
         we = wrapper.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/button"));
 
+        assert we != null;
+
         wrapper.humanComment("Нажатие кнопки авторизации");
         we.click();
 
@@ -229,7 +245,6 @@ abstract public class CommonActions {
         String url = "https://taplink.ru/profile/2988200/account/settings/";
         wrapper.humanComment("Открытие страницы:" + url);
         wrapper.get(url);
-        System.out.println("10");
 
         System.out.println(wrapper.takeSreenshot());
 
@@ -239,15 +254,21 @@ abstract public class CommonActions {
         } catch (Exception e) {
             return false;
         }
-        System.out.println("11");
 
         String value = we.getAttribute("value");
-        System.out.println("авторизованно:" + value);
+        log.info("авторизованно:" + value);
 
         return getLogin().equals(value);
     }
 
+    /**
+     * @param phoneNumber
+     * @param imShure     если false - выполним код без нажатия кнопки
+     * @throws Exception
+     */
     public void setPhoneNumber(String phoneNumber, boolean imShure) throws Exception {
+
+        assert phoneNumber != null;
 
         try {
             String url = "https://taplink.ru/";
@@ -285,10 +306,9 @@ abstract public class CommonActions {
 
             wrapper.humanComment("Нажатие кнопки [Сохранить]");
 
-            //Главная кнопка!
-            if (imShure) {
-                we.click();
-            }
+            /** Главная кнопка! */
+            if (imShure) we.click();
+
 
             wrapper.humanComment("Ожидание Сохранения номера.");
             Thread.sleep(45 * 1000);
@@ -300,6 +320,8 @@ abstract public class CommonActions {
     }
 
     private void checkThePage(String phoneNumber) throws Exception {
+
+        assert phoneNumber != null;
 
         try {
             if (!phoneNumber.matches("^\\+7\\d{10}$")) {
@@ -343,20 +365,20 @@ abstract public class CommonActions {
 
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось проверить страницу ТапЛинк `" + getPageUrl() + "` ,последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
+            telegram.alert("Ну удалось проверить страницу ТапЛинк " + getPageUrl() + " , последние действие:" + wrapper.getHumanComment(), wrapper.takeSreenshot());
             throw e;
         }
     }
 
-    public void checkCanvas() {
+    public void checkPage() throws Exception {
 
         try {
             String phone = getNumber();
 
-            phoneLoggerRepository.save(new PhoneLogger(phone));
+            phoneLoggerRepository.save(new PhoneLogger(phone, stateService.getBotContext()));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -379,14 +401,13 @@ abstract public class CommonActions {
                     throw new Exception("see telegram alerts");
                 }
 
-                // удаляем знак '+' из номераr
+                /** удаляем знак '+' из номера */
                 String hrefFact = we.getAttribute("href");
 
                 hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
                 hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
                 return hrefFact;
             } else {
-                //telegram.alert("Бот заблокирован, попробуйте позже.");
                 return "Бот заблокирован, попробуйте позже.";
             }
 

@@ -1,9 +1,7 @@
 package taplinkbot.telegram;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
@@ -26,9 +24,8 @@ import javax.annotation.PostConstruct;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
+@Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
-
-    private static final Logger log = LoggerFactory.getLogger(TelegramBot.class);
 
     private String botToken;
 
@@ -36,7 +33,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private String alertChatId;
 
-    @Autowired
     private Commands commands;
 
     private final Environment env;
@@ -64,10 +60,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    /*public TelegramBot() {
-        super();
-    }*/
-
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -92,7 +84,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         try {
             Message msg = parser.parse(text, chatId);
-            //@todo logger
+
             log.info(msg.toString());
 
             if (!accessor.check(msg)) throw new ClientRequestException("Нет доступа");
@@ -242,5 +234,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCommands(Commands commands) {
+        this.commands = commands;
     }
 }
