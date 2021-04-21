@@ -5,35 +5,40 @@
 </head>
 
 <body>
-<style>
-    template {
-        display: none;
-    }
-</style>
+
+<div id="vueapp">
 
 
-<div id="app">
+    <login-form v-if="loginFormShow"></login-form>
 
-    <template id="loginForm">
-
-        <form v-on:submit="onLoginSubmit" @submit.prevent>
-
-            <input type="password" v-model="password"/>
-
-            <button type="submit">login</button>
-
-        </form>
-
-    </template>
-
+    <control-form v-if="controlFormShow"></control-form>
 </div>
 
+<template id="templateLoginForm">
+    <div>
+        LoginForm:
+        <input type="password" v-model="password">
+        <button type="button" v-on:click="loginDo">Login!</button>
+    </div>
+</template>
+
+<template id="templateControlForm">
+    <div>
+        Control:
+        <button type="button" v-on:click="testButton">test</button>
+    </div>
+</template>
+
+<!-- Vue JS -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
+<!-- Axios -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+<!-- Babel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
 
+<!-- Main app -->
 <script type="text/babel" src="/app.js"></script>
 
 </body>
