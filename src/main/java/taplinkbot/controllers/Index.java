@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 public class Index {
 
-
     @GetMapping("/")
     public String index() {
         return "index";

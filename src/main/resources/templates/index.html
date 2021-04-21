@@ -1,28 +1,30 @@
 <html>
-// in head tag
 
 <head>
     <title></title>
 </head>
-<!-- Include Bootstrap -->
-
-// other markup
 
 <body>
-
-// at end of body tag
+<style>
+    template {
+        display: none;
+    }
+</style>
 
 
 <div id="app">
 
+    <template id="loginForm">
 
-    <form v-on:submit="onLoginSubmit" @submit.prevent>
+        <form v-on:submit="onLoginSubmit" @submit.prevent>
 
-        <input type="password" v-model="password"/>
+            <input type="password" v-model="password"/>
 
-        <button type="submit">login</button>
+            <button type="submit">login</button>
 
-    </form>
+        </form>
+
+    </template>
 
 </div>
 

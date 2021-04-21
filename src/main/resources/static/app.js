@@ -1,11 +1,8 @@
 //import Vue from 'vue'
 
-
-var app = new Vue({
-    el: '#app',
-    data: {
-        password: "",
-    },
+Vue.component("loginForm",{
+    el: "#loginForm",
+    data: {password: ""},
     methods: {
         onLoginSubmit: function () {
 
@@ -25,5 +22,6 @@ var app = new Vue({
     }
 });
 
-
-console.log('tes23t');
+const app = new Vue({
+    el: '#app',
+});
