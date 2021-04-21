@@ -1,23 +1,27 @@
-Vue.component('component-name', {
-    props: ['player'],
-    template: '<div>' +
-        '{{player.name}} {{player.id}}' +
-        '</div>'
-});
+//import Vue from 'vue'
+
 
 var app = new Vue({
-    el: '#contents',
+    el: '#app',
     data: {
-        players: [
-            {
-                id: "1",
-                name: "name1",
-            },
-            {
-                id: "2",
-                name: "name2",
-            }
-        ]
+        password: "",
+    },
+    methods: {
+        onLoginSubmit: function () {
+
+            console.log(this.password);
+
+            axios.post("/login", {
+                password2: this.password,
+            }).then(function () {
+
+                console.log(arguments);
+
+            }).catch(function () {
+                alert("ошибка:запрос не обработан");
+                console.log(arguments);
+            });
+        }
     }
 });
 

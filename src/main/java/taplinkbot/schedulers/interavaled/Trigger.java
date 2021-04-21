@@ -102,14 +102,14 @@ public class Trigger {
         int countIntervals = (int) (getMillisFromStartDay(millis) / stateService.getManagerInterval());
         long offset = getMillisFromStartDay(millis) - (countIntervals * stateService.getManagerInterval());
 
-        log.info(
+        /*log.info(
                 "mils" + getMillisFromStartDay(millis) + "\t" +
                         "countIntervals: " + countIntervals + "\t" +
                         "interval" + stateService.getManagerInterval() + "\t" +
                         "offset: " + offset + "\t" +
                         "dev" + getIntervalDeviation()
-        );
-
+        );*/
+        
         return offset <= getIntervalDeviation();
     }
 

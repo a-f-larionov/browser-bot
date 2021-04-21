@@ -1,36 +1,38 @@
+<html>
 // in head tag
 
+<head>
+    <title></title>
+</head>
 <!-- Include Bootstrap -->
 
-//  other markup
+// other markup
+
+<body>
 
 // at end of body tag
-<script
-        src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js">
-</script>
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js">
-</script>
 
 
-<div id="contents">
+<div id="app">
 
-    <ul>
-        <li style="list-style-type:none" v-for="player in players">
 
-            <component-name
-                    v-bind:player="player"
-                    v-bind:key="player.id">
-            </component-name>
+    <form v-on:submit="onLoginSubmit" @submit.prevent>
 
-        </li>
-    </ul>
+        <input type="password" v-model="password"/>
+
+        <button type="submit">login</button>
+
+    </form>
 
 </div>
 
-<script type="text/babel" src="/app.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
-<div>
-    <span th:text="${attrName}"></span>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+
+<script type="text/babel" src="/app.js"></script>
+
+</body>
+</html>
