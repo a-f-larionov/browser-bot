@@ -15,11 +15,8 @@ Vue.component("login-form", {
                 password: this.password
 
             }).then(function (answer) {
-
-                console.log(answer.data);
-
                 eventBus.$emit(eventBus.EVENT_CHECK_AUTH);
-                //@todo
+
             }).catch(function () {
 
                 alert("Что то пошло не так. Обратитесь к разработчику.");
@@ -36,7 +33,6 @@ Vue.component("control-form", {
         testButton: () => {
             axios.get("/test")
                 .then(function (answer) {
-                    console.log(answer.data);
                     alert("шикарно");
                 })
                 .catch(function () {
@@ -74,21 +70,17 @@ let app = new Vue({
             axios.get("is_it_auth")
                 .then(function (answer) {
 
-                    console.log(answer);
-                    console.log(answer.data);
-                    console.log(answer.data.isIt);
                     if (answer.data.isIt) {
-                        console.log(1);
                         self.loginFormShow = false;
                         self.controlFormShow = true;
                     } else {
-                        console.log(2);
+
                         self.loginFormShow = true;
                         self.controlFormShow = false;
                     }
 
                 }).catch(function () {
-                console.log(arguments);
+                console.debug(arguments);
                 alert("Не могу определить авторизацию, Обратитесь к разработчику.");
             })
         }
