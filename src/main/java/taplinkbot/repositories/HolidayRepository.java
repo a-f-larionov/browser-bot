@@ -5,7 +5,7 @@ import taplinkbot.entities.Holiday;
 
 import java.util.List;
 
-public interface HolidayRepository extends CrudRepository<Holiday, Integer> {
+public interface HolidayRepository extends CrudRepository<Holiday, Long> {
 
     List<Holiday> findAll();
 

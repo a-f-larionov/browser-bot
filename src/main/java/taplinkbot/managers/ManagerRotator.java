@@ -3,74 +3,85 @@ package taplinkbot.managers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import taplinkbot.entities.Manager;
+import taplinkbot.repositories.ManagerRepository;
 import taplinkbot.service.StateService;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ManagerRotator {
 
-    private Manager[] managers = {
-            Manager.Manager9206,
-            Manager.Manager3990,
-            Manager.Manager9434,
-            Manager.Manager0307,
-    };
+    private Manager[] managers;
 
     private final StateService stateService;
 
+    private final ManagerRepository managerRepository;
+
+    @PostConstruct
+    private void init() {
+        List<Manager> all = managerRepository.findAll();
+
+        managers = new Manager[all.size()];
+
+        managers = all.toArray(managers);
+
+        for (int i = 0; i < managers.length; i++) {
+            managers[i].setIndex(i);
+        }
+    }
+
     public Manager getNextManager() {
 
-        incrementIndex();
+        incrementIndex(stateService.getManagerIndex());
 
         return getCurrentManager();
     }
 
-    public Manager getPrevManager() {
+    private void incrementIndex(int startIndex) {
 
-        decrementIndex();
+        int index = stateService.getManagerIndex();
 
-        return getCurrentManager();
-    }
+        index++;
 
-    private void incrementIndex() {
-        log.info("++++++++incrementIndex");
-        int lastIndex = stateService.getManagerLastIndex();
-        log.info("++++++++ " + lastIndex);
-        lastIndex++;
+        if (index >= managers.length) index = 0;
 
-        if (lastIndex >= managers.length) lastIndex = 0;
+        stateService.setManagerIndex(index);
 
-        log.info("++++++++ " + lastIndex);
-        stateService.setManagerLastIndex(lastIndex);
-    }
-
-    private void decrementIndex() {
-        log.info("++++++++decrementIndex");
-        int lastIndex = stateService.getManagerLastIndex();
-        log.info("++++++++ " + lastIndex);
-        lastIndex--;
-
-        if (lastIndex == -1) lastIndex = 0;
-
-
-        log.info("++++++++ " + lastIndex);
-        stateService.setManagerLastIndex(lastIndex);
+        if (!getCurrentManager().isWorking()) {
+            if (startIndex != getCurrentManager().getIndex()) {
+                incrementIndex(startIndex);
+            }
+        }
     }
 
     public Manager getCurrentManager() {
-        log.info("++++++++getCurrentManager");
-        int lastIndex = stateService.getManagerLastIndex();
-        log.info("++++++++ " + lastIndex);
-        return managers[lastIndex];
+
+        int index = stateService.getManagerIndex();
+
+        return managers[index];
     }
 
     public void setIndex(int i) {
-        stateService.setManagerLastIndex(i);
+        stateService.setManagerIndex(i);
     }
 
     public Manager[] getList() {
 
         return managers;
+    }
+
+    public void isWorkingChange(int managerId) {
+
+        for (Manager manager : managers) {
+            if (manager.getId() == managerId) {
+                manager.setWorking(!manager.isWorking());
+                managerRepository.save(manager);
+            }
+        }
+
     }
 }

@@ -72,11 +72,11 @@ public class StateService {
         stateRepository.save(state);
     }
 
-    public int getManagerLastIndex() {
+    public int getManagerIndex() {
         return getIntValue(State.STATE_LAST_MANAGER_INDEX);
     }
 
-    public void setManagerLastIndex(int lastIndex) {
+    public void setManagerIndex(int lastIndex) {
         saveIntValue(State.STATE_LAST_MANAGER_INDEX, lastIndex);
     }
 

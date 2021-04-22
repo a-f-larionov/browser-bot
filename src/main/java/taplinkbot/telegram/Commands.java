@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import taplinkbot.bot.CanvasActions;
 import taplinkbot.bot.CommonActions;
 import taplinkbot.bot.LadyArtActions;
-import taplinkbot.managers.Manager;
+import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.HolidayService;
@@ -154,7 +154,7 @@ public class Commands {
             msg += " \r\nlast timestamp: " +
                     new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(stateService.getIntervalledLastTimestamp());
             msg += " \r\nscheduler is active: " + stateService.schedulerIsActive();
-            msg += " \r\nlast index: " + stateService.getManagerLastIndex();
+            msg += " \r\nlast index: " + stateService.getManagerIndex();
             msg += " \r\nis every day: " + (stateService.allowEveryDay() ? "y" : "n");
 
             msg += "\r\n";
@@ -262,7 +262,7 @@ public class Commands {
     public void holiDayRemove(String chatId, String argument) {
         if (!functionalHolidays) return;
         try {
-            int id = Integer.parseInt(argument);
+            long id = Long.parseLong(argument);
             holidayService.remove(id);
         } catch (Exception e) {
             telegram.sendMessage("нужно передать id не рабочего дня.", chatId);
@@ -275,13 +275,23 @@ public class Commands {
         String msg;
         msg = "";
 
-        Manager[] managers = managerRotator.getList();
+        Manager[] manager = managerRotator.getList();
 
-        for (int i = 0; i < managers.length; i++) {
-            msg += i + " - " + managers[i].getDescription() + "\r\n";
+        for (int i = 0; i < manager.length; i++) {
+            msg += i + " - " + manager[i].getDescription() + "\r\n";
         }
 
         telegram.sendMessage(msg, chatId);
     }
 
+    public void managerTest(String chatId) {
+
+        telegram.sendMessage(
+                managerRotator.getCurrentManager().getDescription(),
+                chatId);
+
+        telegram.sendMessage(
+                managerRotator.getNextManager().getDescription(),
+                chatId);
+    }
 }

@@ -172,19 +172,23 @@ public class TelegramBot extends TelegramLongPollingBot {
                 commands.holidayList(chatId);
                 break;
 
-
             case "/manager_list___":
                 commands.managerList(chatId);
+                break;
+
+            case "/manager_test":
+                commands.managerTest(chatId);
                 break;
 
             case "/set_manager_index":
                 commands.setManagerIndex(arg1, chatId);
                 break;
+
             case "/get_state":
                 commands.getState(chatId);
                 break;
-            case "/check_date":
 
+            case "/check_date":
                 sendMessage(
                         trigger.checkDate(arg1)
                         , chatId);

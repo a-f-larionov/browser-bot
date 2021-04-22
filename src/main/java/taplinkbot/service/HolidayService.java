@@ -52,7 +52,7 @@ public class HolidayService {
         return msg;
     }
 
-    public void remove(int id) {
+    public void remove(long id) {
         holidayRepository.deleteById(id);
     }
 }

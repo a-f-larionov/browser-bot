@@ -11,7 +11,7 @@ import taplinkbot.bot.CanvasActions;
 import taplinkbot.bot.CommonActions;
 import taplinkbot.bot.DriverWrapper;
 import taplinkbot.bot.LadyArtActions;
-import taplinkbot.managers.Manager;
+import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.StateService;
