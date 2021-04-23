@@ -36,7 +36,10 @@ public class Index {
             HttpSession httpSession
     ) {
 
+
         String password = env.getProperty("app.userPassword");
+
+        log.info("GUI. is it login " + loginForm.password);
 
 
         if (password.equals(loginForm.password)) {
@@ -53,7 +56,7 @@ public class Index {
     @ResponseBody
     public BooleanResponse isItAuth(HttpSession httpSession) {
 
-        log.info("GUI. auth ");
+        log.info("GUI. is it auth ");
 
         if (isAuth(httpSession)) {
             return new BooleanResponse(true);
