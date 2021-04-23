@@ -77,7 +77,7 @@ public class Scheduler {
                 log.info("driver reseted");
             }
             e.printStackTrace();
-            telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
+            //telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
         } finally {
             stateService.setBotContext(null);
         }
@@ -91,7 +91,7 @@ public class Scheduler {
         } catch (Exception e) {
             log.info("exception___");
             e.printStackTrace();
-            telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
+            //telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
         } finally {
             stateService.setBotContext(null);
         }

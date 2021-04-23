@@ -53,6 +53,8 @@ public class Index {
     @ResponseBody
     public BooleanResponse isItAuth(HttpSession httpSession) {
 
+        log.info("GUI. auth ");
+
         if (isAuth(httpSession)) {
             return new BooleanResponse(true);
         } else {
@@ -74,6 +76,8 @@ public class Index {
             return null;
         }
 
+        log.info("GUI. get_manager_list  ");
+
         Manager[] source = managerRotator.getList();
 
         ManagerResponse[] response;
@@ -94,7 +98,9 @@ public class Index {
     @ResponseBody
     public String managerWorkingSwitch(HttpSession httpSession, @RequestParam int managerId) {
 
-        log.info("managerWorkingSwitch " + managerId);
+        //@Todo separated file
+        log.info("GUI. managerWorkingSwitch " + managerId);
+
         if (!isAuth(httpSession)) {
             return null;
         }
