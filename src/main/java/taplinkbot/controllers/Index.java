@@ -65,11 +65,6 @@ public class Index {
         }
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    public String test() {
-        return "OK!";
-    }
 
     @RequestMapping(value = "/get_manager_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

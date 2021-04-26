@@ -56,17 +56,7 @@ Vue.component("control-form", {
         eventBus.$emit(eventBus.EVENT_REQUEST_MANAGER_UPDATE);
     },
 
-    methods: {
-        testButton: () => {
-            axios.get("/test")
-                .then(function (answer) {
-                    alert("шикарно");
-                })
-                .catch(function () {
-                    alert("Что то не так!");
-                });
-        }
-    }
+    methods: {}
 });
 
 Vue.component("manager-item", {
