@@ -1,4 +1,4 @@
-package taplinkbot.bot;
+package taplinkbot.browser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Обрётка над драйвером браузера
+ *
  * @link https://geekflare.com/install-chromium-ubuntu-centos/
  */
 @Component
@@ -100,10 +102,10 @@ public class DriverWrapper implements WebDriver {
 
         assert driver != null;
 
+        //@todo profiler
         long start = System.currentTimeMillis();
         driver.get(url);
         long finish = System.currentTimeMillis();
-
 
         BotContext botContext = stateService.getBotContext();
 
@@ -243,7 +245,7 @@ public class DriverWrapper implements WebDriver {
 
         if (driver != null) driver.quit();
 
-      //  killChrome();
+        //  killChrome();
 
         driver = getDriver();
     }

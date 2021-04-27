@@ -1,4 +1,4 @@
-package taplinkbot.schedulers.interavaled;
+package taplinkbot.schedulers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Компонент интервальногоо срабатыванияы
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -109,7 +112,7 @@ public class Trigger {
                         "offset: " + offset + "\t" +
                         "dev" + getIntervalDeviation()
         );*/
-        
+
         return offset <= getIntervalDeviation();
     }
 
@@ -152,9 +155,37 @@ public class Trigger {
         }
     }
 
-    public Conditions getConditions(long millis) {
-        Conditions cond = new Conditions(millis);
 
+    /**
+     * Необходимо ли сейчас срабатывать.
+     *
+     * @return true - время срабатывать, иначе false
+     */
+    public boolean isItTimeToChange() {
+        Trigger.Conditions cond = getConditions();
+
+        return cond.isItTimeToChange;
+    }
+
+    /**
+     * Возвращает состояние условий для текущего момента времени.
+     *
+     * @return состояние условий срабатывания
+     */
+    public Conditions getConditions() {
+        return getConditions(Calendar.getInstance().getTimeInMillis());
+    }
+
+    /**
+     * Возвращает состояние условий срабатывания для определенного времени
+     *
+     * @param millis миллисекунды
+     * @return состояние условий срабатывания
+     */
+    public Conditions getConditions(long millis) {
+
+
+        Conditions cond = new Conditions(millis);
 
         cond.isItActiveDay = isActiveToDay(millis);
         cond.isActiveTomorrow = isActiveTomorrow(millis);

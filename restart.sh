@@ -5,10 +5,14 @@
 
 #mvn -Dtests.skip=true package
 
-mvn -T 1C clean install -Dmaven.test.skip -DskipTests -Dmaven.javadoc.skip=true
+while true; do
 
-pkill java
+  mvn -T 1C clean install -Dmaven.test.skip -DskipTests -Dmaven.javadoc.skip=true
 
-pkill chrome
+  pkill java
 
-nohup java -jar -Dspring.profiles.active=prod target/taplinkbot-0.0.1-SNAPSHOT.jar >>java.log &
+  pkill chrome
+
+  java -jar -Dspring.profiles.active=prod target/taplinkbot-0.0.1-SNAPSHOT.jar >>java.log
+
+done

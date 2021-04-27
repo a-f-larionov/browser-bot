@@ -25,11 +25,6 @@ public class ManagerRotator {
     private void init() {
         List<Manager> all = managerRepository.findAll();
 
-        log.info(all.get(0).getComment());
-        log.info(all.get(0).getComment());
-        log.info(all.get(0).getComment());
-        log.info(all.get(0).getComment());
-
         managers = new Manager[all.size()];
 
         managers = all.toArray(managers);

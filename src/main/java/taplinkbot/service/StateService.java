@@ -7,6 +7,9 @@ import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
 import taplinkbot.telegram.BotContext;
 
+/**
+ * Компонент хранит состояние значений
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -128,9 +131,10 @@ public class StateService {
     }
 
     public void setBotContext(BotContext botContext) {
-        if (botContext != null) {
+
+        if (botContext != null && this.botContext != null) {
             log.info(
-                    "bot context is busy by:" + botContext.name
+                    "bot context is busy by:" + this.botContext.name
                             + "!!! Requested: " + botContext.name
             );
         }
@@ -141,10 +145,17 @@ public class StateService {
     public BotContext getBotContext() {
 
         if (botContext == null) {
-            log.info("bot context is null");
-        } else {
-            log.info("bot context is " + botContext.name);
+            log.info("---------");
+            Exception exception = new Exception();
+            log.info("---------");
+            exception.printStackTrace();
+            log.info("---------");
         }
+
         return botContext;
+    }
+
+    public boolean isContextBusy() {
+        return botContext != null;
     }
 }

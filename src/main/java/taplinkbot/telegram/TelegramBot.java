@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import taplinkbot.schedulers.interavaled.Trigger;
+import taplinkbot.schedulers.Trigger;
 import taplinkbot.service.StateService;
 
 import javax.annotation.PostConstruct;
@@ -117,15 +117,23 @@ public class TelegramBot extends TelegramLongPollingBot {
             case "/help":
                 commands.help(chatId);
                 break;
+
             case "/start":
                 commands.start(chatId, arg1);
                 break;
+
             case "/stop":
                 commands.stop(chatId);
                 break;
+
+            case "/restart":
+                commands.restart(chatId);
+                break;
+
             case "/status":
                 commands.status(chatId);
                 break;
+
             case "/set_number":
                 commands.setNumber(arg1, chatId);
                 break;
@@ -138,24 +146,31 @@ public class TelegramBot extends TelegramLongPollingBot {
             case "/everyday_allow":
                 commands.setEveryDay(chatId, true);
                 break;
+
             case "/everyday_disallow":
                 commands.setEveryDay(chatId, false);
                 break;
+
             case "/weekdays_allow":
                 commands.setAllowWeekDays(chatId, true);
                 break;
+
             case "/weekdays_disallow":
                 commands.setAllowWeekDays(chatId, false);
                 break;
+
             case "/weekends_allow":
                 commands.setAllowWeekEnds(chatId, true);
                 break;
+
             case "/weekends_disallow":
                 commands.setAllowWeekEnds(chatId, false);
                 break;
+
             case "/holidays_allow":
                 commands.setAllowHolidays(chatId, true);
                 break;
+
             case "/holidays_disallow":
                 commands.setAllowHolidays(chatId, false);
                 break;

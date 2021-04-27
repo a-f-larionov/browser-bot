@@ -7,25 +7,21 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.CanvasActions;
-import taplinkbot.bot.CommonActions;
-import taplinkbot.bot.DriverWrapper;
-import taplinkbot.bot.LadyArtActions;
+import taplinkbot.bot.actions.Canvas;
+import taplinkbot.bot.actions.Common;
+import taplinkbot.bot.actions.LadyArt;
+import taplinkbot.browser.DriverWrapper;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.schedulers.interavaled.Trigger;
 import taplinkbot.service.StateService;
 import taplinkbot.telegram.BotContext;
 import taplinkbot.telegram.TelegramBot;
-
-import java.util.Calendar;
 
 @Component
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
 @Slf4j
 public class Scheduler {
-
 
     private final TelegramBot telegram;
 
@@ -35,34 +31,38 @@ public class Scheduler {
 
     private final ManagerRotator rotator;
 
-    private final CanvasActions canvasActions;
+    private final Canvas canvasActions;
 
-    private final LadyArtActions ladyArtActions;
+    private final LadyArt ladyArtActions;
 
-    private final DriverWrapper driverWrapper;
+    private final DriverWrapper browser;
 
     @Scheduled(cron = "0 * * * * 1-7")
 
     public void intervaled() {
 
-        if (stateService.getBotContext() != null) {
+        if (stateService.isContextBusy()) {
             log.info("skip because bot context busy");
             return;
         }
 
-        onIdleCanvas();
+        onIdleBrowserReacheble();
 
-        onIdleLadyArt();
+        onIdleManagerChange(BotContext.Canvas);
 
-        onIdlePinger();
+        onIdleManagerChange(BotContext.LadyArt);
+
+        onIdlePinger(BotContext.Canvas);
+
+        onIdlePinger(BotContext.LadyArt);
     }
 
-    private void onIdlePinger() {
-
+    private void onIdleBrowserReacheble() {
 
         try {
 
             stateService.setBotContext(BotContext.Canvas);
+
             checkCanvas();
 
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class Scheduler {
             log.info(e.getMessage());
             if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
                 //@todo
-                driverWrapper.reset();
+                browser.reset();
                 log.info("driver reseted");
             }
             e.printStackTrace();
@@ -82,32 +82,36 @@ public class Scheduler {
             stateService.setBotContext(null);
         }
 
+    }
+
+    private void onIdlePinger(BotContext botContext) {
 
         try {
 
-            stateService.setBotContext(BotContext.LadyArt);
-            checkLadyArt();
+            stateService.setBotContext(botContext);
+
+            if (botContext == BotContext.Canvas) {
+                checkCanvas();
+            }
+
+            if (botContext == BotContext.LadyArt) {
+                checkLadyArt();
+            }
 
         } catch (Exception e) {
-            log.info("exception___");
             e.printStackTrace();
-            //telegram.alert("Чтото пошло не так. не удалось проверить страницу" + stateService.getBotContext());
         } finally {
             stateService.setBotContext(null);
         }
+
     }
 
-    private void onIdleCanvas() {
+    private void onIdleManagerChange(BotContext botContext) {
 
-        stateService.setBotContext(BotContext.Canvas);
+        stateService.setBotContext(botContext);
 
-        Trigger.Conditions cond;
         try {
-            cond = trigger.getConditions(Calendar.getInstance().getTimeInMillis());
-
-            if (cond.isItTimeToChange) {
-
-                log.info("Is it time to change!");
+            if (trigger.isItTimeToChange()) {
 
                 Manager manager = rotator.getNextManager();
 
@@ -116,53 +120,22 @@ public class Scheduler {
                 log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
 
                 setNewManager(manager, canvasActions);
-
-                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
             }
         } finally {
+
             stateService.setBotContext(null);
         }
     }
 
-    private void onIdleLadyArt() {
-        stateService.setBotContext(BotContext.LadyArt);
+    private void setNewManager(Manager manager, Common actions) {
 
-        Trigger.Conditions cond;
-        try {
-            cond = trigger.getConditions(Calendar.getInstance().getTimeInMillis());
-
-            if (cond.isItTimeToChange) {
-
-                log.info("Is it time to change!");
-
-                Manager manager = rotator.getNextManager();
-
-                trigger.updateLastTime();
-
-                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
-
-                String phone = ladyArtActions.getNumber();
-
-                setNewManager(manager, ladyArtActions);
-
-                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            stateService.setBotContext(null);
-        }
-    }
-
-    private void setNewManager(Manager manager, CommonActions actions) {
-        log.info("Scheduler setNewManager");
         if (!stateService.schedulerIsActive()) {
             telegram.info("Расписание выключено, действие отменено: " + manager.getDescription() + stateService.getBotContext().name);
             return;
-        } else {
-            telegram.info("Смена номера: " + stateService.getBotContext().name + " " + manager.getDescription());
-            actions.authAndUpdatePhone(manager.getPhone(), false, true);
         }
+
+        telegram.info("Смена номера: " + stateService.getBotContext().name + " " + manager.getDescription());
+        actions.authAndUpdatePhone(manager.getPhone(), false, true);
     }
 
 
@@ -171,7 +144,7 @@ public class Scheduler {
 
         canvasActions.checkPage();
 
-        log.info("pinger on idle");
+        log.info("Pinger on idle. check canvas");
     }
 
     private void checkLadyArt() throws Exception {
@@ -179,7 +152,7 @@ public class Scheduler {
 
         ladyArtActions.checkPage();
 
-        log.info("pinger on idle");
+        log.info("Pinger on idle. check lady art");
     }
 }
 

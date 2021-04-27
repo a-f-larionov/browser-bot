@@ -3,14 +3,16 @@ package taplinkbot.telegram;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.CanvasActions;
-import taplinkbot.bot.CommonActions;
-import taplinkbot.bot.LadyArtActions;
+import taplinkbot.bot.actions.Canvas;
+import taplinkbot.bot.actions.Common;
+import taplinkbot.bot.actions.LadyArt;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.schedulers.interavaled.Trigger;
+import taplinkbot.schedulers.Trigger;
 import taplinkbot.service.HolidayService;
 import taplinkbot.service.StateService;
 
@@ -32,13 +34,15 @@ public class Commands {
 
     private final StateService stateService;
 
-    private final CanvasActions canvasActions;
+    private final Canvas canvasActions;
 
-    private final LadyArtActions ladyArtActions;
+    private final LadyArt ladyArtActions;
 
     private final HolidayService holidayService;
 
     private final Trigger trigger;
+
+    private final ConfigurableApplicationContext context;
 
     private boolean functionalHolidays = false;
 
@@ -88,6 +92,12 @@ public class Commands {
         sayStatus(chatId);
     }
 
+    public void restart(String chatId) {
+        SpringApplication.exit(context);
+
+        Runtime.getRuntime().exit(0);
+    }
+
     public void status(String chatId) {
         sayStatus(chatId);
     }
@@ -104,7 +114,7 @@ public class Commands {
                 .authAndUpdatePhone(phoneNumber, true, true);
     }
 
-    private CommonActions getActions() {
+    private Common getActions() {
 
         switch (stateService.getBotContext()) {
             case Canvas:
