@@ -94,10 +94,6 @@ public class StateService {
         return interval;
     }
 
-    public void setManagerInterval(long interval) {
-        saveLongValue(State.STATE_MANAGER_INTERVAL, interval);
-    }
-
     public void setIsEveryDay(boolean b) {
         setBooleanValue(State.STATE_ALLOW_EVERY_DAY, b);
     }
@@ -143,14 +139,6 @@ public class StateService {
     }
 
     public BotContext getBotContext() {
-
-        if (botContext == null) {
-            log.info("---------");
-            Exception exception = new Exception();
-            log.info("---------");
-            exception.printStackTrace();
-            log.info("---------");
-        }
 
         return botContext;
     }

@@ -7,9 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.actions.Canvas;
-import taplinkbot.bot.actions.Common;
-import taplinkbot.bot.actions.LadyArt;
+import taplinkbot.bot.Actions;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.Trigger;
@@ -34,9 +32,7 @@ public class Commands {
 
     private final StateService stateService;
 
-    private final Canvas canvasActions;
-
-    private final LadyArt ladyArtActions;
+    private final Actions actions;
 
     private final HolidayService holidayService;
 
@@ -110,21 +106,7 @@ public class Commands {
 
         telegram.sendMessage("Начинаю смену номера:" + phoneNumber, chatId);
 
-        getActions()
-                .authAndUpdatePhone(phoneNumber, true, true);
-    }
-
-    private Common getActions() {
-
-        switch (stateService.getBotContext()) {
-            case Canvas:
-                return canvasActions;
-            case LadyArt:
-                return ladyArtActions;
-            default:
-                telegram.alert("Чтото не так: нет такого класса действий. Обратитесь к разработчику.");
-                return null;
-        }
+        actions.authAndUpdatePhone(phoneNumber, true, true);
     }
 
     public void getNumber(String chatId) {
@@ -133,7 +115,7 @@ public class Commands {
         String phoneNumber = null;
         try {
 
-            phoneNumber = getActions().getNumber();
+            phoneNumber = actions.getNumber();
             long finish = System.currentTimeMillis();
             telegram.sendMessage("Номер телефона: " + phoneNumber + ", " + (finish - start) + " мсек.", chatId);
 

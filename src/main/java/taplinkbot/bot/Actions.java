@@ -1,4 +1,4 @@
-package taplinkbot.bot.actions;
+package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import taplinkbot.browser.DriverWrapper;
-import taplinkbot.bot.Profile;
 import taplinkbot.browser.Semaphore;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.repositories.PhoneLoggerRepository;
@@ -18,7 +17,7 @@ import taplinkbot.telegram.TelegramBot;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-abstract public class Common {
+public class Actions {
 
     protected final Semaphore semaphore;
 
@@ -34,7 +33,17 @@ abstract public class Common {
 
     private WebElement we;
 
-    abstract protected Profile getProfile();
+    protected Profile getProfile() {
+        switch (stateService.getBotContext()) {
+
+            case Canvas:
+                return Profile.Canvas;
+
+            case LadyArt:
+                return Profile.LadyArt;
+        }
+        return null;
+    }
 
     public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
 
@@ -44,7 +53,6 @@ abstract public class Common {
             telegram.info("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
             return;
         }
-
 
         try {
             if (semaphore.lock()) {

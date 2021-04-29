@@ -79,6 +79,7 @@ Vue.component("manager-item", {
                 eventBus.$emit(eventBus.EVENT_REQUEST_MANAGER_UPDATE);
 
             }).catch(function () {
+                //@todo bootstrap notificator
                 alert("ERR 85");
             })
         },
