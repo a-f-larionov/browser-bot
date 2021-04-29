@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public enum BotContext {
 
-    Canvas("Canvas", "c"),
+    Canvas("canvas", "c"),
     LadyArt("ladyart", "l"),
     Ping("ping", "p");
 

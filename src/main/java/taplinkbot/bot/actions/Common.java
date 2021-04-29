@@ -202,7 +202,11 @@ abstract public class Common {
                         .getBotContext()
                         .name
                 + "." + name;
-        return env.getProperty(propName);
+        String prop = env.getProperty(propName);
+
+        log.info("prop " + propName + " " + prop);
+
+        return prop;
     }
 
     private void authSubmit() {

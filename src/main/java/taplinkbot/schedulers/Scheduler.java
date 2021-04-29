@@ -119,7 +119,11 @@ public class Scheduler {
 
                 log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
 
-                setNewManager(manager, canvasActions);
+                if (botContext == BotContext.Canvas)
+                    setNewManager(manager, canvasActions);
+
+                if (botContext == BotContext.LadyArt)
+                    setNewManager(manager, ladyArtActions);
             }
         } finally {
 
