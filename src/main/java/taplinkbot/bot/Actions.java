@@ -7,7 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import taplinkbot.browser.DriverWrapper;
-import taplinkbot.browser.Semaphore;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.repositories.PhoneLoggerRepository;
 import taplinkbot.service.StateService;
@@ -18,8 +17,6 @@ import taplinkbot.telegram.TelegramBot;
 @RequiredArgsConstructor
 @Slf4j
 public class Actions {
-
-    protected final Semaphore semaphore;
 
     protected final TelegramBot telegram;
 
@@ -45,7 +42,7 @@ public class Actions {
         return null;
     }
 
-    public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
+    synchronized public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
 
         assert phoneNumber != null;
 
@@ -55,31 +52,24 @@ public class Actions {
         }
 
         try {
-            if (semaphore.lock()) {
 
+            if (stepsInfo) telegram.info("Авторизация");
+            authorize();
+            if (stepsInfo) telegram.info("Авторизация успешна", browser.takeSreenshot());
 
-                if (stepsInfo) telegram.info("Авторизация");
-                authorize();
-                if (stepsInfo) telegram.info("Авторизация успешна", browser.takeSreenshot());
+            if (stepsInfo) telegram.info("Смена профиля");
+            changeProfile(getProfile());
 
-                if (stepsInfo) telegram.info("Смена профиля");
-                changeProfile(getProfile());
+            if (stepsInfo) telegram.info("Установка номера" + phoneNumber);
+            setPhoneNumber(phoneNumber, imShure);
 
-                if (stepsInfo) telegram.info("Установка номера" + phoneNumber);
-                setPhoneNumber(phoneNumber, imShure);
+            if (stepsInfo) telegram.info("Проверка страницы TapLink" + stateService.getBotContext().name);
 
-                if (stepsInfo) telegram.info("Проверка страницы TapLink" + stateService.getBotContext().name);
-
-                checkThePage(phoneNumber);
-                if (stepsInfo) telegram.info("Проверка завершена", browser.takeSreenshot());
-            } else {
-                telegram.alert("Бот заблокирован, попробуйте позже.");
-            }
+            checkThePage(phoneNumber);
+            if (stepsInfo) telegram.info("Проверка завершена", browser.takeSreenshot());
         } catch (Exception e) {
             e.printStackTrace();
             telegram.alert("Не удалось выполнить действие.", browser.takeSreenshot());
-        } finally {
-            semaphore.unlock();
         }
     }
 
@@ -174,7 +164,6 @@ public class Actions {
         }
     }
 
-
     private void enterLogin() {
         browser.humanComment("Обращение к полю ввода логина");
 
@@ -267,7 +256,7 @@ public class Actions {
      * @param imShure     если false - выполним код без нажатия кнопки
      * @throws Exception
      */
-    public void setPhoneNumber(String phoneNumber, boolean imShure) throws Exception {
+    private void setPhoneNumber(String phoneNumber, boolean imShure) throws Exception {
 
         assert phoneNumber != null;
 
@@ -371,7 +360,7 @@ public class Actions {
         }
     }
 
-    public void checkPage() throws Exception {
+    public void testMultiPage() throws Exception {
 
         try {
             String phone = getNumber();
@@ -383,41 +372,37 @@ public class Actions {
         }
     }
 
-    public String getNumber() throws Exception {
+    synchronized public String getNumber() throws Exception {
+
+        log.info("actions.get_number" + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + " " + this.hashCode());
 
         try {
-            if (semaphore.lock()) {
-                browser.humanComment("Открытие страницы:" + getPageUrl());
-                browser.get(getPageUrl());
 
-                browser.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
-                we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
+            browser.humanComment("Открытие страницы:" + getPageUrl());
+            browser.get(getPageUrl());
 
-                if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                    telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), browser.takeSreenshot());
-                    throw new Exception("see telegram alerts");
-                }
-                if (!we.isDisplayed()) {
-                    telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), browser.takeSreenshot());
-                    throw new Exception("see telegram alerts");
-                }
+            browser.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
+            we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
-                /* удаляем знак '+' из номера */
-                String hrefFact = we.getAttribute("href");
-
-                hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
-                hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
-                return hrefFact;
-            } else {
-                return "Бот заблокирован, попробуйте позже.";
+            if (!we.getText().equals("Узнать цену в WhatsApp")) {
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), browser.takeSreenshot());
+                throw new Exception("see telegram alerts");
+            }
+            if (!we.isDisplayed()) {
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), browser.takeSreenshot());
+                throw new Exception("see telegram alerts");
             }
 
+            /* Удаляем знак '+' из номера */
+            String hrefFact = we.getAttribute("href");
+
+            hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
+            hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
+            return hrefFact;
         } catch (Exception e) {
             e.printStackTrace();
             telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + getPageUrl() + "`, последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
             throw e;
-        } finally {
-            semaphore.unlock();
         }
     }
 

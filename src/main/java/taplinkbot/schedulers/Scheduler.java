@@ -129,7 +129,7 @@ public class Scheduler {
     private void checkPage() throws Exception {
         if (!stateService.schedulerIsActive()) return;
 
-        actions.checkPage();
+        actions.testMultiPage();
 
         log.info("Pinger on idle. check canvas");
     }
