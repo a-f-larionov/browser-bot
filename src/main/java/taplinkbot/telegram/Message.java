@@ -1,5 +1,7 @@
 package taplinkbot.telegram;
 
+import taplinkbot.bot.BotContext;
+
 import java.util.Arrays;
 
 public class Message {

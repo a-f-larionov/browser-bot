@@ -12,8 +12,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import taplinkbot.bot.BotContexts;
 import taplinkbot.schedulers.Trigger;
-import taplinkbot.service.StateService;
 
 import javax.annotation.PostConstruct;
 
@@ -43,7 +43,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final Accessor accessor;
 
-    private final StateService stateService;
+    private final BotContexts botContexts;
 
     @PostConstruct
     public void init() {
@@ -91,7 +91,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             String[] args = Message.getFilledArgs(msg);
 
-            stateService.setBotContext(msg.botContext);
+            botContexts.setCurrent(msg.botContext);
 
             processCommand(msg.cammand, args[2], args[3], msg.chatId);
 
@@ -99,7 +99,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             log.info("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
             sendMessage(e.getMessage(), chatId);
         } finally {
-            stateService.setBotContext(null);
+            botContexts.setCurrent(null);
         }
     }
 

@@ -1,7 +1,7 @@
 package taplinkbot.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
-import taplinkbot.telegram.BotContext;
+import taplinkbot.bot.BotContext;;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -3,9 +3,9 @@ package taplinkbot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import taplinkbot.bot.BotContexts;
 import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
-import taplinkbot.telegram.BotContext;
 
 /**
  * Компонент хранит состояние значений
@@ -17,7 +17,7 @@ public class StateService {
 
     private final StateRepository stateRepository;
 
-    private BotContext botContext;
+    private final BotContexts botContexts;
 
     public void schedulerSetActive(boolean value) {
         setBooleanValue(State.STATE_SCHEDULER_ACTIVE, value);
@@ -37,9 +37,9 @@ public class StateService {
 
     private State getStateByName(String name) {
         State state;
-        state = stateRepository.findByNameAndBotContext(name, botContext);
+        state = stateRepository.findByNameAndBotContext(name, botContexts.getCurrent());
         if (state == null) {
-            state = new State(name, botContext);
+            state = new State(name, botContexts.getCurrent());
             stateRepository.save(state);
         }
         return state;
@@ -124,26 +124,5 @@ public class StateService {
 
     public boolean allowHoliDays() {
         return getBooleanValue(State.STATE_ALLOW_HOLIDAYS);
-    }
-
-    public void setBotContext(BotContext botContext) {
-
-        if (botContext != null && this.botContext != null) {
-            log.info(
-                    "bot context is busy by:" + this.botContext.name
-                            + "!!! Requested: " + botContext.name
-            );
-        }
-
-        this.botContext = botContext;
-    }
-
-    public BotContext getBotContext() {
-
-        return botContext;
-    }
-
-    public boolean isContextBusy() {
-        return botContext != null;
     }
 }

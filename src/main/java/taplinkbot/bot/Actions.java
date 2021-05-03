@@ -24,23 +24,13 @@ public class Actions {
 
     protected final StateService stateService;
 
+    protected final BotContexts botContexts;
+
     protected final PhoneLoggerRepository phoneLoggerRepository;
 
     protected final Environment env;
 
     private WebElement we;
-
-    protected Profile getProfile() {
-        switch (stateService.getBotContext()) {
-
-            case Canvas:
-                return Profile.Canvas;
-
-            case LadyArt:
-                return Profile.LadyArt;
-        }
-        return null;
-    }
 
     synchronized public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
 
@@ -58,12 +48,12 @@ public class Actions {
             if (stepsInfo) telegram.info("Авторизация успешна", browser.takeSreenshot());
 
             if (stepsInfo) telegram.info("Смена профиля");
-            changeProfile(getProfile());
+            changeProfile(botContexts.getCurrent().profile);
 
             if (stepsInfo) telegram.info("Установка номера" + phoneNumber);
             setPhoneNumber(phoneNumber, imShure);
 
-            if (stepsInfo) telegram.info("Проверка страницы TapLink" + stateService.getBotContext().name);
+            if (stepsInfo) telegram.info("Проверка страницы TapLink" + botContexts.getCurrent().name);
 
             checkThePage(phoneNumber);
             if (stepsInfo) telegram.info("Проверка завершена", browser.takeSreenshot());
@@ -195,9 +185,7 @@ public class Actions {
 
     private String getProp(String name) {
         String propName = "taplink." +
-                stateService
-                        .getBotContext()
-                        .name
+                botContexts.getCurrent().name
                 + "." + name;
         String prop = env.getProperty(propName);
 
@@ -365,7 +353,7 @@ public class Actions {
         try {
             String phone = getNumber();
 
-            phoneLoggerRepository.save(new PhoneLogger(phone, stateService.getBotContext()));
+            phoneLoggerRepository.save(new PhoneLogger(phone, botContexts.getCurrent()));
 
         } catch (Exception e) {
             throw e;
@@ -373,8 +361,6 @@ public class Actions {
     }
 
     synchronized public String getNumber() throws Exception {
-
-        log.info("actions.get_number" + Thread.currentThread().getName() + " " + Thread.currentThread().getId() + " " + this.hashCode());
 
         try {
 
@@ -412,6 +398,6 @@ public class Actions {
      * @return мультиссылка
      */
     protected String getPageUrl() {
-        return "https://" + getProfile().getDomainName() + "/";
+        return "https://" + botContexts.getCurrent().profile.getDomainName() + "/";
     }
 }

@@ -10,10 +10,11 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import taplinkbot.bot.BotContext;
+import taplinkbot.bot.BotContexts;
 import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
 import taplinkbot.service.StateService;
-import taplinkbot.telegram.BotContext;
 import taplinkbot.telegram.TelegramBot;
 
 import javax.annotation.PostConstruct;
@@ -40,6 +41,8 @@ public class DriverWrapper implements WebDriver {
     private final PageLoadsRepository pageLoadsRepository;
 
     private final StateService stateService;
+
+    private final BotContexts botContexts;
 
     private RemoteWebDriver driver;
 
@@ -107,7 +110,7 @@ public class DriverWrapper implements WebDriver {
         driver.get(url);
         long finish = System.currentTimeMillis();
 
-        BotContext botContext = stateService.getBotContext();
+        BotContext botContext = botContexts.getCurrent();
 
         pageLoadsRepository.save(new PageLoads(url, finish - start, botContext));
     }

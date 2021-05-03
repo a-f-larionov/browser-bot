@@ -8,11 +8,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotContext;
+import taplinkbot.bot.BotContexts;
 import taplinkbot.browser.DriverWrapper;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.service.StateService;
-import taplinkbot.telegram.BotContext;
 import taplinkbot.telegram.TelegramBot;
 
 @Component
@@ -25,6 +26,8 @@ public class Scheduler {
 
     private final StateService stateService;
 
+    private final BotContexts botContexts;
+
     private final Trigger trigger;
 
     private final ManagerRotator rotator;
@@ -34,10 +37,9 @@ public class Scheduler {
     private final DriverWrapper browser;
 
     @Scheduled(cron = "0 * * * * 1-7")
-
     public void intervaled() {
 
-        if (stateService.isContextBusy()) {
+        if (botContexts.isBusy()) {
             log.info("skip because bot context busy");
             return;
         }
@@ -57,7 +59,7 @@ public class Scheduler {
 
         try {
 
-            stateService.setBotContext(BotContext.Canvas);
+            botContexts.setCurrent(BotContext.Canvas);
 
             checkPage();
 
@@ -72,7 +74,7 @@ public class Scheduler {
             e.printStackTrace();
         } finally {
 
-            stateService.setBotContext(null);
+            botContexts.setCurrent(null);
         }
 
     }
@@ -81,21 +83,21 @@ public class Scheduler {
 
         try {
 
-            stateService.setBotContext(botContext);
+            botContexts.setCurrent(botContext);
 
             checkPage();
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            stateService.setBotContext(null);
+            botContexts.setCurrent(null);
         }
 
     }
 
     private void onIdleManagerChange(BotContext botContext) {
 
-        stateService.setBotContext(botContext);
+        botContexts.setCurrent(botContext);
 
         try {
             if (trigger.isItTimeToChange()) {
@@ -104,34 +106,34 @@ public class Scheduler {
 
                 trigger.updateLastTime();
 
-                log.info("Установка менеджера(" + stateService.getBotContext().name + "):" + manager.getDescription());
+                log.info("Установка менеджера(" + botContexts.getCurrent().name + "):" + manager.getDescription());
 
                 setNewManager(manager);
             }
         } finally {
 
-            stateService.setBotContext(null);
+            botContexts.setCurrent(null);
         }
     }
 
     private void setNewManager(Manager manager) {
 
         if (!stateService.schedulerIsActive()) {
-            telegram.info("Расписание выключено, действие отменено: " + manager.getDescription() + stateService.getBotContext().name);
+            telegram.info("Расписание выключено, действие отменено: " +
+                    manager.getDescription() + botContexts.getCurrent().name);
             return;
         }
 
-        telegram.info("Смена номера: " + stateService.getBotContext().name + " " + manager.getDescription());
+        telegram.info("Смена номера: " + botContexts.getCurrent().name + " " + manager.getDescription());
 
         actions.authAndUpdatePhone(manager.getPhone(), false, true);
     }
 
     private void checkPage() throws Exception {
+
         if (!stateService.schedulerIsActive()) return;
 
         actions.testMultiPage();
-
-        log.info("Pinger on idle. check canvas");
     }
 }
 
