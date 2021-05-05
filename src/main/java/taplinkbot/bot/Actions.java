@@ -12,6 +12,9 @@ import taplinkbot.repositories.PhoneLoggerRepository;
 import taplinkbot.service.StateService;
 import taplinkbot.telegram.TelegramBot;
 
+/**
+ * Алгоритмы действий на сайте taplink
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -27,43 +30,46 @@ public class Actions {
 
     protected final PhoneLoggerRepository phoneLoggerRepository;
 
-    protected final TapLinkAuthActions tapLinkAuthActions;
+    protected final AuthActions authActions;
 
     protected final Environment env;
 
+    protected final DataProvider dataProvider;
+
     private WebElement we;
 
-    synchronized public void authAndUpdatePhone(String phoneNumber, boolean stepsInfo, boolean imShure) {
+    /**
+     * Установить номер телефона
+     *
+     * @param phoneNumber   номер телефона
+     * @param logToTelegram
+     */
+    synchronized public void setPhoneNumber(String phoneNumber) {
 
-        assert phoneNumber != null;
-
+        //@todo validate phone number?
         if (!phoneNumber.matches("^\\+7\\d{10}$")) {
+            //@Todo throw Exception may be?
             telegram.info("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
             return;
         }
 
         try {
 
-            if (stepsInfo) telegram.info("Авторизация");
-
-            tapLinkAuthActions.authorize();
-
-            if (stepsInfo) telegram.info("Авторизация успешна", browser.takeSreenshot());
-
-            if (stepsInfo) telegram.info("Смена профиля");
+            /**
+             * - log to telegram?
+             * client log
+             */
+            authActions.authorize();
 
             //@todo taplinkProfileActions
             changeProfile(botContexts.getCurrent().profile);
 
             //@todo taplinkPhoneActions
-            if (stepsInfo) telegram.info("Установка номера" + phoneNumber);
-            setPhoneNumber(phoneNumber, imShure);
-
-            if (stepsInfo) telegram.info("Проверка страницы TapLink" + botContexts.getCurrent().name);
+            setPhoneNumber(phoneNumber);
 
             //@todo taplinkPageActions
             checkThePage(phoneNumber);
-            if (stepsInfo) telegram.info("Проверка завершена", browser.takeSreenshot());
+
         } catch (Exception e) {
             e.printStackTrace();
             telegram.alert("Не удалось выполнить действие.", browser.takeSreenshot());
@@ -71,8 +77,6 @@ public class Actions {
     }
 
     private void changeProfile(Profile profile) throws Exception {
-
-        assert profile != null;
 
         try {
 
@@ -138,12 +142,14 @@ public class Actions {
      * @param imShure     если false - выполним код без нажатия кнопки
      * @throws Exception
      */
-    private void setPhoneNumber(String phoneNumber, boolean imShure) throws Exception {
+    private void setPhoneNumber(String phoneNumber) throws Exception {
 
         assert phoneNumber != null;
 
+        String url = "https://taplink.ru/";
+
         try {
-            String url = "https://taplink.ru/";
+
             browser.humanComment("Открытие страницы:" + url);
             browser.get(url);
 
@@ -179,7 +185,7 @@ public class Actions {
             browser.humanComment("Нажатие кнопки [Сохранить]");
 
             /** Главная кнопка! */
-            if (imShure) we.click();
+            we.click();
 
 
             browser.humanComment("Ожидание Сохранения номера.");
@@ -193,7 +199,8 @@ public class Actions {
 
     private void checkThePage(String phoneNumber) throws Exception {
 
-        assert phoneNumber != null;
+
+        String url = dataProvider.getPageUrl();
 
         try {
             if (!phoneNumber.matches("^\\+7\\d{10}$")) {
@@ -201,18 +208,19 @@ public class Actions {
                 throw new Exception("see telegram alerts");
             }
 
-            browser.humanComment("Открытие страницы:" + getPageUrl());
-            browser.get(getPageUrl());
+
+            browser.humanComment("Открытие страницы:" + url);
+            browser.get(url);
 
             browser.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
             we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
             if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -224,7 +232,7 @@ public class Actions {
                 telegram.alert("Не нашелся блок Whatsup по признаку ссылки в href" +
                         "(ожидалось:'" + hrefExpect + "'," +
                         " фактически:'" + hrefFact + "')" +
-                        ", на странице " + getPageUrl(), browser.takeSreenshot());
+                        ", на странице " + url, browser.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -233,11 +241,11 @@ public class Actions {
             browser.humanComment("Ожидание нажатие на номер телефона.");
             Thread.sleep(45 * 1000);
 
-            telegram.info("Номер на странице " + getPageUrl() + " соответствует:" + phoneNumber, browser.takeSreenshot());
+            telegram.info("Номер на странице " + url + " соответствует:" + phoneNumber, browser.takeSreenshot());
 
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось проверить страницу ТапЛинк " + getPageUrl() + " , последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
+            telegram.alert("Ну удалось проверить страницу ТапЛинк " + url + " , последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
             throw e;
         }
     }
@@ -256,20 +264,24 @@ public class Actions {
 
     synchronized public String getNumber() throws Exception {
 
+        String url = dataProvider.getPageUrl();
+
+
         try {
 
-            browser.humanComment("Открытие страницы:" + getPageUrl());
-            browser.get(getPageUrl());
+
+            browser.humanComment("Открытие страницы:" + url);
+            browser.get(url);
 
             browser.humanComment("Обращение к элементы 'узнать цену в WhatsApp'.");
             we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + getPageUrl(), browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
             if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + getPageUrl(), browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeSreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -281,17 +293,8 @@ public class Actions {
             return hrefFact;
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + getPageUrl() + "`, последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
+            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + url + "`, последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
             throw e;
         }
-    }
-
-    /**
-     * Возвращает ссылку на страницу Мультиссылки.
-     *
-     * @return мультиссылка
-     */
-    protected String getPageUrl() {
-        return "https://" + botContexts.getCurrent().profile.getDomainName() + "/";
     }
 }

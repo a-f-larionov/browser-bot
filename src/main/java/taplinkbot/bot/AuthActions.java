@@ -15,7 +15,7 @@ import taplinkbot.telegram.TelegramBot;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class TapLinkAuthActions {
+public class AuthActions {
 
     protected final TelegramBot telegram;
 
@@ -120,6 +120,7 @@ public class TapLinkAuthActions {
 
         return getLogin().equals(value);
     }
+
 
 
     private String getLogin() {

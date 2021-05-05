@@ -106,7 +106,7 @@ public class Commands {
 
         telegram.sendMessage("Начинаю смену номера:" + phoneNumber, chatId);
 
-        actions.authAndUpdatePhone(phoneNumber, true, true);
+        actions.setPhoneNumber(phoneNumber);
     }
 
     public void getNumber(String chatId) {

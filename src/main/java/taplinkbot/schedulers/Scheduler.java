@@ -126,7 +126,7 @@ public class Scheduler {
 
         telegram.info("Смена номера: " + botContexts.getCurrent().name + " " + manager.getDescription());
 
-        actions.authAndUpdatePhone(manager.getPhone(), false, true);
+        actions.setPhoneNumber(manager.getPhone());
     }
 
     private void checkPage() throws Exception {
