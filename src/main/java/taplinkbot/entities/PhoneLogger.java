@@ -1,7 +1,7 @@
 package taplinkbot.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
-import taplinkbot.bot.BotContext;
+import taplinkbot.bot.Context;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,9 +21,9 @@ public class PhoneLogger {
 
     private String phoneNumber;
 
-    private BotContext botContext;
+    private Context botContext;
 
-    public PhoneLogger(String phoneNumber, BotContext botContext) {
+    public PhoneLogger(String phoneNumber, Context botContext) {
         this.phoneNumber = phoneNumber;
         this.botContext = botContext;
     }

@@ -112,106 +112,114 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     private void processCommand(String command, String arg1, String arg2, String chatId) {
 
-        switch (command) {
+        try {
+            String answer = null;
 
-            case "/help":
-                commands.help(chatId);
-                break;
+            switch (command) {
 
-            case "/start":
-                commands.start(chatId, arg1);
-                break;
+                case "/help":
+                    answer = commands.help();
+                    break;
 
-            case "/stop":
-                commands.stop(chatId);
-                break;
+                case "/start":
+                    commands.start(chatId, arg1);
+                    break;
 
-            case "/restart":
-                commands.restart(chatId);
-                break;
+                case "/stop":
+                    commands.stop(chatId);
+                    break;
 
-            case "/status":
-                commands.status(chatId);
-                break;
+                case "/restart":
+                    commands.restart(chatId);
+                    break;
 
-            case "/set_number":
-                commands.setNumber(arg1, chatId);
-                break;
+                case "/status":
+                    commands.status(chatId);
+                    break;
 
-            case "/get_number":
-                commands.getNumber(chatId);
-                break;
+                case "/set_number":
+                    commands.setNumber(arg1, chatId);
+                    break;
+
+                case "/get_number":
+                    commands.getNumber(chatId);
+                    break;
 
 
-            case "/everyday_allow":
-                commands.setEveryDay(chatId, true);
-                break;
+                case "/everyday_allow":
+                    commands.setEveryDay(chatId, true);
+                    break;
 
-            case "/everyday_disallow":
-                commands.setEveryDay(chatId, false);
-                break;
+                case "/everyday_disallow":
+                    commands.setEveryDay(chatId, false);
+                    break;
 
-            case "/weekdays_allow":
-                commands.setAllowWeekDays(chatId, true);
-                break;
+                case "/weekdays_allow":
+                    commands.setAllowWeekDays(chatId, true);
+                    break;
 
-            case "/weekdays_disallow":
-                commands.setAllowWeekDays(chatId, false);
-                break;
+                case "/weekdays_disallow":
+                    commands.setAllowWeekDays(chatId, false);
+                    break;
 
-            case "/weekends_allow":
-                commands.setAllowWeekEnds(chatId, true);
-                break;
+                case "/weekends_allow":
+                    commands.setAllowWeekEnds(chatId, true);
+                    break;
 
-            case "/weekends_disallow":
-                commands.setAllowWeekEnds(chatId, false);
-                break;
+                case "/weekends_disallow":
+                    commands.setAllowWeekEnds(chatId, false);
+                    break;
 
-            case "/holidays_allow":
-                commands.setAllowHolidays(chatId, true);
-                break;
+                case "/holidays_allow":
+                    commands.setAllowHolidays(chatId, true);
+                    break;
 
-            case "/holidays_disallow":
-                commands.setAllowHolidays(chatId, false);
-                break;
+                case "/holidays_disallow":
+                    commands.setAllowHolidays(chatId, false);
+                    break;
 
-            case "/holidays_add":
-                commands.holiDayAdd(chatId, arg1, arg2);
-                break;
+                case "/holidays_add":
+                    commands.holiDayAdd(chatId, arg1, arg2);
+                    break;
 
-            case "/holidays_remove":
-                commands.holiDayRemove(chatId, arg1);
-                break;
+                case "/holidays_remove":
+                    commands.holiDayRemove(chatId, arg1);
+                    break;
 
-            case "/holidays_list":
-                commands.holidayList(chatId);
-                break;
+                case "/holidays_list":
+                    commands.holidayList(chatId);
+                    break;
 
-            case "/manager_list___":
-                commands.managerList(chatId);
-                break;
+                case "/manager_list___":
+                    commands.managerList(chatId);
+                    break;
 
-            case "/manager_test":
-                commands.managerTest(chatId);
-                break;
+                case "/manager_test":
+                    commands.managerTest(chatId);
+                    break;
 
-            case "/set_manager_index":
-                commands.setManagerIndex(arg1, chatId);
-                break;
+                case "/set_manager_index":
+                    commands.setManagerIndex(arg1);
+                    break;
 
-            case "/get_state":
-                commands.getState(chatId);
-                break;
+                case "/check_date":
+                    sendMessage(
+                            trigger.checkDate(arg1)
+                            , chatId);
+                    break;
 
-            case "/check_date":
-                sendMessage(
-                        trigger.checkDate(arg1)
-                        , chatId);
-                break;
+                default:
+                    //@todo multilanguage mechanizm realize
+                    sendMessage("Не удалось распознать команду", chatId);
+                    break;
+            }
 
-            default:
-                sendMessage("Нужна другая команда.", chatId);
-                break;
+            if (answer != null) {
+                sendMessage(answer, chatId);
+            }
+
+        } catch (Exception e) {
+            sendMessage(e.getMessage(), chatId);
         }
     }
 

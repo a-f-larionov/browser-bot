@@ -150,6 +150,8 @@ public class Trigger {
 
         public boolean isItTimeToChange;
 
+        public boolean isSchedulerActive;
+
         public Conditions(long millis) {
             this.millis = millis;
         }
@@ -184,7 +186,6 @@ public class Trigger {
      */
     public Conditions getConditions(long millis) {
 
-
         Conditions cond = new Conditions(millis);
 
         cond.isItActiveDay = isActiveToDay(millis);
@@ -195,9 +196,11 @@ public class Trigger {
         cond.isItWeekday = isItWeekDay(millis);
         cond.isItWeekend = isItWeekEnd(millis);
         cond.isItHoliday = isItHoliDay(millis);
+        cond.isSchedulerActive = stateService.schedulerIsActive();
 
         cond.isItTimeToChange = true;
 
+        if (!cond.isSchedulerActive) cond.isActiveTomorrow = false;
         if (!cond.isItActiveDay) cond.isItTimeToChange = false;
         if (!cond.isActiveTomorrow && cond.isNineteenHoursAfter) cond.isItTimeToChange = false;
         if (!cond.isIntervalLeft) cond.isItTimeToChange = false;

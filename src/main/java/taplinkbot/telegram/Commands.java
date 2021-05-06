@@ -15,8 +15,6 @@ import taplinkbot.service.HolidayService;
 import taplinkbot.service.StateService;
 
 import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -98,7 +96,8 @@ public class Commands {
         sayStatus(chatId);
     }
 
-    public void setNumber(String phoneNumber, String chatId) {
+    public void setNumber(String phoneNumber, String chatId) throws Exception {
+
         if (!phoneNumber.matches("^\\+7\\d{10}$")) {
             telegram.sendMessage("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'", chatId);
             return;
@@ -138,31 +137,7 @@ public class Commands {
         telegram.sendMessage(message, chatId);
     }
 
-    public void getState(String chatId) {
-        if (chatId.equals("149798103")) {
-            Calendar c = Calendar.getInstance();
-            String msg = "";
-            msg += " \r\ninterval: " + stateService.getManagerInterval();
-            msg += " \r\nlast timestamp: " +
-                    new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(stateService.getIntervalledLastTimestamp());
-            msg += " \r\nscheduler is active: " + stateService.schedulerIsActive();
-            msg += " \r\nlast index: " + stateService.getManagerIndex();
-            msg += " \r\nis every day: " + (stateService.allowEveryDay() ? "y" : "n");
-
-            msg += "\r\n";
-            msg += "\r\n elapsed time: " + trigger.getElapsedTime(c.getTimeInMillis());
-
-            msg += "\r\n inFromTo: " + (trigger.allowRun() ? "y" : "n");
-            msg += "\r\n timeIsLeft: " + (trigger.isIntervalLeft(c.getTimeInMillis()) ? "y" : "n");
-            msg += "\r\n isFittedInterval: " + (trigger.isBeginOfInterval(c.getTimeInMillis()) ? "y" : "n");
-
-            telegram.sendMessage(msg, chatId);
-        } else {
-            log.info("get_state from:" + chatId);
-        }
-    }
-
-    public void setManagerIndex(String argument, String chatId) {
+    public void setManagerIndex(String argument) {
         switch (argument) {
             case "0":
                 managerRotator.setIndex(0);
@@ -173,6 +148,8 @@ public class Commands {
             case "2":
                 managerRotator.setIndex(2);
                 break;
+
+            //@todo default, wrong param
         }
     }
 
@@ -197,33 +174,20 @@ public class Commands {
         sayStatus(chatId);
     }
 
-    public void help(String chatId) {
-        telegram.sendMessage(
-                "/help - подсказка\r\n" +
+    public String help() {
+        return "/help - подсказка\r\n" +
 
-                        "/start - Запустить работу расписания /start\r\n" +
-                        "/stop - Остановить работу расписания /stop\r\n" +
-                        "/status - Узнать состояние бота /status\r\n" +
+                "/start - Запустить работу расписания /start\r\n" +
+                "/stop - Остановить работу расписания /stop\r\n" +
+                "/status - Узнать состояние бота /status\r\n" +
 
-                        "/set_number - Установить номер /set_number +71234567890\r\n" +
+                "/set_number - Установить номер /set_number +71234567890\r\n" +
 
-                        "/everyday_allow - работать все дни\r\n" +
-                        "/everyday_disallow - работать не все дни\r\n" +
+                "/everyday_allow - работать все дни\r\n" +
+                "/everyday_disallow - работать не все дни\r\n" +
 
-                        "/weekends_allow - работать все выходные дни\r\n" +
-                        "/weekends_disallow - не работать в выходные дни\r\n" +
-
-                        "/holidays_allow - работать в праздники\r\n" +
-                        "/holidays_disallow - не работать в праздники\r\n" +
-
-                        "/holidays_add - добавить не рабочий день \r\n" +
-                        "/holidays_remove - удалить не рабочий день \r\n" +
-                        "/holidays_list - получить список не рабоичих дней\r\n" +
-
-                        "",
-
-                chatId
-        );
+                "/weekends_allow - работать все выходные дни\r\n" +
+                "/weekends_disallow - не работать в выходные дни\r\n";
     }
 
     public void holiDayAdd(String chatId, String dateText, String comment) {

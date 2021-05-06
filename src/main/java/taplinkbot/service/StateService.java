@@ -37,9 +37,9 @@ public class StateService {
 
     private State getStateByName(String name) {
         State state;
-        state = stateRepository.findByNameAndBotContext(name, botContexts.getCurrent());
+        state = stateRepository.findByNameAndBotContext(name, botContexts.current());
         if (state == null) {
-            state = new State(name, botContexts.getCurrent());
+            state = new State(name, botContexts.current());
             stateRepository.save(state);
         }
         return state;

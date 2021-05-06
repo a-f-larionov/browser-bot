@@ -20,6 +20,6 @@ public class DataProvider {
      * @return мультиссылка
      */
     public String getPageUrl() {
-        return "https://" + botContexts.getCurrent().profile.getDomainName() + "/";
+        return "https://" + botContexts.current().profile.getDomainName() + "/";
     }
 }

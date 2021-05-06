@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BotContexts {
 
-    private BotContext botContext;
+    private Context botContext;
 
-    public void setCurrent(BotContext botContext) {
+    public void setCurrent(Context botContext) {
 
         if (botContext != null && this.botContext != null) {
             log.info("bot context is busy by:" + this.botContext.name
@@ -22,18 +22,13 @@ public class BotContexts {
         this.botContext = botContext;
     }
 
-    public BotContext getCurrent() {
+    public Context current() {
         return botContext;
     }
 
-    public boolean isBusy() {
-        return botContext != null;
-    }
+    public static Context getByString(String arg) {
 
-
-    public static BotContext getByString(String arg) {
-
-        for (BotContext botContext : BotContext.values()) {
+        for (Context botContext : Context.values()) {
             if (botContext.name.equals(arg) ||
                     botContext.alias.equals(arg)) {
                 return botContext;

@@ -10,7 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.BotContext;
+import taplinkbot.bot.Context;
 import taplinkbot.bot.BotContexts;
 import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
@@ -103,16 +103,19 @@ public class DriverWrapper implements WebDriver {
     @Override
     public void get(String url) {
 
-        assert driver != null;
-
         //@todo profiler
         long start = System.currentTimeMillis();
         driver.get(url);
         long finish = System.currentTimeMillis();
 
-        BotContext botContext = botContexts.getCurrent();
+        Context botContext = botContexts.current();
 
         pageLoadsRepository.save(new PageLoads(url, finish - start, botContext));
+    }
+
+    public void get(String url, String message) {
+        comment(message);
+        get(url);
     }
 
     @Override
@@ -221,7 +224,7 @@ public class DriverWrapper implements WebDriver {
         return driver.manage();
     }
 
-    public void humanComment(String comment) {
+    public void comment(String comment) {
         lastHumanComment = comment;
     }
 
