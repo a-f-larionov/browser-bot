@@ -3,7 +3,7 @@ package taplinkbot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import taplinkbot.bot.BotContexts;
+import taplinkbot.bot.Profiles;
 import taplinkbot.entities.State;
 import taplinkbot.repositories.StateRepository;
 
@@ -17,7 +17,7 @@ public class StateService {
 
     private final StateRepository stateRepository;
 
-    private final BotContexts botContexts;
+    private final Profiles profiles;
 
     public void schedulerSetActive(boolean value) {
         setBooleanValue(State.STATE_SCHEDULER_ACTIVE, value);
@@ -37,9 +37,9 @@ public class StateService {
 
     private State getStateByName(String name) {
         State state;
-        state = stateRepository.findByNameAndBotContext(name, botContexts.current());
+        state = stateRepository.findByNameAndBotContext(name, profiles.current());
         if (state == null) {
-            state = new State(name, botContexts.current());
+            state = new State(name, profiles.current());
             stateRepository.save(state);
         }
         return state;

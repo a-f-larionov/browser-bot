@@ -51,9 +51,7 @@ public class Trigger {
         // Mon day, Tues day, Wednes day, Thurs day
         if (Arrays.stream(daysMonToThur).anyMatch(d -> d == getDayOfWeek(0))) return true;
 
-        if (getDayOfWeek(0) == Calendar.FRIDAY && (getHours(0) < 19)) return true;
-
-        return false;
+        return getDayOfWeek(0) == Calendar.FRIDAY && (getHours(0) < 19);
     }
 
     private int getHours(long millis) {
@@ -246,9 +244,7 @@ public class Trigger {
         // Если будни запрещены
         if (isItWeekDay(mills) && !stateService.allowWeekDays()) return false;
         // Если выходные запрщены
-        if (isItWeekEnd(mills) && !stateService.allowWeekEnds()) return false;
-
-        return true;
+        return !isItWeekEnd(mills) || stateService.allowWeekEnds();
     }
 
     public String checkDate(String argument1) {

@@ -2,7 +2,7 @@ package taplinkbot.telegram;
 
 public interface Command {
 
-    public void execute();
+    void execute();
 
-    public String getAnswer();
+    String getAnswer();
 }

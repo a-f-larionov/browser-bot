@@ -8,12 +8,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
-import taplinkbot.bot.Context;
-import taplinkbot.bot.BotContexts;
+import taplinkbot.bot.Profile;
+import taplinkbot.bot.Profiles;
 import taplinkbot.browser.DriverWrapper;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.service.StateService;
 import taplinkbot.telegram.TelegramBot;
 
 @Component
@@ -24,9 +23,7 @@ public class Scheduler {
 
     private final TelegramBot telegram;
 
-    private final StateService stateService;
-
-    private final BotContexts botContexts;
+    private final Profiles profiles;
 
     private final Trigger trigger;
 
@@ -42,13 +39,13 @@ public class Scheduler {
         try {
             onIdleBrowserReachable();
 
-            onIdleManagerChange(Context.Canvas);
+            onIdleManagerChange(Profile.Canvas);
 
-            onIdleManagerChange(Context.LadyArt);
+            onIdleManagerChange(Profile.LadyArt);
 
-            onIdlePinger(Context.Canvas);
+            onIdlePinger(Profile.Canvas);
 
-            onIdlePinger(Context.LadyArt);
+            onIdlePinger(Profile.LadyArt);
 
         } catch (Exception e) {
             //@Todo create annotation @BotExceptionHandler
@@ -59,9 +56,11 @@ public class Scheduler {
     private void onIdleBrowserReachable() {
 
         try {
-            botContexts.setCurrent(Context.Canvas);
+            profiles.set(Profile.Canvas);
 
-            checkPage();
+            checkPage(Profile.Canvas);
+
+            profiles.clear();
 
         } catch (Exception e) {
             if (e instanceof WebDriverException) {
@@ -74,44 +73,48 @@ public class Scheduler {
             e.printStackTrace();
         } finally {
 
-            botContexts.setCurrent(null);
+            profiles.clear();
         }
 
     }
 
-    private void onIdlePinger(Context botContext) throws Exception {
+    private void onIdlePinger(Profile botProfile) throws Exception {
 
-        botContexts.setCurrent(botContext);
+        profiles.set(botProfile);
 
         checkPage();
+
+        profiles.clear();
     }
 
-    private void onIdleManagerChange(Context botContext) throws Exception {
+    private void onIdleManagerChange(Profile profile) throws Exception {
 
         if (trigger.isItTimeToChange()) {
 
-            botContexts.setCurrent(botContext);
+            profiles.set(profile);
 
             Manager manager = rotator.getNextManager();
 
-            log.info("Установка менеджера(" + botContexts.current().name + "):" + manager.getDescription());
+            log.info("Установка менеджера(" + profiles.current().name + "):" + manager.getDescription());
 
             setNewManager(manager);
 
             trigger.updateLastTime();
+
+            profiles.clear();
         }
     }
 
     private void setNewManager(Manager manager) throws Exception {
 
-        telegram.info("Смена номера: " + botContexts.current().name + " " + manager.getDescription());
+        telegram.info("Смена номера: " + profiles.current().name + " " + manager.getDescription());
 
         actions.setPhoneNumber(manager.getPhone());
     }
 
-    private void checkPage() throws Exception {
+    private void checkPage(Profile profile) throws Exception {
 
-        actions.multiPageControl();
+        actions.multiPageControl(profile);
     }
 }
 

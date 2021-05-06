@@ -19,11 +19,13 @@ public class MultiPageActions {
 
     private final DriverWrapper browser;
 
+    private final Profiles profiles;
+
     public void checkPhoneNumber(String phoneNumber) throws Exception {
 
         WebElement we;
 
-        String url = dataProvider.getPageUrl();
+        String url = profiles.current().getPageUrl();
 
         try {
             if (!phoneNumber.matches("^\\+7\\d{10}$")) {
@@ -74,9 +76,9 @@ public class MultiPageActions {
         }
     }
 
-    public String getNumber() throws Exception {
+    public String getNumber(Profile profile) throws Exception {
 
-        String url = dataProvider.getPageUrl();
+        String url = profiles.current().getPageUrl();
 
         WebElement we;
 

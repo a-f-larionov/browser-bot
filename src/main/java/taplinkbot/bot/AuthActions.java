@@ -21,13 +21,13 @@ public class AuthActions {
 
     protected final DriverWrapper browser;
 
-    protected final BotContexts botContexts;
+    protected final Profiles profiles;
 
     private final Environment env;
 
     private WebElement we;
 
-    public void signin(String login, String password) {
+    public void webLogin(String login, String password) {
 
         String url = "https://taplink.ru/profile/auth/signin/";
 

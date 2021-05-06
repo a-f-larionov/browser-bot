@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
+import taplinkbot.bot.Profiles;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.schedulers.Trigger;
@@ -38,7 +39,9 @@ public class Commands {
 
     private final ConfigurableApplicationContext context;
 
-    private boolean functionalHolidays = false;
+    private final boolean functionalHolidays = false;
+
+    private final Profiles profiles;
 
     @PostConstruct
     private void init() {
@@ -114,7 +117,7 @@ public class Commands {
         String phoneNumber = null;
         try {
 
-            phoneNumber = actions.getNumber();
+            phoneNumber = actions.getNumber(profiles.current());
             long finish = System.currentTimeMillis();
             telegram.sendMessage("Номер телефона: " + phoneNumber + ", " + (finish - start) + " мсек.", chatId);
 

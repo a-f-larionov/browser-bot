@@ -12,14 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataProvider {
 
-    protected final BotContexts botContexts;
+    protected final Profiles profiles;
 
-    /**
-     * Возвращает ссылку на страницу Мультиссылки.
-     *
-     * @return мультиссылка
-     */
-    public String getPageUrl() {
-        return "https://" + botContexts.current().profile.getDomainName() + "/";
-    }
 }

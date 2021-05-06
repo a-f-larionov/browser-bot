@@ -2,14 +2,10 @@ package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import taplinkbot.browser.DriverWrapper;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.helpers.PhoneNumber;
 import taplinkbot.repositories.PhoneLoggerRepository;
-import taplinkbot.service.StateService;
-import taplinkbot.telegram.TelegramBot;
 
 /**
  * Алгоритмы действий на сайте taplink.
@@ -19,27 +15,17 @@ import taplinkbot.telegram.TelegramBot;
 @Slf4j
 public class Actions {
 
-    protected final TelegramBot telegram;
+    private final Profiles profiles;
 
-    protected final DriverWrapper browser;
+    private final PhoneLoggerRepository phoneLoggerRep;
 
-    protected final StateService stateService;
+    private final AuthActions authActions;
 
-    protected final BotContexts botContexts;
+    private final PhoneNumberActions phoneNumberActions;
 
-    protected final PhoneLoggerRepository phoneLoggerRep;
-
-    protected final AuthActions authActions;
-
-    protected final PhoneNumberActions phoneNumberActions;
-
-    protected final ProfileActions profileActions;
+    private final ProfileActions profileActions;
 
     private final MultiPageActions taplinkMultiPageActions;
-
-    protected final Environment env;
-
-    protected final DataProvider dataProvider;
 
     /**
      * Установить номер телефона
@@ -52,16 +38,15 @@ public class Actions {
      */
     synchronized public void setPhoneNumber(String phoneNumber) throws Exception {
 
+        Profile profile = profiles.current();
+
         if (!PhoneNumber.validate(phoneNumber)) {
             throw new BotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
         }
 
-        authActions.signin(
-                botContexts.current().getLogin(),
-                botContexts.current().getPassword()
-        );
+        authActions.webLogin(profile.getLogin(), profile.getPassword());
 
-        profileActions.change(botContexts.current());
+        profileActions.changeTo(profile);
 
         phoneNumberActions.setPhoneNumber(phoneNumber);
 
@@ -71,19 +56,19 @@ public class Actions {
     /**
      * Контроль мульти страницы, номера телефона.
      *
-     * @throws Exception
+     * @throws Exception ошибки бота и вебдрайвера
      */
-    synchronized public void multiPageControl() throws Exception {
+    synchronized public void multiPageControl(Profile profile) throws Exception {
 
-        String phoneNumber = getNumber();
+        String phoneNumber = getNumber(profile);
 
         phoneLoggerRep.save(
-                new PhoneLogger(phoneNumber, botContexts.current())
+                new PhoneLogger(phoneNumber, profile)
         );
     }
 
-    synchronized public String getNumber() throws Exception {
+    synchronized public String getNumber(Profile profile) throws Exception {
 
-        return taplinkMultiPageActions.getNumber();
+        return taplinkMultiPageActions.getNumber(profile);
     }
 }

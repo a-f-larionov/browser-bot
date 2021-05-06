@@ -2,9 +2,9 @@ package taplinkbot.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import taplinkbot.entities.State;
-import taplinkbot.bot.Context;
+import taplinkbot.bot.Profile;
 
 public interface StateRepository extends CrudRepository<State, Integer> {
 
-    State findByNameAndBotContext(String name, Context botContext);
+    State findByNameAndBotContext(String name, Profile botProfile);
 }

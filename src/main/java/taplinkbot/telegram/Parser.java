@@ -1,7 +1,7 @@
 package taplinkbot.telegram;
 
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.BotContexts;
+import taplinkbot.bot.Profiles;
 
 @Component
 public class Parser {
@@ -19,16 +19,16 @@ public class Parser {
 
         if (msg.args.length == 0) throw new ClientRequestException("Неверная команда. см. /help");
         if (msg.args.length < 2)
-            throw new ClientRequestException("Не указан аргумент кабинета. /command [кабинет]." + taplinkbot.bot.BotContexts.getValuesCommaString());
+            throw new ClientRequestException("Не указан аргумент кабинета. /command [кабинет]." + taplinkbot.bot.Profiles.getValuesCommaString());
 
         msg.sourceText = text;
         msg.chatId = chatId;
         msg.cammand = msg.args[0];
-        msg.botContext = BotContexts.getByString(msg.args[1]);
+        msg.profile = Profiles.findByName(msg.args[1]);
 
-        if (msg.botContext == null) throw new ClientRequestException("Не удалось определить кабинет." +
+        if (msg.profile == null) throw new ClientRequestException("Не удалось определить кабинет." +
 
-                BotContexts.getValuesCommaString()
+                Profiles.getValuesCommaString()
         );
 
         return msg;

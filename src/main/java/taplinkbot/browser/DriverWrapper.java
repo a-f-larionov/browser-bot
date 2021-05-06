@@ -10,8 +10,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Context;
-import taplinkbot.bot.BotContexts;
+import taplinkbot.bot.Profile;
+import taplinkbot.bot.Profiles;
 import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
 import taplinkbot.service.StateService;
@@ -42,7 +42,7 @@ public class DriverWrapper implements WebDriver {
 
     private final StateService stateService;
 
-    private final BotContexts botContexts;
+    private final Profiles profiles;
 
     private RemoteWebDriver driver;
 
@@ -108,9 +108,9 @@ public class DriverWrapper implements WebDriver {
         driver.get(url);
         long finish = System.currentTimeMillis();
 
-        Context botContext = botContexts.current();
+        Profile botProfile = profiles.current();
 
-        pageLoadsRepository.save(new PageLoads(url, finish - start, botContext));
+        pageLoadsRepository.save(new PageLoads(url, finish - start, botProfile));
     }
 
     public void get(String url, String message) {
@@ -231,7 +231,7 @@ public class DriverWrapper implements WebDriver {
     public String takeSreenshot() {
 
         String filesPath, url, fileName;
-        TakesScreenshot screenshot = (TakesScreenshot) driver;
+        TakesScreenshot screenshot = driver;
         File source = screenshot.getScreenshotAs(OutputType.FILE);
         filesPath = "/var/www/files/";
         fileName = "botscreen_" + System.currentTimeMillis() + ".png";

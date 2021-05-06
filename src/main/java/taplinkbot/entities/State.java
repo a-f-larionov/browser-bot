@@ -1,6 +1,6 @@
 package taplinkbot.entities;
 
-import taplinkbot.bot.Context;
+import taplinkbot.bot.Profile;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,11 +38,11 @@ public class State {
 
     private boolean booleanValue;
 
-    private Context botContext;
+    private Profile botProfile;
 
-    public State(String name, Context botContext) {
+    public State(String name, Profile botProfile) {
         this.name = name;
-        this.botContext = botContext;
+        this.botProfile = botProfile;
     }
 
     public State() {

@@ -1,6 +1,6 @@
 package taplinkbot.telegram;
 
-import taplinkbot.bot.Context;
+import taplinkbot.bot.Profile;
 
 import java.util.Arrays;
 
@@ -14,7 +14,7 @@ public class Message {
 
     public String cammand;
 
-    public Context botContext;
+    public Profile profile;
 
     public final static String noArgumentValue = "нет аргумента";
 

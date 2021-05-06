@@ -1,7 +1,7 @@
 package taplinkbot.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
-import taplinkbot.bot.Context;;
+import taplinkbot.bot.Profile;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,15 +23,15 @@ public class PageLoads {
 
     private long loadTime;
 
-    private Context botContext;
+    private Profile botProfile;
 
     public PageLoads() {
 
     }
 
-    public PageLoads(String url, long loadTime, Context botContext) {
+    public PageLoads(String url, long loadTime, Profile botProfile) {
         this.loadTime = loadTime;
         this.url = url;
-        this.botContext = botContext;
+        this.botProfile = botProfile;
     }
 }
