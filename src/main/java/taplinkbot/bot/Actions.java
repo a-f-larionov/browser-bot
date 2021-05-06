@@ -15,8 +15,6 @@ import taplinkbot.repositories.PhoneLoggerRepository;
 @Slf4j
 public class Actions {
 
-    private final Profiles profiles;
-
     private final PhoneLoggerRepository phoneLoggerRep;
 
     private final AuthActions authActions;
@@ -27,6 +25,8 @@ public class Actions {
 
     private final MultiPageActions taplinkMultiPageActions;
 
+    private final Profiles profiles;
+
     /**
      * Установить номер телефона
      * 1 - Авторизуется
@@ -36,10 +36,11 @@ public class Actions {
      *
      * @param phoneNumber номер телефона
      */
-    synchronized public void setPhoneNumber(String phoneNumber) throws Exception {
+    synchronized public void setPhoneNumber(String phoneNumber, Profile profile) throws Exception {
 
-        Profile profile = profiles.current();
+        profiles.set(profile);
 
+        //@Todo message from Hibernate validator
         if (!PhoneNumber.validate(phoneNumber)) {
             throw new BotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
         }
@@ -54,7 +55,7 @@ public class Actions {
     }
 
     /**
-     * Контроль мульти страницы, номера телефона.
+     * Проверяем оновную страницу.
      *
      * @throws Exception ошибки бота и вебдрайвера
      */
@@ -62,9 +63,7 @@ public class Actions {
 
         String phoneNumber = getNumber(profile);
 
-        phoneLoggerRep.save(
-                new PhoneLogger(phoneNumber, profile)
-        );
+        phoneLoggerRep.save(new PhoneLogger(phoneNumber, profile));
     }
 
     synchronized public String getNumber(Profile profile) throws Exception {

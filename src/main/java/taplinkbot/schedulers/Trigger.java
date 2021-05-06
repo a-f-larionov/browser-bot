@@ -3,16 +3,14 @@ package taplinkbot.schedulers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.HolidayService;
+import taplinkbot.bot.Profile;
 import taplinkbot.service.StateService;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
- * Компонент интервальногоо срабатыванияы
+ * Компонент интервальногоо срабатывания
  */
 @Component
 @RequiredArgsConstructor
@@ -20,8 +18,6 @@ import java.util.Date;
 public class Trigger {
 
     private final StateService stateService;
-
-    private final HolidayService holidayService;
 
     final int[] weekdays = {
             Calendar.MONDAY,
@@ -35,24 +31,6 @@ public class Trigger {
             Calendar.SUNDAY,
             Calendar.SATURDAY
     };
-
-    public boolean allowRun() {
-
-        if (stateService.allowEveryDay()) {
-            return true;
-        }
-
-        int[] daysMonToThur = {
-                Calendar.MONDAY,
-                Calendar.TUESDAY,
-                Calendar.WEDNESDAY,
-                Calendar.THURSDAY
-        };
-        // Mon day, Tues day, Wednes day, Thurs day
-        if (Arrays.stream(daysMonToThur).anyMatch(d -> d == getDayOfWeek(0))) return true;
-
-        return getDayOfWeek(0) == Calendar.FRIDAY && (getHours(0) < 19);
-    }
 
     private int getHours(long millis) {
         Calendar c = Calendar.getInstance();
@@ -70,10 +48,6 @@ public class Trigger {
         return Arrays.stream(weekends).anyMatch(v -> v == dayOfWeek);
     }
 
-    public boolean isItHoliDay(long mills) {
-        return holidayService.existsByMills(mills);
-    }
-
     private int getDayOfWeek(long mills) {
         Calendar c = Calendar.getInstance();
         if (mills != 0) c.setTimeInMillis(mills);
@@ -81,10 +55,16 @@ public class Trigger {
     }
 
     public boolean isIntervalLeft(long millis) {
+
+        System.out.println("1   " + stateService.getManagerInterval());
+
         return getElapsedTime(millis) >= (stateService.getManagerInterval() - getIntervalDeviation() * 1.5);
     }
 
     public long getElapsedTime(long millis) {
+
+        System.out.println("2   " + stateService.getIntervalledLastTimestamp());
+
         return millis - stateService.getIntervalledLastTimestamp();
     }
 
@@ -102,14 +82,6 @@ public class Trigger {
 
         int countIntervals = (int) (getMillisFromStartDay(millis) / stateService.getManagerInterval());
         long offset = getMillisFromStartDay(millis) - (countIntervals * stateService.getManagerInterval());
-
-        /*log.info(
-                "mils" + getMillisFromStartDay(millis) + "\t" +
-                        "countIntervals: " + countIntervals + "\t" +
-                        "interval" + stateService.getManagerInterval() + "\t" +
-                        "offset: " + offset + "\t" +
-                        "dev" + getIntervalDeviation()
-        );*/
 
         return offset <= getIntervalDeviation();
     }
@@ -144,7 +116,6 @@ public class Trigger {
 
         public boolean isItWeekend;
         public boolean isItWeekday;
-        public boolean isItHoliday;
 
         public boolean isItTimeToChange;
 
@@ -161,8 +132,8 @@ public class Trigger {
      *
      * @return true - время срабатывать, иначе false
      */
-    public boolean isItTimeToChange() {
-        Trigger.Conditions cond = getConditions();
+    public boolean isItTimeToChange(Profile profile) {
+        Trigger.Conditions cond = getConditions(profile);
 
         return cond.isItTimeToChange;
     }
@@ -172,8 +143,8 @@ public class Trigger {
      *
      * @return состояние условий срабатывания
      */
-    public Conditions getConditions() {
-        return getConditions(Calendar.getInstance().getTimeInMillis());
+    public Conditions getConditions(Profile profile) {
+        return getConditions(profile, Calendar.getInstance().getTimeInMillis());
     }
 
     /**
@@ -182,7 +153,7 @@ public class Trigger {
      * @param millis миллисекунды
      * @return состояние условий срабатывания
      */
-    public Conditions getConditions(long millis) {
+    public Conditions getConditions(Profile profile, long millis) {
 
         Conditions cond = new Conditions(millis);
 
@@ -193,7 +164,6 @@ public class Trigger {
         cond.isBeginOfInterval = isBeginOfInterval(millis);
         cond.isItWeekday = isItWeekDay(millis);
         cond.isItWeekend = isItWeekEnd(millis);
-        cond.isItHoliday = isItHoliDay(millis);
         cond.isSchedulerActive = stateService.schedulerIsActive();
 
         cond.isItTimeToChange = true;
@@ -230,56 +200,10 @@ public class Trigger {
      */
     private boolean isItDayActive(long mills) {
 
-        /*System.out.print("weekday, weekend, holiday, mills "
-                + isItWeekDay(mills) + " "
-                + isItWeekEnd(mills) + " "
-                + isItHoliDay(mills) + " "
-                + mills
-                + "\r\n"
-        );*/
-
-        // Если выходной запрещен
-
-        //if (isItHoliDay(mills) && !stateService.allowHoliDays()) return false;
         // Если будни запрещены
         if (isItWeekDay(mills) && !stateService.allowWeekDays()) return false;
+
         // Если выходные запрщены
         return !isItWeekEnd(mills) || stateService.allowWeekEnds();
-    }
-
-    public String checkDate(String argument1) {
-
-        try {
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd_HH:mm");
-            Date date = sdf.parse(argument1);
-            long millis = date.getTime();
-
-            String msg = "";
-
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(millis);
-            Conditions cond = getConditions(millis);
-
-            msg += "\r\n " + c.get(Calendar.YEAR) + "/" +
-                    c.get(Calendar.MONTH) + "/" +
-                    c.get(Calendar.DAY_OF_MONTH) + "_" +
-                    c.get(Calendar.HOUR_OF_DAY) + ":" +
-                    c.get(Calendar.MINUTE) + " ";
-
-            msg += "\r\nдень активен: " + (cond.isItActiveDay ? "y" : "n");
-
-            msg += "\r\nбудний:" + (cond.isItWeekday ? "y" : "n");
-            msg += "\r\nвыходной:" + (cond.isItWeekend ? "y" : "n");
-            //msg += "\r\nпраздничный:" + (cond.isItHoliday ? "y" : "n");
-
-            msg += "\r\nменть менеджера?:" + (cond.isItTimeToChange ? "y" : "n");
-
-
-            return msg;
-
-        } catch (Exception e) {
-            return "some thing wrong yyyy/MM/dd_HH:mm";
-        }
     }
 }

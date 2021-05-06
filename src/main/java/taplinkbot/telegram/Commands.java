@@ -108,7 +108,7 @@ public class Commands {
 
         telegram.sendMessage("Начинаю смену номера:" + phoneNumber, chatId);
 
-        actions.setPhoneNumber(phoneNumber);
+        actions.setPhoneNumber(phoneNumber, profiles.current());
     }
 
     public void getNumber(String chatId) {
@@ -252,5 +252,10 @@ public class Commands {
         telegram.sendMessage(
                 managerRotator.getNextManager().getDescription(),
                 chatId);
+    }
+
+    public void test() {
+
+        trigger.updateLastTime();
     }
 }

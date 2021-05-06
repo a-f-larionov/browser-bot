@@ -38,11 +38,11 @@ public class State {
 
     private boolean booleanValue;
 
-    private Profile botProfile;
+    private Profile profile;
 
-    public State(String name, Profile botProfile) {
+    public State(String name, Profile profile) {
         this.name = name;
-        this.botProfile = botProfile;
+        this.profile = profile;
     }
 
     public State() {

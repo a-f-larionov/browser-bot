@@ -251,22 +251,7 @@ public class DriverWrapper implements WebDriver {
 
         if (driver != null) driver.quit();
 
-        //  killChrome();
-
         driver = getDriver();
-    }
-
-    private void killChrome() {
-
-        log.info("KILL CHROME");
-
-        try {
-            Process pkill_chrome = Runtime.getRuntime().exec("pkill chrome");
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public String getHumanComment() {

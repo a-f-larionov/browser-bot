@@ -99,7 +99,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             log.info("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
             sendMessage(e.getMessage(), chatId);
         } finally {
-            profiles.set(null);
+            profiles.clear();
         }
     }
 
@@ -202,10 +202,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                     commands.setManagerIndex(arg1);
                     break;
 
-                case "/check_date":
-                    sendMessage(
-                            trigger.checkDate(arg1)
-                            , chatId);
+                case "/test123":
+                    commands.test();
                     break;
 
                 default:
@@ -235,12 +233,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public void alert(String s) {
         log.info("ALERT: " + s);
-        sendMessage(s, alertChatId);
+        //sendMessage(s, alertChatId);
     }
 
     public void alert(String s, String url) {
         log.info("ALERT: " + s + " " + url);
-        sendMessage(s + " " + url, alertChatId);
+        //sendMessage(s + " " + url, alertChatId);
     }
 
     public void info(String s) {

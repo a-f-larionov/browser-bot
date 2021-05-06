@@ -49,6 +49,7 @@ public class Scheduler {
 
         } catch (Exception e) {
             //@Todo create annotation @BotExceptionHandler
+            e.printStackTrace();
             telegram.alert(e.getMessage());
         }
     }
@@ -58,7 +59,7 @@ public class Scheduler {
         try {
             profiles.set(Profile.Canvas);
 
-            checkPage(Profile.Canvas);
+            multiPageControl(Profile.Canvas);
 
             profiles.clear();
 
@@ -78,43 +79,50 @@ public class Scheduler {
 
     }
 
-    private void onIdlePinger(Profile botProfile) throws Exception {
+    private void onIdlePinger(Profile profile) throws Exception {
 
-        profiles.set(botProfile);
+        profiles.set(profile);
 
-        checkPage();
+        multiPageControl(profile);
 
         profiles.clear();
     }
 
     private void onIdleManagerChange(Profile profile) throws Exception {
 
-        if (trigger.isItTimeToChange()) {
+        profiles.set(profile);
 
-            profiles.set(profile);
-
-            Manager manager = rotator.getNextManager();
-
-            log.info("Установка менеджера(" + profiles.current().name + "):" + manager.getDescription());
-
-            setNewManager(manager);
-
-            trigger.updateLastTime();
-
-            profiles.clear();
+        if (!trigger.isItTimeToChange(profile)) {
+            System.out.println("return ");
+            return;
+        } else {
+            System.out.println("ok");
         }
+
+        Manager manager = rotator.getNextManager();
+
+        log.info("Установка менеджера(" + profiles.current().name + "):" + manager.getDescription());
+
+        setNewManager(manager, profile);
+
+        trigger.updateLastTime();
+
+        profiles.clear();
     }
 
-    private void setNewManager(Manager manager) throws Exception {
-
+    private void setNewManager(Manager manager, Profile profile) throws Exception {
+        profiles.set(profile);
         telegram.info("Смена номера: " + profiles.current().name + " " + manager.getDescription());
 
-        actions.setPhoneNumber(manager.getPhone());
+        actions.setPhoneNumber(manager.getPhone(), profile);
+
     }
 
-    private void checkPage(Profile profile) throws Exception {
+    private void multiPageControl(Profile profile) throws Exception {
+        profiles.set(profile);
 
         actions.multiPageControl(profile);
+
     }
 }
 

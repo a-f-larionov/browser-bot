@@ -6,5 +6,5 @@ import taplinkbot.bot.Profile;
 
 public interface StateRepository extends CrudRepository<State, Integer> {
 
-    State findByNameAndBotContext(String name, Profile botProfile);
+    State findByNameAndProfile(String name, Profile profile);
 }

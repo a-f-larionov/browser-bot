@@ -28,6 +28,7 @@ public class StateService {
     }
 
     public long getIntervalledLastTimestamp() {
+        System.out.println(profiles.current().name);
         return getLongValue(State.STATE_LAST_TIMESTAMP);
     }
 
@@ -36,8 +37,9 @@ public class StateService {
     }
 
     private State getStateByName(String name) {
+
         State state;
-        state = stateRepository.findByNameAndBotContext(name, profiles.current());
+        state = stateRepository.findByNameAndProfile(name, profiles.current());
         if (state == null) {
             state = new State(name, profiles.current());
             stateRepository.save(state);

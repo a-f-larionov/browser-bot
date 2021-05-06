@@ -12,14 +12,18 @@ public class Profiles {
 
     private Profile profile;
 
-    public void set(Profile botProfile) {
+    public void set(Profile profile) {
 
-        if (botProfile != null && this.profile != null) {
-            log.info("bot context is busy by:" + this.profile.name
-                    + "!!! Requested: " + botProfile.name);
+        if (profile == null) {
+            log.info("profile is NULL!!!");
         }
 
-        this.profile = botProfile;
+        if (profile != null && this.profile != null) {
+//            log.info("bot context is busy by:" + this.profile.name
+//                    + "!!! Requested: " + botProfile.name);
+        }
+
+        this.profile = profile;
     }
 
     public Profile current() {
@@ -49,6 +53,6 @@ public class Profiles {
     }
 
     public void clear() {
-        set(null);
+        this.profile = null;
     }
 }
