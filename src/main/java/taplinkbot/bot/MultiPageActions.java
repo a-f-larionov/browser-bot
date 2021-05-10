@@ -78,12 +78,11 @@ public class MultiPageActions {
 
     public String getNumber(Profile profile) throws Exception {
 
-        String url = profiles.current().getPageUrl();
+        String url = profile.getPageUrl();
 
         WebElement we;
 
         try {
-
 
             browser.comment("Открытие страницы:" + url);
             browser.get(url);

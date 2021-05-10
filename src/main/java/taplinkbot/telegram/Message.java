@@ -17,6 +17,9 @@ public class Message {
     public Profile profile;
 
     public final static String noArgumentValue = "нет аргумента";
+    public String arg1;
+
+    public String arg2;
 
     public static String[] getFilledArgs(Message msg) {
         String[] args = new String[4];
@@ -30,8 +33,8 @@ public class Message {
     }
 
     /**
-     * @todo use @ToString from lombok
      * @return
+     * @todo use @ToString from lombok
      */
     @Override
     public String toString() {

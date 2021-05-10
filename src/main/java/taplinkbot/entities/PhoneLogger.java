@@ -21,11 +21,11 @@ public class PhoneLogger {
 
     private String phoneNumber;
 
-    private Profile botProfile;
+    private Profile profile;
 
-    public PhoneLogger(String phoneNumber, Profile botProfile) {
+    public PhoneLogger(String phoneNumber, Profile profile) {
         this.phoneNumber = phoneNumber;
-        this.botProfile = botProfile;
+        this.profile = profile;
     }
 
     public PhoneLogger() {

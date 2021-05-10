@@ -12,9 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
 import taplinkbot.bot.Profiles;
-import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
-import taplinkbot.service.StateService;
 import taplinkbot.telegram.TelegramBot;
 
 import javax.annotation.PostConstruct;
@@ -39,8 +37,6 @@ public class DriverWrapper implements WebDriver {
     private final TelegramBot telegram;
 
     private final PageLoadsRepository pageLoadsRepository;
-
-    private final StateService stateService;
 
     private final Profiles profiles;
 
@@ -103,14 +99,16 @@ public class DriverWrapper implements WebDriver {
     @Override
     public void get(String url) {
 
+        log.info(url);
         //@todo profiler
         long start = System.currentTimeMillis();
         driver.get(url);
         long finish = System.currentTimeMillis();
 
-        Profile botProfile = profiles.current();
+        Profile profile = profiles.current();
 
-        pageLoadsRepository.save(new PageLoads(url, finish - start, botProfile));
+        // @todo no profile found
+        //   pageLoadsRepository.save(new PageLoads(url, finish - start, profile));
     }
 
     public void get(String url, String message) {

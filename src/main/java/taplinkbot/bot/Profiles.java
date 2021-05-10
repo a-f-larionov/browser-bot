@@ -42,12 +42,16 @@ public class Profiles {
         return null;
     }
 
+    /**
+     * @return
+     * @todo strange code...
+     */
     public static String getValuesCommaString() {
 
-        return Arrays.asList(taplinkbot.telegram.BotContext.values())
+        return Arrays.asList(Profile.values())
                 .stream()
-                .map((taplinkbot.telegram.BotContext botContext) -> {
-                    return botContext.name;
+                .map((Profile profile) -> {
+                    return profile.name;
                 })
                 .collect(Collectors.joining(","));
     }

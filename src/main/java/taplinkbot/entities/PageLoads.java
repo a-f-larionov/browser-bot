@@ -23,15 +23,15 @@ public class PageLoads {
 
     private long loadTime;
 
-    private Profile botProfile;
+    private Profile profile;
 
     public PageLoads() {
 
     }
 
-    public PageLoads(String url, long loadTime, Profile botProfile) {
+    public PageLoads(String url, long loadTime, Profile profile) {
         this.loadTime = loadTime;
         this.url = url;
-        this.botProfile = botProfile;
+        this.profile = profile;
     }
 }

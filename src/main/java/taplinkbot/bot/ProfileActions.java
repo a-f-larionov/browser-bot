@@ -17,7 +17,9 @@ public class ProfileActions {
 
     protected final TelegramBot telegram;
 
-    public void changeTo(Profile botProfile) throws Exception {
+    public void changeTo(Profile profile) throws Exception {
+
+        log.info("profile to " + profile.name);
 
         WebElement we;
 
@@ -42,22 +44,22 @@ public class ProfileActions {
             }
             we.click();
 
-            browser.comment("Обращение к элементы заголовка профиля " + botProfile.getHtmlText() + ". Для проверки порядка профилей");
+            browser.comment("Обращение к элементы заголовка профиля " + profile.getHtmlText() + ". Для проверки порядка профилей");
 
-            final String xpath = "//td/div[contains(text(),'" + botProfile.getHtmlText() + "')]/..";
+            final String xpath = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/..";
             we = browser.waitElement(By.xpath(xpath));
 
-            if (we.getText().equals(botProfile.getHtmlText() + "\nТекущий профиль")) {
+            if (we.getText().equals(profile.getHtmlText() + "\nТекущий профиль")) {
                 return;
             }
 
-            if (!we.getText().equals(botProfile.getHtmlText())) {
-                telegram.alert("Не удалось найти элемент " + botProfile.getHtmlText() + ". " + we.getText());
+            if (!we.getText().equals(profile.getHtmlText())) {
+                telegram.alert("Не удалось найти элемент " + profile.getHtmlText() + ". " + we.getText());
                 throw new Exception("see telegram alerts");
             }
 
-            browser.comment("Обращение к элементы: кнопка переключение на профиль" + botProfile.getHtmlText());
-            final String xpathButton = "//td/div[contains(text(),'" + botProfile.getHtmlText() + "')]/../../td/button";
+            browser.comment("Обращение к элементы: кнопка переключение на профиль" + profile.getHtmlText());
+            final String xpathButton = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/../../td/button";
 
             we = browser.waitElement(By.xpath(xpathButton));
             if (!we.getText().equals("Переключиться")) {

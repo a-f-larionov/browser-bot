@@ -76,7 +76,6 @@ public class Scheduler {
 
             profiles.clear();
         }
-
     }
 
     private void onIdlePinger(Profile profile) throws Exception {
@@ -115,14 +114,12 @@ public class Scheduler {
         telegram.info("Смена номера: " + profiles.current().name + " " + manager.getDescription());
 
         actions.setPhoneNumber(manager.getPhone(), profile);
-
     }
 
     private void multiPageControl(Profile profile) throws Exception {
         profiles.set(profile);
 
         actions.multiPageControl(profile);
-
     }
 }
 
