@@ -28,7 +28,6 @@ public class StateService {
     }
 
     public long getIntervalledLastTimestamp() {
-        System.out.println(profiles.current().name);
         return getLongValue(State.STATE_LAST_TIMESTAMP);
     }
 
@@ -108,10 +107,6 @@ public class StateService {
         setBooleanValue(State.STATE_ALLOW_WEEKENDS, b);
     }
 
-    public void setAllowHolidays(boolean b) {
-        setBooleanValue(State.STATE_ALLOW_HOLIDAYS, b);
-    }
-
     public boolean allowEveryDay() {
         return getBooleanValue(State.STATE_ALLOW_EVERY_DAY);
     }
@@ -122,9 +117,5 @@ public class StateService {
 
     public boolean allowWeekEnds() {
         return getBooleanValue(State.STATE_ALLOW_WEEKENDS);
-    }
-
-    public boolean allowHoliDays() {
-        return getBooleanValue(State.STATE_ALLOW_HOLIDAYS);
     }
 }

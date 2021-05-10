@@ -3,7 +3,12 @@
     {
       "name": "taplink.username",
       "type": "java.lang.String",
-      "description": "Description for taplink.username."
+      "description": "Пользователь тап линка"
+    },
+    {
+      "name": "app.userPassword",
+      "type": "java.lang.String",
+      "description": "Пароль для входа через ВЕБ в систему."
     }
   ]
 }

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-import taplinkbot.browser.DriverWrapper;
+import taplinkbot.browser.Browser;
 import taplinkbot.telegram.TelegramBot;
 
 @Component
@@ -17,7 +17,7 @@ public class MultiPageActions {
 
     private final TelegramBot telegram;
 
-    private final DriverWrapper browser;
+    private final Browser browser;
 
     private final Profiles profiles;
 
@@ -34,18 +34,18 @@ public class MultiPageActions {
             }
 
 
-            browser.comment("Открытие страницы:" + url);
+            browser.setComment("Открытие страницы:" + url);
             browser.get(url);
 
-            browser.comment("Обращение к элементы 'узнать цену в WhatsApp'.");
+            browser.setComment("Обращение к элементы 'узнать цену в WhatsApp'.");
             we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeScreenshot());
                 throw new Exception("see telegram alerts");
             }
             if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeScreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -57,21 +57,21 @@ public class MultiPageActions {
                 telegram.alert("Не нашелся блок Whatsup по признаку ссылки в href" +
                         "(ожидалось:'" + hrefExpect + "'," +
                         " фактически:'" + hrefFact + "')" +
-                        ", на странице " + url, browser.takeSreenshot());
+                        ", на странице " + url, browser.takeScreenshot());
                 throw new Exception("see telegram alerts");
             }
 
             we.click();
 
-            browser.comment("Ожидание нажатие на номер телефона.");
+            browser.setComment("Ожидание нажатие на номер телефона.");
             Thread.sleep(45 * 1000);
 
-            telegram.info("Номер на странице " + url + " соответствует:" + phoneNumber, browser.takeSreenshot());
+            telegram.info("Номер на странице " + url + " соответствует:" + phoneNumber, browser.takeScreenshot());
 //            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось проверить страницу ТапЛинк " + url + " , последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
+            telegram.alert("Ну удалось проверить страницу ТапЛинк " + url + " , последние действие:" + browser.getComment(), browser.takeScreenshot());
             throw e;
         }
     }
@@ -84,18 +84,18 @@ public class MultiPageActions {
 
         try {
 
-            browser.comment("Открытие страницы:" + url);
+            browser.setComment("Открытие страницы:" + url);
             browser.get(url);
 
-            browser.comment("Обращение к элементы 'узнать цену в WhatsApp'.");
+            browser.setComment("Обращение к элементы 'узнать цену в WhatsApp'.");
             we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
             if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeScreenshot());
                 throw new Exception("see telegram alerts");
             }
             if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeSreenshot());
+                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeScreenshot());
                 throw new Exception("see telegram alerts");
             }
 
@@ -107,7 +107,7 @@ public class MultiPageActions {
             return hrefFact;
         } catch (Exception e) {
             e.printStackTrace();
-            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + url + "`, последние действие:" + browser.getHumanComment(), browser.takeSreenshot());
+            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + url + "`, последние действие:" + browser.getComment(), browser.takeScreenshot());
             throw e;
         }
     }

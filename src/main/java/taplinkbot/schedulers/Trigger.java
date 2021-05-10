@@ -55,16 +55,10 @@ public class Trigger {
     }
 
     public boolean isIntervalLeft(long millis) {
-
-        System.out.println("1   " + stateService.getManagerInterval());
-
         return getElapsedTime(millis) >= (stateService.getManagerInterval() - getIntervalDeviation() * 1.5);
     }
 
     public long getElapsedTime(long millis) {
-
-        System.out.println("2   " + stateService.getIntervalledLastTimestamp());
-
         return millis - stateService.getIntervalledLastTimestamp();
     }
 
@@ -125,7 +119,6 @@ public class Trigger {
             this.millis = millis;
         }
     }
-
 
     /**
      * Необходимо ли сейчас срабатывать.

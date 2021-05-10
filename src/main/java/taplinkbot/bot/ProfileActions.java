@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-import taplinkbot.browser.DriverWrapper;
+import taplinkbot.browser.Browser;
 import taplinkbot.telegram.TelegramBot;
 
 @Component
@@ -13,7 +13,7 @@ import taplinkbot.telegram.TelegramBot;
 @Slf4j
 public class ProfileActions {
 
-    protected final DriverWrapper browser;
+    protected final Browser browser;
 
     protected final TelegramBot telegram;
 
@@ -26,17 +26,17 @@ public class ProfileActions {
         try {
 
             String url = "https://taplink.ru/profile/2988200/pages/";
-            browser.comment("Открытие страницы:" + "https://taplink.ru/profile/2988200/pages/");
+            browser.setComment("Открытие страницы:" + "https://taplink.ru/profile/2988200/pages/");
             browser.get(url);
 
-            browser.comment("Обращение к всплывающему меню профиля");
+            browser.setComment("Обращение к всплывающему меню профиля");
             we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img"));
             we.click();
 
             //@todo for what?
             Thread.sleep(5000);
 
-            browser.comment("Обращение к элементу `Мой профили`");
+            browser.setComment("Обращение к элементу `Мой профили`");
             we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[3]/div[1]/a"));
             if (!we.getText().equals("Мои профили")) {
                 telegram.alert("Не удалось найти элемент. " + we.getText());
@@ -44,7 +44,7 @@ public class ProfileActions {
             }
             we.click();
 
-            browser.comment("Обращение к элементы заголовка профиля " + profile.getHtmlText() + ". Для проверки порядка профилей");
+            browser.setComment("Обращение к элементы заголовка профиля " + profile.getHtmlText() + ". Для проверки порядка профилей");
 
             final String xpath = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/..";
             we = browser.waitElement(By.xpath(xpath));
@@ -58,7 +58,7 @@ public class ProfileActions {
                 throw new Exception("see telegram alerts");
             }
 
-            browser.comment("Обращение к элементы: кнопка переключение на профиль" + profile.getHtmlText());
+            browser.setComment("Обращение к элементы: кнопка переключение на профиль" + profile.getHtmlText());
             final String xpathButton = "//td/div[contains(text(),'" + profile.getHtmlText() + "')]/../../td/button";
 
             we = browser.waitElement(By.xpath(xpathButton));
@@ -73,7 +73,7 @@ public class ProfileActions {
 
         } catch (Exception e) {
 
-            telegram.alert("Смена профиля не удалась.", browser.takeSreenshot());
+            telegram.alert("Смена профиля не удалась.", browser.takeScreenshot());
             throw e;
         }
     }

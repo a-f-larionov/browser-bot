@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
 import taplinkbot.bot.Profile;
 import taplinkbot.bot.Profiles;
-import taplinkbot.browser.DriverWrapper;
+import taplinkbot.browser.Browser;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.telegram.TelegramBot;
@@ -31,7 +31,7 @@ public class Scheduler {
 
     private final Actions actions;
 
-    private final DriverWrapper browser;
+    private final Browser browser;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void intervaled() {
@@ -68,7 +68,7 @@ public class Scheduler {
                 log.debug(e.getMessage());
             }
             if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
-                browser.reset();
+                browser.fixBugErrConnectionClosed();
                 log.info("Web Driver перезапущен.");
             }
             e.printStackTrace();
@@ -92,10 +92,7 @@ public class Scheduler {
         profiles.set(profile);
 
         if (!trigger.isItTimeToChange(profile)) {
-            System.out.println("return ");
             return;
-        } else {
-            System.out.println("ok");
         }
 
         Manager manager = rotator.getNextManager();

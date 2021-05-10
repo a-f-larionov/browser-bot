@@ -1,3 +1,4 @@
+// FINISHED
 package taplinkbot;
 
 import lombok.AccessLevel;
