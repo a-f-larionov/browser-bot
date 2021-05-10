@@ -1,14 +1,16 @@
 TapLinkBot
 
 
-#Installation
+# Installation
 
-##Ubuntu
+## Ubuntu
 
     apt update
     apt upgrade
 
-###MySql
+
+
+### MySql
 
     apt install mysql-server
     mysql_secure_installation
@@ -18,7 +20,7 @@ TapLinkBot
     FLUSH PRIVILEGES;
 
 
-### Start on start ubuntu
+### Run on startup ubuntu
 
     cp ./init.d/taplinkbot to /etc/init.d
 
