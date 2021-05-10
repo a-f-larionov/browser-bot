@@ -35,28 +35,28 @@ public class AuthActions {
         if (checkIsAuthorized(login)) return;
 
         //@todo logout method here!
-        browser.fixBugErrConnectionClosed();
+        logout();
 
         //@todo format string?
         browser.setComment("Открытие страницы для авторизации: " + url);
         browser.get(url);
 
-
-        log.info("1");
-
-
         enterLogin(login);
 
-        log.info("2");
         enterPassword(password);
 
-        log.info("3");
         authSubmit();
-        log.info("df1");
+
         if (!checkIsAuthorized(login)) {
-            log.info("df2");
             throw new BotException("Не удалось авторизоваться.");
         }
+    }
+
+    /**
+     * Выполняет выход.
+     */
+    private void logout() {
+        browser.fixBugErrConnectionClosed();
     }
 
     private void enterLogin(String login) {
