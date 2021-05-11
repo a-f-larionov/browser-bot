@@ -76,40 +76,31 @@ public class MultiPageActions {
         }
     }
 
-    public String getNumber(Profile profile) throws Exception {
+    public String getNumber(Profile profile) throws BotException{
 
         String url = profile.getPageUrl();
 
         WebElement we;
 
-        try {
+        browser.setComment("Открытие страницы:" + url);
+        browser.get(url);
 
-            browser.setComment("Открытие страницы:" + url);
-            browser.get(url);
+        browser.setComment("Обращение к элементы 'узнать цену в WhatsApp'.");
+        we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
-            browser.setComment("Обращение к элементы 'узнать цену в WhatsApp'.");
-            we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
-
-            if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser.takeScreenshot());
-                throw new Exception("see telegram alerts");
-            }
-            if (!we.isDisplayed()) {
-                telegram.alert("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser.takeScreenshot());
-                throw new Exception("see telegram alerts");
-            }
-
-            /* Удаляем знак '+' из номера */
-            String hrefFact = we.getAttribute("href");
-
-            hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
-            hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
-            return hrefFact;
-        } catch (Exception e) {
-            e.printStackTrace();
-            telegram.alert("Ну удалось получить номер со страницы ТапЛинк `" + url + "`, последние действие:" + browser.getComment(), browser.takeScreenshot());
-            throw e;
+        if (!we.getText().equals("Узнать цену в WhatsApp")) {
+            throw new BotException("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser);
         }
+        if (!we.isDisplayed()) {
+            throw new BotException("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser);
+        }
+
+        /* Удаляем знак '+' из номера */
+        String hrefFact = we.getAttribute("href");
+
+        hrefFact = hrefFact.replace("whatsapp://send?phone=", "");
+        hrefFact = hrefFact.replace("&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.", "");
+        return hrefFact;
     }
 
 }

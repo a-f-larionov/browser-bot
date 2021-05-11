@@ -3,28 +3,33 @@ package taplinkbot.telegram.commands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.StateService;
+import taplinkbot.service.Settings;
 import taplinkbot.telegram.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
-@Command(name = "/start")
 @RequiredArgsConstructor
 @Slf4j
-public class Start implements CommandInterface {
+@TelegramCommand(name = "/start")
+public class Start implements TelegramCommandInterface {
 
-    private final StateService stateService;
+    private final Settings settings;
 
     private final Commands commands;
 
     @Override
-    public Response run(Message msg) throws Exception {
+    public String getDescription() {
+        return "Включит расписание";
+    }
+
+    @Override
+    public Response run(Message msg) {
 
         if (msg.arg1.equals(Message.noArgumentValue)) {
 
-            stateService.schedulerSetActive(true);
+            settings.schedulerSetActive(true);
 
             //@todo execute
             Message message = new Message();
@@ -32,6 +37,7 @@ public class Start implements CommandInterface {
             message.chatId = msg.chatId;
             message.cammand = "/status";
 
+            //Commands.execute(CommandClass.class, profile, chatId);
             commands.execute(message);
 
             return new Response("Расписание запущено");
@@ -55,7 +61,7 @@ public class Start implements CommandInterface {
                     //@Todo
                     //telegram.info("Расписание запущено по таймаута. Запрос минут назад: " + minutes);
 
-                    stateService.schedulerSetActive(true);
+                    settings.schedulerSetActive(true);
                 });
 
                 return new Response("Расписание будет запущено, черзе" + minutes + " минут(у,ы)");
@@ -68,3 +74,4 @@ public class Start implements CommandInterface {
         }
     }
 }
+

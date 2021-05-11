@@ -1,29 +1,41 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/get_number")
 @RequiredArgsConstructor
-public class GetNumber implements CommandInterface {
+@TelegramCommand(name = "/get_number")
+public class GetNumber implements TelegramCommandInterface {
 
     private final Actions actions;
 
     @Override
-    public Response run(Message msg) throws Exception {
+    public String getDescription() {
+        return "Выведет установленный номер телефона.";
+    }
 
-        long start = System.currentTimeMillis();
+    /**
+     * Получить текущий номер на мульте-странице.
+     */
+    @Override
+    public Response run(Message msg) {
         String phoneNumber;
+        long start, finish;
+
+        start = System.currentTimeMillis();
 
         phoneNumber = actions.getNumber(msg.profile);
-        long finish = System.currentTimeMillis();
 
-        return new Response("Номер телефона: " + phoneNumber + ", " + (finish - start) + " мсек.");
+        finish = System.currentTimeMillis();
+
+        return ResponseFactory.buildSuccessReponse(
+                "Номер телефона: " +
+                        phoneNumber + ", " +
+                        (finish - start) + " мсек."
+        );
     }
 }

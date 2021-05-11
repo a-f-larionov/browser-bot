@@ -10,13 +10,13 @@ import java.util.Map;
 @Component
 public class CommandAnnotationBeanPostProcessor implements BeanPostProcessor {
 
-    private Map<String, CommandInterface> beans = new HashMap<>();
+    private Map<String, TelegramCommandInterface> beans = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
-        if (bean.getClass().isAnnotationPresent(Command.class)) {
-            beans.put(beanName, (CommandInterface) bean);
+        if (bean.getClass().isAnnotationPresent(TelegramCommand.class)) {
+            beans.put(beanName, (TelegramCommandInterface) bean);
         }
 
         return bean;
@@ -25,10 +25,10 @@ public class CommandAnnotationBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        CommandInterface command = beans.get(beanName);
+        TelegramCommandInterface command = beans.get(beanName);
 
         if (command != null) {
-            String commandName = bean.getClass().getAnnotation(Command.class).name();
+            String commandName = bean.getClass().getAnnotation(TelegramCommand.class).name();
             Commands.addCommand(commandName, command);
         }
 

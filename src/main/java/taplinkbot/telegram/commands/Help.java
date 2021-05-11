@@ -1,30 +1,47 @@
 package taplinkbot.telegram.commands;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.telegram.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 @Component
-@Command(name = "/help")
-public class Help implements CommandInterface {
+@RequiredArgsConstructor
+@TelegramCommand(name = "/help")
+public class Help implements TelegramCommandInterface {
 
     @Override
+    public String getDescription() {
+        return "Выведет список команд.";
+    }
+
+    /**
+     * @param msg
+     * @return
+     * @todo рефакторинг
+     */
+    @Override
     public Response run(Message msg) {
-        return new Response("/help - подсказка\r\n" +
 
-                "/start - Запустить работу расписания /start\r\n" +
-                "/stop - Остановить работу расписания /stop\r\n" +
-                "/status - Узнать состояние бота /status\r\n" +
+        StringBuilder builder = new StringBuilder();
 
-                "/set_number - Установить номер /set_number +71234567890\r\n" +
+        Map<String, TelegramCommandInterface> commands = Commands.getCommands();
 
-                "/everyday_allow - работать все дни\r\n" +
-                "/everyday_disallow - работать не все дни\r\n" +
+        Object keys[] = commands.keySet().toArray();
 
-                "/weekends_allow - работать все выходные дни\r\n" +
-                "/weekends_disallow - не работать в выходные дни\r\n"
-        );
+        Arrays.sort(keys);
+
+        for (Object key : keys) {
+            TelegramCommandInterface command = commands.get(key);
+
+            builder.append(key.toString());
+            builder.append(" - ");
+            builder.append(command.getDescription());
+            builder.append("\r\n");
+        }
+
+        return ResponseFactory.buildSuccessReponse(builder.toString());
     }
 }

@@ -1,25 +1,28 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.StateService;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.service.Settings;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/weekdays_allow")
+@TelegramCommand(name = "/weekdays_allow")
 @RequiredArgsConstructor
-public class WeekDaysAllow implements CommandInterface {
+public class WeekDaysAllow implements TelegramCommandInterface {
 
-    private final StateService stateService;
+    private final Settings settings;
 
     @Override
-    public Response run(Message msg) throws Exception {
+    public String getDescription() {
+        return "Разрешит работу бота в будние";
+    }
 
-        stateService.setAllowWeekDays(true);
+    @Override
+    public Response run(Message msg) {
 
-        return new Response("Выполненно");
+        settings.setAllowWeekDays(true);
+
+        return ResponseFactory.buildSuccessReponse("Выполненно");
     }
 }

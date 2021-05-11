@@ -38,7 +38,7 @@ public class Actions {
      *
      * @param phoneNumber номер телефона
      */
-    synchronized public void setPhoneNumber(String phoneNumber, Profile profile) throws Exception {
+    synchronized public void setPhoneNumber(String phoneNumber, Profile profile) {
 
         profiles.set(profile);
 
@@ -51,9 +51,14 @@ public class Actions {
 
         profileActions.changeTo(profile);
 
-        phoneNumberActions.setPhoneNumber(phoneNumber);
+        try {
+            phoneNumberActions.setPhoneNumber(phoneNumber);
 
-        taplinkMultiPageActions.checkPhoneNumber(phoneNumber);
+            taplinkMultiPageActions.checkPhoneNumber(phoneNumber);
+        }catch (Exception e){
+            //@Todo use BotExceptions
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -61,14 +66,14 @@ public class Actions {
      *
      * @throws Exception ошибки бота и вебдрайвера
      */
-    synchronized public void multiPageControl(Profile profile) throws Exception {
+    synchronized public void multiPageControl(Profile profile) throws BotException {
 
         String phoneNumber = getNumber(profile);
 
         phoneLoggerRep.save(new PhoneLogger(phoneNumber, profile));
     }
 
-    synchronized public String getNumber(Profile profile) throws Exception {
+    synchronized public String getNumber(Profile profile) throws BotException {
 
         return taplinkMultiPageActions.getNumber(profile);
     }

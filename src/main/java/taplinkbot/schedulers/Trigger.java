@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
-import taplinkbot.service.StateService;
+import taplinkbot.service.Settings;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,7 +17,7 @@ import java.util.Calendar;
 @Slf4j
 public class Trigger {
 
-    private final StateService stateService;
+    private final Settings settings;
 
     final int[] weekdays = {
             Calendar.MONDAY,
@@ -55,11 +55,11 @@ public class Trigger {
     }
 
     public boolean isIntervalLeft(long millis) {
-        return getElapsedTime(millis) >= (stateService.getManagerInterval() - getIntervalDeviation() * 1.5);
+        return getElapsedTime(millis) >= (settings.getManagerInterval() - getIntervalDeviation() * 1.5);
     }
 
     public long getElapsedTime(long millis) {
-        return millis - stateService.getIntervalledLastTimestamp();
+        return millis - settings.getIntervalledLastTimestamp();
     }
 
     /**
@@ -69,13 +69,13 @@ public class Trigger {
      * @return long time deviation
      */
     private long getIntervalDeviation() {
-        return stateService.getManagerInterval() / 3;
+        return settings.getManagerInterval() / 3;
     }
 
     public boolean isBeginOfInterval(long millis) {
 
-        int countIntervals = (int) (getMillisFromStartDay(millis) / stateService.getManagerInterval());
-        long offset = getMillisFromStartDay(millis) - (countIntervals * stateService.getManagerInterval());
+        int countIntervals = (int) (getMillisFromStartDay(millis) / settings.getManagerInterval());
+        long offset = getMillisFromStartDay(millis) - (countIntervals * settings.getManagerInterval());
 
         return offset <= getIntervalDeviation();
     }
@@ -91,7 +91,7 @@ public class Trigger {
     }
 
     public void updateLastTime() {
-        stateService.updateLastTimestamp(Calendar.getInstance().getTimeInMillis());
+        settings.updateLastTimestamp(Calendar.getInstance().getTimeInMillis());
     }
 
     public class Conditions {
@@ -157,7 +157,7 @@ public class Trigger {
         cond.isBeginOfInterval = isBeginOfInterval(millis);
         cond.isItWeekday = isItWeekDay(millis);
         cond.isItWeekend = isItWeekEnd(millis);
-        cond.isSchedulerActive = stateService.schedulerIsActive();
+        cond.isSchedulerActive = settings.schedulerIsActive();
 
         cond.isItTimeToChange = true;
 
@@ -194,9 +194,9 @@ public class Trigger {
     private boolean isItDayActive(long mills) {
 
         // Если будни запрещены
-        if (isItWeekDay(mills) && !stateService.allowWeekDays()) return false;
+        if (isItWeekDay(mills) && !settings.allowWeekDays()) return false;
 
         // Если выходные запрщены
-        return !isItWeekEnd(mills) || stateService.allowWeekEnds();
+        return !isItWeekEnd(mills) || settings.allowWeekEnds();
     }
 }

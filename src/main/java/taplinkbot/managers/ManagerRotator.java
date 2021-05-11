@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.entities.Manager;
 import taplinkbot.repositories.ManagerRepository;
-import taplinkbot.service.StateService;
+import taplinkbot.service.Settings;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -17,7 +17,7 @@ public class ManagerRotator {
 
     private Manager[] managers;
 
-    private final StateService stateService;
+    private final Settings settings;
 
     private final ManagerRepository managerRepository;
 
@@ -36,20 +36,20 @@ public class ManagerRotator {
 
     public Manager getNextManager() {
 
-        incrementIndex(stateService.getManagerIndex());
+        incrementIndex(settings.getManagerIndex());
 
         return getCurrentManager();
     }
 
     private void incrementIndex(int startIndex) {
 
-        int index = stateService.getManagerIndex();
+        int index = settings.getManagerIndex();
 
         index++;
 
         if (index >= managers.length) index = 0;
 
-        stateService.setManagerIndex(index);
+        settings.setManagerIndex(index);
 
         if (!getCurrentManager().isWorking()) {
             if (startIndex != getCurrentManager().getIndex()) {
@@ -60,13 +60,13 @@ public class ManagerRotator {
 
     public Manager getCurrentManager() {
 
-        int index = stateService.getManagerIndex();
+        int index = settings.getManagerIndex();
 
         return managers[index];
     }
 
     public void setIndex(int i) {
-        stateService.setManagerIndex(i);
+        settings.setManagerIndex(i);
     }
 
     public Manager[] getList() {

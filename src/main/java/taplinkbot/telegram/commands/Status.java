@@ -1,30 +1,40 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.StateService;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.service.Settings;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/status")
 @RequiredArgsConstructor
-public class Status implements CommandInterface {
+@TelegramCommand(name = "/status")
+public class Status implements TelegramCommandInterface {
 
-    private final StateService stateService;
+    private final Settings settings;
+
+    @Override
+    public String getDescription() {
+        return "Выведет настройки бота";
+    }
 
     @Override
     public Response run(Message msg) {
-        String message;
+        StringBuilder builder = new StringBuilder();
 
-        //@todo multilanguage mechanizm
-        message = "\r\nРасписание: \t" + (stateService.schedulerIsActive() ? "включено" : "выключено");
-        message += "\r\nВО ВСЕ ДНИ без исключения: \t" + (stateService.allowEveryDay() ? "да" : "нет");
-        message += "\r\nВ будние дни: \t\t\t" + (stateService.allowWeekDays() ? "да" : "нет");
-        message += "\r\nВ быходные дни: \t\t\t" + (stateService.allowWeekEnds() ? "да" : "нет");
+        builder.append("Расписание: \t");
+        builder.append(settings.schedulerIsActive() ? "включено" : "выключено");
 
-        return new Response(message);
+        builder.append("\r\n");
+
+        builder.append("В будние дни: \t\t\t");
+        builder.append(settings.allowWeekDays() ? "да" : "нет");
+
+        builder.append("\r\n");
+
+        builder.append("В быходные дни: \t\t\t");
+        builder.append(settings.allowWeekEnds() ? "да" : "нет");
+
+        return ResponseFactory.buildSuccessReponse(builder.toString());
     }
 }

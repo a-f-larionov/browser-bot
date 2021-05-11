@@ -1,5 +1,6 @@
 package taplinkbot.telegram;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,26 +19,27 @@ public class Commands {
 
     private final Router router;
 
+    @Getter
+    private static final Map<String, TelegramCommandInterface> commands = new HashMap<>();
+
     @PostConstruct
     private void init() {
         router.setCommands(this);
     }
 
-    private static Map<String, CommandInterface> commands = new HashMap<>();
-
-    public static void addCommand(String name, CommandInterface commandObject) {
+    public static void addCommand(String name, TelegramCommandInterface commandObject) {
 
         commands.put(name, commandObject);
     }
 
-    public Response execute(Message msg) throws Exception {
+    public Response execute(Message request) {
 
-        CommandInterface command = commands.get(msg.cammand);
+        TelegramCommandInterface command = commands.get(request.cammand);
 
         if (command == null) {
             return new Response("Команда не найдена");
         }
 
-        return command.run(msg);
+        return command.run(request);
     }
 }

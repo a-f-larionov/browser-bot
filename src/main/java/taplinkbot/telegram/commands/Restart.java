@@ -1,27 +1,34 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/restart")
 @RequiredArgsConstructor
-public class Restart implements CommandInterface {
+@TelegramCommand(name = "/restart")
+public class Restart implements TelegramCommandInterface {
 
     private final ConfigurableApplicationContext context;
 
+    @Override
+    public String getDescription() {
+        return "Перезагрузит сервер";
+    }
+
+    /**
+     * Завершит работу спринг приложения.
+     * Перезагрузку соврешит shell скрипт. см. init.d/taplinkb
+     */
     @Override
     public Response run(Message msg) {
         SpringApplication.exit(context);
 
         Runtime.getRuntime().exit(0);
 
-        return new Response("Перезапущено");
+        return ResponseFactory.buildSuccessReponse();
     }
 }

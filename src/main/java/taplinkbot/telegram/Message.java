@@ -4,6 +4,7 @@ import taplinkbot.bot.Profile;
 
 import java.util.Arrays;
 
+//todo Validation annotations
 public class Message {
 
     public String sourceText;

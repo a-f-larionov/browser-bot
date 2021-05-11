@@ -1,33 +1,38 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/manager_list")
+@TelegramCommand(name = "/manager_list")
 @RequiredArgsConstructor
-public class ManagerList implements CommandInterface {
+public class ManagerList implements TelegramCommandInterface {
 
     private final ManagerRotator managerRotator;
 
     @Override
-    public Response run(Message msg) throws Exception {
+    public String getDescription() {
+        return "Выведет список менеджеров.";
+    }
 
-        String message;
-        message = "";
+    @Override
+    public Response run(Message msg) {
+
+        StringBuilder builder = new StringBuilder();
 
         Manager[] manager = managerRotator.getList();
 
         for (int i = 0; i < manager.length; i++) {
-            message += i + " - " + manager[i].getDescription() + "\r\n";
+            builder.append(i);
+            builder.append(" - ");
+            builder.append(manager[i].getDescription());
+            builder.append("\r\n");
         }
 
-        return new Response(message);
+        return ResponseFactory.buildSuccessReponse(builder.toString());
     }
 }

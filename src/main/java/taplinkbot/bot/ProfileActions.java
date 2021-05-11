@@ -17,7 +17,7 @@ public class ProfileActions {
 
     protected final TelegramBot telegram;
 
-    public void changeTo(Profile profile) throws Exception {
+    public void changeTo(Profile profile) {
 
         log.info("profile to " + profile.name);
 
@@ -74,7 +74,7 @@ public class ProfileActions {
         } catch (Exception e) {
 
             telegram.alert("Смена профиля не удалась.", browser.takeScreenshot());
-            throw e;
+            //@todo throw BotExctipions
         }
     }
 

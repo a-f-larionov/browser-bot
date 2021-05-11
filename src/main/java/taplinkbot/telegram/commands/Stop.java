@@ -1,25 +1,28 @@
+//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.StateService;
-import taplinkbot.telegram.Command;
-import taplinkbot.telegram.CommandInterface;
-import taplinkbot.telegram.Message;
-import taplinkbot.telegram.Response;
+import taplinkbot.service.Settings;
+import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/stop")
 @RequiredArgsConstructor
-public class Stop implements CommandInterface {
+@TelegramCommand(name = "/stop")
+public class Stop implements TelegramCommandInterface {
 
-    private final StateService stateService;
+    private final Settings settings;
+
+    @Override
+    public String getDescription() {
+        return "Выключит расписание";
+    }
 
     @Override
     public Response run(Message msg) {
 
-        stateService.schedulerSetActive(false);
+        settings.schedulerSetActive(false);
 
-        return new Response("Расписание выключенно");
+        return ResponseFactory.buildSuccessReponse("Расписание выключенно");
     }
 }

@@ -8,23 +8,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class State {
+public class Settings {
 
-    final public static String STATE_SCHEDULER_ACTIVE = "schedulerActive";
+    final public static String SETTING_SCHEDULER_ACTIVE = "schedulerActive";
 
-    final public static String STATE_LAST_TIMESTAMP = "lastTimeStamp";
+    final public static String SETTING_LAST_TIMESTAMP = "lastTimeStamp";
 
-    final public static String STATE_LAST_MANAGER_INDEX = "lastManagerIndex";
+    final public static String SETTING_LAST_MANAGER_INDEX = "lastManagerIndex";
 
-    final public static String STATE_MANAGER_INTERVAL = "managerInterval";
+    final public static String SETTING_MANAGER_INTERVAL = "managerInterval";
 
-    final public static String STATE_ALLOW_EVERY_DAY = "isEveryDay";
+    final public static String SETTING_ALLOW_EVERY_DAY = "isEveryDay";
 
-    final public static String STATE_ALLOW_WEEKDAYS = "allowWeekdays";
+    final public static String SETTING_ALLOW_WEEKDAYS = "allowWeekdays";
 
-    final public static String STATE_ALLOW_WEEKENDS = "allowWeekends";
-
-    final public static String STATE_ALLOW_HOLIDAYS = "allowHolidays";
+    final public static String SETTING_ALLOW_WEEKENDS = "allowWeekends";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,12 +38,12 @@ public class State {
 
     private Profile profile;
 
-    public State(String name, Profile profile) {
+    public Settings(String name, Profile profile) {
         this.name = name;
         this.profile = profile;
     }
 
-    public State() {
+    public Settings() {
 
     }
 
@@ -53,7 +51,7 @@ public class State {
         return name;
     }
 
-    public State setName(String name) {
+    public Settings setName(String name) {
         this.name = name;
         return this;
     }
@@ -62,7 +60,7 @@ public class State {
         return intValue;
     }
 
-    public State setIntValue(int intValue) {
+    public Settings setIntValue(int intValue) {
         this.intValue = intValue;
         return this;
     }
@@ -83,7 +81,7 @@ public class State {
         return booleanValue;
     }
 
-    public State setBooleanValue(boolean booleanValue) {
+    public Settings setBooleanValue(boolean booleanValue) {
         this.booleanValue = booleanValue;
         return this;
     }

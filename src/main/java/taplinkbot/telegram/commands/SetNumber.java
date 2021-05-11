@@ -6,17 +6,29 @@ import taplinkbot.bot.Actions;
 import taplinkbot.telegram.*;
 
 @Component
-@Command(name = "/set_number")
 @RequiredArgsConstructor
-public class SetNumber implements CommandInterface {
+@TelegramCommand(name = "/set_number")
+public class SetNumber implements TelegramCommandInterface {
 
     private final TelegramBot telegramBot;
 
     private final Actions actions;
 
     @Override
-    public Response run(Message msg) throws Exception {
+    public String getDescription() {
+        return "Установит переданный номер";
+    }
 
+    /**
+     * @param msg
+     * @return
+     * @throws Exception
+     * @todo telegramBot to informator.send("message here",request.chatId);
+     */
+    @Override
+    public Response run(Message msg) {
+
+        //@todo validation
         if (!msg.arg1.matches("^\\+7\\d{10}$")) {
             return new Response("Номер телефона должен быть в формате +71234567890, передано:'" + msg.arg1 + "'");
         }
@@ -25,6 +37,6 @@ public class SetNumber implements CommandInterface {
 
         actions.setPhoneNumber(msg.arg1, msg.profile);
 
-        return new Response("Команда выполненна");
+        return ResponseFactory.buildSuccessReponse();
     }
 }
