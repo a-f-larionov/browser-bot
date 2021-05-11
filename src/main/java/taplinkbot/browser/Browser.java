@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +14,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -35,19 +33,21 @@ public class Browser implements WebDriver {
 
     private final Environment env;
 
+    private final Screenshoter screenshoter;
+
     private RemoteWebDriver driver;
 
     /**
-     * Время по умолчанию для ожидания.
+     * Время по умолчанию для ожидания элементов на странице.
      * Секунды.
      */
     @Value("${webdriver.defaultTimeout:300}")
     public int DEFAULT_WAIT_TIME;
 
     /**
-     * Последний комментарий.
-     * Будет выведен при ошибке.
-     * Например: клиентский код запросил элемент
+     * "Последний комментарий".
+     * Будет выведен при ошибке, для дебага.
+     * Например: клиентский код запросил элемент:
      * lastComment("Нажатие кнопки входа")
      * findElementBy();
      * если кнопка не будет найдена, ошибка будет содержать текст последнего комментария
@@ -58,7 +58,7 @@ public class Browser implements WebDriver {
     private String comment;
 
     /**
-     * Откроем браузер.
+     * Запустим браузер.
      */
     @PostConstruct
     public void init() {
@@ -67,7 +67,7 @@ public class Browser implements WebDriver {
 
     /**
      * Открыть страницу в браузере
-     * Метод профилируется классом PageLoadProfiler
+     * Метод профилируется бином PageLoadProfiler
      *
      * @param url url страницы для открытия
      */
@@ -123,11 +123,11 @@ public class Browser implements WebDriver {
     }
 
     /**
-     * Проверяет наличие элемента
+     * Проверяет наличие элемента.
      *
      * @param by      org.openqa.selenium.By
      * @param seconds время ожидания в секундах
-     * @return WebElement или null
+     * @return WebElement или null если не присутствует
      */
     public boolean isElementPresent(By by, int seconds) {
 
@@ -153,17 +153,23 @@ public class Browser implements WebDriver {
         return findElement(by);
     }
 
+    /**
+     * Ищет элемент, если не найден выбросит исключение BrowserException
+     *
+     * @param by org.openqa.selenium.By
+     * @return WebElement
+     */
     @Override
     public WebElement findElement(By by) {
 
         try {
-
             return driver.findElement(by);
 
         } catch (NotFoundException e) {
 
             throw new BrowserException(
-                    "Не удалось найти элемент. Обратитесь к разработчику. Элемент: `" + by.toString() + "`",
+                    "Не удалось найти элемент. Обратитесь к разработчику. Элемент:" +
+                            " `" + by.toString() + "`",
                     takeScreenshot(),
                     comment
             );
@@ -228,18 +234,8 @@ public class Browser implements WebDriver {
      */
     @SneakyThrows
     public String takeScreenshot() {
-        String filesPath, url, fileName;
 
-        filesPath = env.getProperty("app.screenshot.path");
-        fileName = "botscreen_" + System.currentTimeMillis() + ".png";
-        url = "http://" + env.getProperty("app.screenshot.hostname") + "/" + fileName;
-
-        File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        File dest = new File(filesPath + fileName);
-
-        FileUtils.copyFile(source, dest);
-
-        return url;
+        return screenshoter.takeScreenshot(driver);
     }
 
     /**
