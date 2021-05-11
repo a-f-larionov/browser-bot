@@ -27,6 +27,8 @@ public class Actions {
 
     private final Profiles profiles;
 
+    private final TaplinkAcсount taplinkAcсount;
+
     /**
      * Установить номер телефона
      * 1 - Авторизуется
@@ -45,7 +47,7 @@ public class Actions {
             throw new BotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
         }
 
-        authActions.webLogin(profile.getLogin(), profile.getPassword());
+        authActions.webLogin(taplinkAcсount.getLogin(), taplinkAcсount.getPassword());
 
         profileActions.changeTo(profile);
 

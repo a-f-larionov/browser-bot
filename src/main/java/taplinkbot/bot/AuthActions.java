@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import taplinkbot.browser.Browser;
-import taplinkbot.telegram.TelegramBot;
 
 /**
  * @todo move mini actions, and group actions
@@ -17,13 +15,7 @@ import taplinkbot.telegram.TelegramBot;
 @RequiredArgsConstructor
 public class AuthActions {
 
-    protected final TelegramBot telegram;
-
-    protected final Browser browser;
-
-    protected final Profiles profiles;
-
-    private final Environment env;
+    private final Browser browser;
 
     private WebElement we;
 

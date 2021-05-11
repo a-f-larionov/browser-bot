@@ -1,8 +1,6 @@
 package taplinkbot.bot;
 
 import lombok.Getter;
-import org.springframework.core.env.ConfigurableEnvironment;
-import taplinkbot.Application;
 
 @Getter
 public enum Profile {
@@ -41,22 +39,5 @@ public enum Profile {
      */
     public String getPageUrl() {
         return "https://" + this.getDomainName() + "/";
-    }
-
-    public String getLogin() {
-        return getProp("username");
-    }
-
-    public String getPassword() {
-        return getProp("password");
-    }
-
-    private String getProp(String propName) {
-
-        ConfigurableEnvironment env = Application.getContext().getEnvironment();
-
-        String envPropName = "taplink." + this.getName() + "." + propName;
-
-        return env.getProperty(envPropName);
     }
 }

@@ -15,10 +15,10 @@ import java.io.File;
 @RequiredArgsConstructor
 public class Screenshoter {
 
-    @Value("${app.screenshot.path}")
+    @Value("${webdriver.screenshot.path}")
     private String filePath;
 
-    @Value("${app.screenshot.hostname}")
+    @Value("${webdriver.screenshot.hostname}")
     private String hostname;
 
     @SneakyThrows
