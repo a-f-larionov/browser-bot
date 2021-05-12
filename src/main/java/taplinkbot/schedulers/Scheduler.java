@@ -2,7 +2,6 @@ package taplinkbot.schedulers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebDriverException;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,7 +36,7 @@ public class Scheduler {
     public void intervaled() {
 
         try {
-            onIdleBrowserReachable();
+            onIdleTestBugErrConnectionClosed();
 
             onIdleManagerChange(Profile.Canvas);
 
@@ -54,28 +53,9 @@ public class Scheduler {
         }
     }
 
-    private void onIdleBrowserReachable() {
+    private void onIdleTestBugErrConnectionClosed() {
 
-        try {
-            profiles.set(Profile.Canvas);
-
-            multiPageControl(Profile.Canvas);
-
-            profiles.clear();
-
-        } catch (Exception e) {
-            if (e instanceof WebDriverException) {
-                log.debug(e.getMessage());
-            }
-            if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
-                browser.fixBugErrConnectionClosed();
-                log.info("Web Driver перезапущен.");
-            }
-            e.printStackTrace();
-        } finally {
-
-            profiles.clear();
-        }
+        browser.testBugErrConnectionClosed();
     }
 
     private void onIdlePinger(Profile profile) throws Exception {

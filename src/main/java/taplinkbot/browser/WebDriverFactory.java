@@ -21,12 +21,6 @@ public class WebDriverFactory {
 
         System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(env.getProperty("webdriver.path")));
 
-        log.info(env.getProperty("webdriver.path"));
-        log.info(env.getProperty("webdriver.path"));
-        log.info(env.getProperty("webdriver.path"));
-        log.info(env.getProperty("webdriver.path"));
-        log.info(env.getProperty("webdriver.path"));
-
         ChromeOptions options = new ChromeOptions();
 
         if (!env.getProperty("webdriver.guiEnabled").equals("true")) {

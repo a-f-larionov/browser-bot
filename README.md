@@ -7,11 +7,11 @@ TapLinkBot
     Пробелма: Taplink.RU не представляет возможности, менять номер телефона по расписанию, например каждые 30 минут из списка 4-ех номеров.
     Решение: Автоматизация смены номера ботом, посредством WebDriver.
 
-    Проект реализует функционал на сервисе https://taplink.ru/, не заложенных в самом сервисе, посредством автоматизации браузера.
+    Проект реализует функционал, не заложенных в самом сервисе, посредством автоматизации браузера, управление через web интерфейс и телеграм бота.
 
-    Функционал: (@too)
+    Функционал: (//@too)
 
-    - смена номера на странице, по рассписанию;
+    - Смена номера в блоке "Узнать цену"
     - вкл\откл номеров менеджеров через веб интерфейс\телеграм бота;
     - включения\выключение работы расписания на будни\выходные\все дни;
     - получение номера со страницы через телеграм бота командой /get_number
@@ -19,11 +19,12 @@ TapLinkBot
 
     Технологии:
     
-    - Language: Java 
-    - Spring, Spring boot
+    - Language: Java 8+ 
+    - Spring, Spring boot, Maven
     - Lombok
     - Mysql server
-    
+    - Selenium, WebDriver
+    - Telegram Bot API
 
 # Installation
 
@@ -31,8 +32,6 @@ TapLinkBot
 
     apt update
     apt upgrade
-
-
 
 ### MySql
 
@@ -42,7 +41,6 @@ TapLinkBot
     CREATE USER 'taplinkbot'@'%' IDENTIFIED BY 'taplinkbot';
     GRANT ALL PRIVILEGES ON taplinkbot.* TO 'taplinkbot'@'%';
     FLUSH PRIVILEGES;
-
 
 ### Run on startup ubuntu
 

@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.browser;
 
 import lombok.Getter;
@@ -10,8 +11,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import taplinkbot.bot.Profile;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -31,8 +32,6 @@ public class Browser implements WebDriver {
 
     private final PageLoadProfiler pageLoadProfiler;
 
-    private final Environment env;
-
     private final Screenshoter screenshoter;
 
     private RemoteWebDriver driver;
@@ -48,9 +47,9 @@ public class Browser implements WebDriver {
      * "Последний комментарий".
      * Будет выведен при ошибке, для дебага.
      * Например: клиентский код запросил элемент:
-     * lastComment("Нажатие кнопки входа")
-     * findElementBy();
-     * если кнопка не будет найдена, ошибка будет содержать текст последнего комментария
+     * 1 comment("Нажатие кнопки входа")
+     * 2 findElementBy();
+     * Если элемент не будет найден, ошибка будет содержать текст последнего комментария
      * так быстрей устранить баг.
      */
     @Getter
@@ -58,7 +57,7 @@ public class Browser implements WebDriver {
     private String comment;
 
     /**
-     * Запустим браузер.
+     * Получим доступ к браузеру.
      */
     @PostConstruct
     public void init() {
@@ -104,7 +103,6 @@ public class Browser implements WebDriver {
      * Найти элементы
      *
      * @param by org.openqa.selenium
-     * @return
      */
     @Override
     public List<WebElement> findElements(By by) {
@@ -116,7 +114,6 @@ public class Browser implements WebDriver {
      * По умолчанию ждёт DEFAULT_WAIT_TIME секунд.
      *
      * @param by org.openqa.selenium.By
-     * @return
      */
     public WebElement waitElement(By by) {
         return waitElement(by, DEFAULT_WAIT_TIME);
@@ -134,7 +131,7 @@ public class Browser implements WebDriver {
         try {
             waitElement(by, seconds);
             return true;
-        } catch (TimeoutException | NotFoundException | BrowserException e) {
+        } catch (TimeoutException | NotFoundException e) {
             return false;
         }
     }
@@ -143,7 +140,7 @@ public class Browser implements WebDriver {
      * Ждёт элемент.
      *
      * @param by      селектор элемента.
-     * @param seconds ожидание в секундах, не точное.
+     * @param seconds ожидание в секундах.
      */
     public WebElement waitElement(By by, int seconds) {
 
@@ -166,12 +163,11 @@ public class Browser implements WebDriver {
             return driver.findElement(by);
 
         } catch (NotFoundException e) {
-
             throw new BrowserException(
-                    "Не удалось найти элемент. Обратитесь к разработчику. Элемент:" +
-                            " `" + by.toString() + "`",
-                    takeScreenshot(),
-                    comment
+                    "Не удалось найти элемент." +
+                            " Обратитесь к разработчику." +
+                            " Элемент:" + " `" + by.toString() + "`"
+                    , this
             );
         }
     }
@@ -234,8 +230,25 @@ public class Browser implements WebDriver {
      */
     @SneakyThrows
     public String takeScreenshot() {
-
         return screenshoter.takeScreenshot(driver);
+    }
+
+    /**
+     * Проверка бага обрыва связи с браузером.
+     */
+    public void testBugErrConnectionClosed() {
+        try {
+
+            get(Profile.Canvas.getPageUrl());
+
+        } catch (Exception e) {
+
+            if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
+                fixBugErrConnectionClosed();
+            } else {
+                throw e;
+            }
+        }
     }
 
     /**
@@ -248,5 +261,7 @@ public class Browser implements WebDriver {
         if (driver != null) driver.quit();
 
         driver = webDriverFactory.buildWebDriver();
+
+        log.info("Web Driver перезапущен.");
     }
 }
