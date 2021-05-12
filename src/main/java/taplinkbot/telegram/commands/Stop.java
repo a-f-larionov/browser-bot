@@ -9,7 +9,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/stop")
-public class Stop implements CommandInterface {
+public class Stop extends Command {
 
     private final Settings settings;
 

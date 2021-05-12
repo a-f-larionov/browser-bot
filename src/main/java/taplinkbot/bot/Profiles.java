@@ -12,20 +12,6 @@ public class Profiles {
 
     private Profile profile;
 
-    public void set(Profile profile) {
-
-        if (profile == null) {
-            log.info("profile is NULL!!!");
-        }
-
-        if (profile != null && this.profile != null) {
-//            log.info("bot context is busy by:" + this.profile.name
-//                    + "!!! Requested: " + botProfile.name);
-        }
-
-        this.profile = profile;
-    }
-
     public static Profile findByName(String arg) {
 
         for (Profile botProfile : Profile.values()) {
@@ -50,9 +36,5 @@ public class Profiles {
                     return profile.name;
                 })
                 .collect(Collectors.joining(","));
-    }
-
-    public void clear() {
-        this.profile = null;
     }
 }

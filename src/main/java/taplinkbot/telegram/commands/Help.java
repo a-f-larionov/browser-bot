@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/help")
-public class Help implements CommandInterface {
+public class Help extends Command {
 
     @Override
     public String getDescription() {
@@ -27,14 +27,14 @@ public class Help implements CommandInterface {
 
         StringBuilder builder = new StringBuilder();
 
-        Map<String, CommandInterface> commands = Commands.getCommands();
+        Map<String, Command> commands = Commands.getCommands();
 
         Object keys[] = commands.keySet().toArray();
 
         Arrays.sort(keys);
 
         for (Object key : keys) {
-            CommandInterface command = commands.get(key);
+            Command command = commands.get(key);
 
             builder.append(key.toString());
             builder.append(" - ");

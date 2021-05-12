@@ -60,16 +60,10 @@ public class Scheduler {
 
     private void onIdlePinger(Profile profile) throws Exception {
 
-        profiles.set(profile);
-
         multiPageControl(profile);
-
-        profiles.clear();
     }
 
     private void onIdleManagerChange(Profile profile) throws Exception {
-
-        profiles.set(profile);
 
         if (!trigger.isItTimeToChange(profile)) {
             return;
@@ -82,19 +76,15 @@ public class Scheduler {
         setNewManager(manager, profile);
 
         trigger.updateLastTime(profile);
-
-        profiles.clear();
     }
 
     private void setNewManager(Manager manager, Profile profile) throws Exception {
-        profiles.set(profile);
         telegram.info("Смена номера: " + profile.name + " " + manager.getDescription());
 
         actions.setPhoneNumber(manager.getPhone(), profile);
     }
 
     private void multiPageControl(Profile profile) throws Exception {
-        profiles.set(profile);
 
         actions.multiPageControl(profile);
     }

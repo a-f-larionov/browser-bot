@@ -1,17 +1,28 @@
 //FIN
 package taplinkbot.telegram;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Интерфейс комманд телеграмм бота
  */
-public interface CommandInterface {
+public abstract class Command {
+
+    /**
+     * Имя комманды, заполняется автоматически из name аннотации.
+     */
+    @Setter(AccessLevel.PUBLIC)
+    @Getter(AccessLevel.PUBLIC)
+    private String name = "";
 
     /**
      * Возвращает краткое описание действий команды
      *
      * @return краткое описание действий команды
      */
-    String getDescription();
+    public abstract String getDescription();
 
     /**
      * Вызывается при запросе выполнения команды
@@ -19,5 +30,5 @@ public interface CommandInterface {
      * @param msg сообщение от пользователя системы.
      * @return Ответ работы команды
      */
-    Response run(Message msg);
+    public abstract Response run(Message msg);
 }

@@ -11,7 +11,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/status")
-public class Status implements CommandInterface {
+public class Status extends Command {
 
     private final Settings settings;
 

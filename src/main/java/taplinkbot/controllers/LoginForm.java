@@ -1,6 +1,6 @@
 package taplinkbot.controllers;
 
-//@oto validations
+//@todo validations
 public class LoginForm {
 
     public String password;

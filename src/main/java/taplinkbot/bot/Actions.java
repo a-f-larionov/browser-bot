@@ -41,8 +41,6 @@ public class Actions {
      */
     synchronized public void setPhoneNumber(String phoneNumber, Profile profile) {
 
-        profiles.set(profile);
-
         //@Todo message from Hibernate validator
         if (!PhoneNumber.validate(phoneNumber)) {
             throw new TapLinkBotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");

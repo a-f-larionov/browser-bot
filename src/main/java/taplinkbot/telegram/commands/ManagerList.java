@@ -10,7 +10,7 @@ import taplinkbot.telegram.*;
 @Component
 @TelegramCommand(name = "/manager_list")
 @RequiredArgsConstructor
-public class ManagerList implements CommandInterface {
+public class ManagerList extends Command {
 
     private final ManagerRotator managerRotator;
 

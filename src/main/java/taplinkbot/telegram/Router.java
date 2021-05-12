@@ -38,8 +38,6 @@ public class Router {
 
             String[] args = Message.getFilledArgs(msg);
 
-            profiles.set(msg.profile);
-
             //response = processCommand(msg.cammand, args[2], args[3], msg.chatId);
             msg.arg1 = args[2];
             msg.arg2 = args[3];
@@ -50,9 +48,6 @@ public class Router {
             log.info("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
             response = new Response("Невозможно обработать команду", e);
 
-        } finally {
-
-            profiles.clear();
         }
 
         return response.getDescription();

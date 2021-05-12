@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 @Slf4j
 @TelegramCommand(name = "/start")
-public class Start implements CommandInterface {
+public class Start extends Command {
 
     private final Settings settings;
 

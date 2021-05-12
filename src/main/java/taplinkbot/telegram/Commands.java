@@ -23,14 +23,14 @@ public class Commands {
      * Hashtable no have null and synchronized
      */
     @Getter
-    private static final Map<String, CommandInterface> commands = new Hashtable<>();
+    private static final Map<String, Command> commands = new Hashtable<>();
 
     @PostConstruct
     private void init() {
         router.setCommands(this);
     }
 
-    public static void addCommand(String name, CommandInterface commandObject) {
+    public static void addCommand(String name, Command commandObject) {
 
         if (commands.containsKey(name)) {
             //@todo
@@ -40,7 +40,7 @@ public class Commands {
 
     public Response execute(Message request) {
 
-        CommandInterface command = commands.get(request.cammand);
+        Command command = commands.get(request.cammand);
 
         if (command == null) {
             return new Response("Команда не найдена");

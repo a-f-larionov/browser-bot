@@ -9,7 +9,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/get_number")
-public class GetNumber implements CommandInterface {
+public class GetNumber extends Command {
 
     private final Actions actions;
 
