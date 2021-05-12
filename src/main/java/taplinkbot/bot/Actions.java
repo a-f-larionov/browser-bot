@@ -26,9 +26,7 @@ public class Actions {
 
     private final MultiPageActions taplinkMultiPageActions;
 
-    private final Profiles profiles;
-
-    private final TaplinkAcсount taplinkAcсount;
+    private final TapLinkAccount tapLinkAccount;
 
     /**
      * Установить номер телефона
@@ -46,7 +44,7 @@ public class Actions {
             throw new TapLinkBotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
         }
 
-        authActions.webLogin(taplinkAcсount.getLogin(), taplinkAcсount.getPassword());
+        authActions.webLogin(tapLinkAccount.getLogin(), tapLinkAccount.getPassword());
 
         profileActions.changeTo(profile);
 

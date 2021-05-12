@@ -32,7 +32,7 @@ public class Browser implements WebDriver {
 
     private final PageLoadProfiler pageLoadProfiler;
 
-    private final Screenshoter screenshoter;
+    private final ScreenShooter screenShooter;
 
     private RemoteWebDriver driver;
 
@@ -71,9 +71,10 @@ public class Browser implements WebDriver {
      * @param url url страницы для открытия
      */
     @Override
-    public void get(String url) {
+    synchronized public void get(String url) {
         pageLoadProfiler.start();
 
+        log.info(url);
         driver.get(url);
 
         pageLoadProfiler.finish(url);
@@ -230,7 +231,7 @@ public class Browser implements WebDriver {
      */
     @SneakyThrows
     public String takeScreenshot() {
-        return screenshoter.takeScreenshot(driver);
+        return screenShooter.takeScreenshot(driver);
     }
 
     /**

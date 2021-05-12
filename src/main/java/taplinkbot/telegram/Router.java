@@ -15,8 +15,6 @@ public class Router {
 
     private final Accessor accessor;
 
-    private final Profiles profiles;
-
     private Commands commands;
 
     /**

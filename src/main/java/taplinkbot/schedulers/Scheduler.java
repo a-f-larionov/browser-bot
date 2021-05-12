@@ -33,9 +33,11 @@ public class Scheduler {
     private final Browser browser;
 
     @Scheduled(cron = "0 * * * * 1-7")
-    public void intervaled() {
+    public void tick() {
 
         try {
+            log.info("tick");
+
             onIdleTestBugErrConnectionClosed();
 
             onIdleManagerChange(Profile.Canvas);
@@ -78,13 +80,13 @@ public class Scheduler {
         trigger.updateLastTime(profile);
     }
 
-    private void setNewManager(Manager manager, Profile profile) throws Exception {
+    private void setNewManager(Manager manager, Profile profile) {
         telegram.info("Смена номера: " + profile.name + " " + manager.getDescription());
 
         actions.setPhoneNumber(manager.getPhone(), profile);
     }
 
-    private void multiPageControl(Profile profile) throws Exception {
+    private void multiPageControl(Profile profile) {
 
         actions.multiPageControl(profile);
     }

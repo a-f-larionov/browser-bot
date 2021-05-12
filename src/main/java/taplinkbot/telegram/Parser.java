@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
 import taplinkbot.bot.Profiles;
 
+//@Todo
 @Component
 public class Parser {
 

@@ -37,6 +37,6 @@ public class SetNumber extends Command {
 
         actions.setPhoneNumber(msg.arg1, msg.profile);
 
-        return ResponseFactory.buildSuccessReponse();
+        return ResponseFactory.buildSuccessResponse();
     }
 }

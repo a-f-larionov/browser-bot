@@ -1,4 +1,4 @@
-// FINISHED
+//FIN
 package taplinkbot;
 
 import org.springframework.beans.factory.annotation.Value;

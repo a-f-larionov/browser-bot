@@ -1,7 +1,12 @@
+//FIN
 package taplinkbot.telegram;
 
 import lombok.Data;
 
+/**
+ * Ответ может содержать текст,
+ * в случае ошибки еще и Exception этой ошибки.
+ */
 @Data
 public class Response {
 
@@ -14,11 +19,16 @@ public class Response {
     }
 
     public Response(String message, Exception exception) {
+
         this.message = message;
         this.exception = exception;
-        exception.printStackTrace();
     }
 
+    /**
+     * Описание ответа.
+     *
+     * @return
+     */
     public String getDescription() {
         if (exception != null) {
             return message + " " + exception.getMessage();

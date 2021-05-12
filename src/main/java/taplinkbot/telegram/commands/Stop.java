@@ -23,6 +23,6 @@ public class Stop extends Command {
 
         settings.schedulerSetActive(msg.profile, false);
 
-        return ResponseFactory.buildSuccessReponse("Расписание выключенно");
+        return ResponseFactory.buildSuccessResponse("Расписание выключенно");
     }
 }

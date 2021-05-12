@@ -16,6 +16,7 @@ public class Conditions {
     public boolean isBeginOfInterval;
 
     public boolean isItWeekend;
+
     public boolean isItWeekday;
 
     public boolean isItTimeToChange;

@@ -29,6 +29,6 @@ public class Restart extends Command {
 
         Runtime.getRuntime().exit(0);
 
-        return ResponseFactory.buildSuccessReponse();
+        return ResponseFactory.buildSuccessResponse();
     }
 }

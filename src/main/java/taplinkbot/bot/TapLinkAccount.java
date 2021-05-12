@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TaplinkAcсount {
+public class TapLinkAccount {
 
     private final Environment env;
 

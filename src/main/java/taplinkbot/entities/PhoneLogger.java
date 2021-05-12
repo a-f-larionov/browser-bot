@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+//@todo valdations
 @Entity
 public class PhoneLogger {
 
@@ -24,6 +25,7 @@ public class PhoneLogger {
     private Profile profile;
 
     public PhoneLogger(String phoneNumber, Profile profile) {
+
         this.phoneNumber = phoneNumber;
         this.profile = profile;
     }

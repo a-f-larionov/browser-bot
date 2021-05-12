@@ -1,4 +1,3 @@
-//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ public class ManagerList extends Command {
     }
 
     @Override
+    //@todo StringBuilder
     public Response run(Message msg) {
 
         StringBuilder builder = new StringBuilder();
@@ -33,6 +33,6 @@ public class ManagerList extends Command {
             builder.append("\r\n");
         }
 
-        return ResponseFactory.buildSuccessReponse(builder.toString());
+        return ResponseFactory.buildSuccessResponse(builder.toString());
     }
 }

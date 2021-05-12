@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+//@Todo validations
 public class PageLoads {
 
     @Id

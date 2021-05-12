@@ -6,18 +6,17 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+//@Todo
 @Component
 @Slf4j
 public class Profiles {
 
-    private Profile profile;
-
     public static Profile findByName(String arg) {
 
-        for (Profile botProfile : Profile.values()) {
-            if (botProfile.name.equals(arg) ||
-                    botProfile.alias.equals(arg)) {
-                return botProfile;
+        for (Profile profile : Profile.values()) {
+            if (profile.name.equals(arg) ||
+                    profile.alias.equals(arg)) {
+                return profile;
             }
         }
 

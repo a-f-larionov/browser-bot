@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.bot;
 
 import lombok.Getter;
@@ -6,9 +7,19 @@ import lombok.Getter;
 public enum Profile {
 
     Canvas("canvas", "c", "canvas.ru.com", "canvas.ru.com"),
-    LadyArt("ladyart", "l", "lady-art.art", "lady-art.art");
+    LadyArt("ladyart", "l", "lady-art.art", "lady-art.art"),
 
+    Test1("larionov", "a", "a.f.larionov", "taplink.cc/a.f.larionov"),
+    Test2("id5006243", "i", "id:5006243", "taplink.cc/id:5006243");
+
+    /**
+     * Имя используется для указаний клиентом профиля по имени
+     */
     public final String name;
+
+    /**
+     * Алиас используется для указаний клиентом профиля по алиасу
+     */
     public final String alias;
 
     /**
@@ -35,9 +46,8 @@ public enum Profile {
      * Возвращает ссылку на страницу Мультиссылки.
      *
      * @return мультиссылка
-     * @todo move to Profile
      */
     public String getPageUrl() {
-        return "https://" + this.getDomainName() + "/";
+        return "https://" + this.getDomainName();
     }
 }

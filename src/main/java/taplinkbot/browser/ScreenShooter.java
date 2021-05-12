@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.browser;
 
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.io.File;
 
 @Component
 @RequiredArgsConstructor
-public class Screenshoter {
+public class ScreenShooter {
 
     @Value("${webdriver.screenshot.path}")
     private String filePath;
@@ -21,6 +22,12 @@ public class Screenshoter {
     @Value("${webdriver.screenshot.hostname}")
     private String hostname;
 
+    /**
+     * Возвращает url скриншота браузера.
+     *
+     * @param driver драйвер браузера
+     * @return url скришота
+     */
     @SneakyThrows
     public String takeScreenshot(RemoteWebDriver driver) {
 

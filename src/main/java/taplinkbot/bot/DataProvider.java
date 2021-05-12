@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+//@todo
 public class DataProvider {
-
-    protected final Profiles profiles;
 
 }

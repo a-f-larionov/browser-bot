@@ -33,8 +33,9 @@ public class Commands {
     public static void addCommand(String name, Command commandObject) {
 
         if (commands.containsKey(name)) {
-            //@todo
+            throw new RuntimeException("Команда " + name + "уже существует.");
         }
+
         commands.put(name, commandObject);
     }
 

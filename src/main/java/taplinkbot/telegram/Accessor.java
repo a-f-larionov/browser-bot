@@ -3,6 +3,7 @@ package taplinkbot.telegram;
 import org.springframework.stereotype.Component;
 
 @Component
+//@todo some pattern may be? or spring accesor?
 public class Accessor {
 
     /**

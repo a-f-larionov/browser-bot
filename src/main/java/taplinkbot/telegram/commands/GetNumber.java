@@ -32,7 +32,7 @@ public class GetNumber extends Command {
 
         finish = System.currentTimeMillis();
 
-        return ResponseFactory.buildSuccessReponse(
+        return ResponseFactory.buildSuccessResponse(
                 "Номер телефона: " +
                         phoneNumber + ", " +
                         (finish - start) + " мсек."

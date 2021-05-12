@@ -1,12 +1,16 @@
+//FIN
 package taplinkbot.telegram;
 
+/**
+ * Фабрика ответов на команды в телеграмме.
+ */
 public class ResponseFactory {
 
-    public static Response buildSuccessReponse() {
+    public static Response buildSuccessResponse() {
         return new Response("Успешно.");
     }
 
-    public static Response buildSuccessReponse(String messsage) {
+    public static Response buildSuccessResponse(String messsage) {
         return new Response(messsage);
     }
 

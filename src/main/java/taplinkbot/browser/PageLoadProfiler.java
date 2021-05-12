@@ -2,7 +2,6 @@ package taplinkbot.browser;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Profiles;
 import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
 
@@ -12,8 +11,6 @@ import taplinkbot.repositories.PageLoadsRepository;
 @Component
 @RequiredArgsConstructor
 public class PageLoadProfiler {
-
-    private final Profiles profiles;
 
     private final PageLoadsRepository pageLoadsRepository;
 

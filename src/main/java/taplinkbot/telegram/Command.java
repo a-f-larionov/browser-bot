@@ -12,6 +12,7 @@ public abstract class Command {
 
     /**
      * Имя комманды, заполняется автоматически из name аннотации.
+     * см. TelegramCommandAnnotationBeanPostProcessor
      */
     @Setter(AccessLevel.PUBLIC)
     @Getter(AccessLevel.PUBLIC)

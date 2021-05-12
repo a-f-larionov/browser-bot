@@ -23,6 +23,6 @@ public class WeekDaysDisallow extends Command {
 
         settings.setAllowWeekDays(msg.profile, false);
 
-        return ResponseFactory.buildSuccessReponse();
+        return ResponseFactory.buildSuccessResponse();
     }
 }

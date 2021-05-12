@@ -42,6 +42,6 @@ public class Help extends Command {
             builder.append("\r\n");
         }
 
-        return ResponseFactory.buildSuccessReponse(builder.toString());
+        return ResponseFactory.buildSuccessResponse(builder.toString());
     }
 }

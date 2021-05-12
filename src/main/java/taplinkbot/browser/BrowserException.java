@@ -1,16 +1,16 @@
+//FIN
 package taplinkbot.browser;
 
 import taplinkbot.TapLinkBotException;
 
+/**
+ * Исключения содержат данные браузера для отладки.
+ */
 public class BrowserException extends TapLinkBotException {
 
     private String screenShotUrl = "";
 
     private String comment = "";
-
-    public BrowserException(String message) {
-        super(message);
-    }
 
     public BrowserException(String message, Browser browser) {
         super(message);

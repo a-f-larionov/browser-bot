@@ -25,7 +25,6 @@ public class PhoneNumberActions {
      */
     public void setPhoneNumber(String phoneNumber) throws Exception {
 
-
         //@todo props data provider
         String url = "https://taplink.ru/";
 
@@ -35,7 +34,8 @@ public class PhoneNumberActions {
             browser.get(url);
 
             browser.setComment("Обращение к блоку WhatsUp.");
-            WebElement we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
+            //WebElement we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
+            WebElement we = browser.waitElement(By.xpath("//span[contains(text(),'Узнать цену в WhatsApp')]/.."));
 
             if (!we.isDisplayed()) {
                 telegram.alert("Блок Whatsup не удалось найти по признаку displayed().", browser.takeScreenshot());

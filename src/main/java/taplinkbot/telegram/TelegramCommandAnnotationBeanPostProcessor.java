@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.telegram;
 
 import org.springframework.beans.BeansException;
@@ -7,8 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * БинПостПроцессор собирает аннотированные @TelegramCommand.class классы
+ * и добавляет их в список команд.
+ */
 @Component
-public class CommandAnnotationBeanPostProcessor implements BeanPostProcessor {
+public class TelegramCommandAnnotationBeanPostProcessor implements BeanPostProcessor {
 
     private Map<String, Command> beans = new HashMap<>();
 

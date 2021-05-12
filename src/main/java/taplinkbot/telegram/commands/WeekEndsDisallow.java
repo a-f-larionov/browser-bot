@@ -26,6 +26,6 @@ public class WeekEndsDisallow extends Command {
 
         settings.setAllowWeekEnds(msg.profile, false);
 
-        return ResponseFactory.buildSuccessReponse();
+        return ResponseFactory.buildSuccessResponse();
     }
 }
