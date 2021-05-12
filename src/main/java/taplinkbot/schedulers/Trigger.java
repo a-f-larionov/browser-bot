@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
+import taplinkbot.helpers.DateTimeHelper;
 import taplinkbot.service.Settings;
 
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
- * Компонент интервальногоо срабатывания
+ * Определяет, когда срабатывать расписанию с учетом интервала, времени последнего срабатывания.
  */
 @Component
 @RequiredArgsConstructor
@@ -19,46 +19,65 @@ public class Trigger {
 
     private final Settings settings;
 
-    final int[] weekdays = {
-            Calendar.MONDAY,
-            Calendar.TUESDAY,
-            Calendar.WEDNESDAY,
-            Calendar.THURSDAY,
-            Calendar.FRIDAY
-    };
-
-    final int[] weekends = {
-            Calendar.SUNDAY,
-            Calendar.SATURDAY
-    };
-
-    private int getHours(long millis) {
-        Calendar c = Calendar.getInstance();
-        if (millis != 0) c.setTimeInMillis(millis);
-        return c.get(Calendar.HOUR_OF_DAY);
+    /**
+     * Необходимо ли сейчас срабатывать.
+     *
+     * @return true - время срабатывать, иначе false
+     */
+    public boolean isItTimeToChange(Profile profile) {
+        return getConditions(profile)
+                .isItTimeToChange;
     }
 
-    private boolean isItWeekDay(long mills) {
-        int dayOfWeek = getDayOfWeek(mills);
-        return Arrays.stream(weekdays).anyMatch(v -> v == dayOfWeek);
+    /**
+     * Возвращает состояние условий для текущего момента времени.
+     *
+     * @return состояние условий срабатывания
+     */
+    public Conditions getConditions(Profile profile) {
+        return getConditions(profile, Calendar.getInstance().getTimeInMillis());
     }
 
-    private boolean isItWeekEnd(long mills) {
-        int dayOfWeek = getDayOfWeek(mills);
-        return Arrays.stream(weekends).anyMatch(v -> v == dayOfWeek);
+    public void updateLastTime() {
+        settings.updateLastTimestamp(Calendar.getInstance().getTimeInMillis());
     }
 
-    private int getDayOfWeek(long mills) {
-        Calendar c = Calendar.getInstance();
-        if (mills != 0) c.setTimeInMillis(mills);
-        return c.get(Calendar.DAY_OF_WEEK);
+    /**
+     * Возвращает состояние условий срабатывания для определенного времени
+     *
+     * @param millis миллисекунды
+     * @return состояние условий срабатывания
+     */
+    private Conditions getConditions(Profile profile, long millis) {
+
+        Conditions cond = new Conditions(millis);
+
+        cond.isItActiveDay = isActiveToDay(millis);
+        cond.isActiveTomorrow = isActiveTomorrow(millis);
+        cond.isNineteenHoursAfter = DateTimeHelper.getHours(millis) >= 19;
+        cond.isIntervalLeft = isIntervalLeft(millis);
+        cond.isBeginOfInterval = isBeginOfInterval(millis);
+        cond.isItWeekday = DateTimeHelper.isItWeekDay(millis);
+        cond.isItWeekend = DateTimeHelper.isItWeekEnd(millis);
+        cond.isSchedulerActive = settings.schedulerIsActive();
+
+        cond.isItTimeToChange = true;
+
+        if (!cond.isSchedulerActive) cond.isActiveTomorrow = false;
+        if (!cond.isItActiveDay) cond.isItTimeToChange = false;
+        if (!cond.isActiveTomorrow && cond.isNineteenHoursAfter) cond.isItTimeToChange = false;
+        if (!cond.isIntervalLeft) cond.isItTimeToChange = false;
+        if (!cond.isBeginOfInterval) cond.isItTimeToChange = false;
+
+        return cond;
     }
 
-    public boolean isIntervalLeft(long millis) {
+
+    private boolean isIntervalLeft(long millis) {
         return getElapsedTime(millis) >= (settings.getManagerInterval() - getIntervalDeviation() * 1.5);
     }
 
-    public long getElapsedTime(long millis) {
+    private long getElapsedTime(long millis) {
         return millis - settings.getIntervalledLastTimestamp();
     }
 
@@ -72,15 +91,15 @@ public class Trigger {
         return settings.getManagerInterval() / 3;
     }
 
-    public boolean isBeginOfInterval(long millis) {
+    private boolean isBeginOfInterval(long millis) {
 
-        int countIntervals = (int) (getMillisFromStartDay(millis) / settings.getManagerInterval());
-        long offset = getMillisFromStartDay(millis) - (countIntervals * settings.getManagerInterval());
+        int countIntervals = (int) (getStartOfTheDayMillis(millis) / settings.getManagerInterval());
+        long offset = getStartOfTheDayMillis(millis) - (countIntervals * settings.getManagerInterval());
 
         return offset <= getIntervalDeviation();
     }
 
-    private long getMillisFromStartDay(long millis) {
+    private long getStartOfTheDayMillis(long millis) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(millis);
         c.set(Calendar.HOUR_OF_DAY, 0);
@@ -88,102 +107,6 @@ public class Trigger {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         return millis - c.getTimeInMillis();
-    }
-
-    public void updateLastTime() {
-        settings.updateLastTimestamp(Calendar.getInstance().getTimeInMillis());
-    }
-
-    public class Conditions {
-
-        public long millis;
-
-        public boolean isItActiveDay;
-
-        public boolean isActiveTomorrow;
-
-        public boolean isNineteenHoursAfter;
-
-        public boolean isIntervalLeft;
-
-        public boolean isBeginOfInterval;
-
-        public boolean isItWeekend;
-        public boolean isItWeekday;
-
-        public boolean isItTimeToChange;
-
-        public boolean isSchedulerActive;
-
-        public Conditions(long millis) {
-            this.millis = millis;
-        }
-
-        @Override
-        public String toString() {
-            return "Conditions{" +
-                    "millis=" + millis +
-                    ", isItActiveDay=" + isItActiveDay +
-                    ", isActiveTomorrow=" + isActiveTomorrow +
-                    ", isNineteenHoursAfter=" + isNineteenHoursAfter +
-                    ", isIntervalLeft=" + isIntervalLeft +
-                    ", isBeginOfInterval=" + isBeginOfInterval +
-                    ", isItWeekend=" + isItWeekend +
-                    ", isItWeekday=" + isItWeekday +
-                    ", isItTimeToChange=" + isItTimeToChange +
-                    ", isSchedulerActive=" + isSchedulerActive +
-                    '}';
-        }
-    }
-
-    /**
-     * Необходимо ли сейчас срабатывать.
-     *
-     * @return true - время срабатывать, иначе false
-     */
-    public boolean isItTimeToChange(Profile profile) {
-        Trigger.Conditions cond = getConditions(profile);
-
-        return cond.isItTimeToChange;
-    }
-
-    /**
-     * Возвращает состояние условий для текущего момента времени.
-     *
-     * @return состояние условий срабатывания
-     */
-    public Conditions getConditions(Profile profile) {
-        return getConditions(profile, Calendar.getInstance().getTimeInMillis());
-    }
-
-    /**
-     * Возвращает состояние условий срабатывания для определенного времени
-     *
-     * @param millis миллисекунды
-     * @return состояние условий срабатывания
-     */
-    public Conditions getConditions(Profile profile, long millis) {
-
-        Conditions cond = new Conditions(millis);
-
-        cond.isItActiveDay = isActiveToDay(millis);
-        cond.isActiveTomorrow = isActiveTomorrow(millis);
-        cond.isNineteenHoursAfter = getHours(millis) >= 19;
-        cond.isIntervalLeft = isIntervalLeft(millis);
-        cond.isBeginOfInterval = isBeginOfInterval(millis);
-        cond.isItWeekday = isItWeekDay(millis);
-        cond.isItWeekend = isItWeekEnd(millis);
-        cond.isSchedulerActive = settings.schedulerIsActive();
-
-        cond.isItTimeToChange = true;
-
-        if (!cond.isSchedulerActive) cond.isActiveTomorrow = false;
-        if (!cond.isItActiveDay) cond.isItTimeToChange = false;
-        if (!cond.isActiveTomorrow && cond.isNineteenHoursAfter) cond.isItTimeToChange = false;
-        if (!cond.isIntervalLeft) cond.isItTimeToChange = false;
-        if (!cond.isBeginOfInterval) cond.isItTimeToChange = false;
-
-        return cond;
     }
 
     private boolean isActiveToDay(long millis) {
@@ -205,14 +128,13 @@ public class Trigger {
      * Выполнять ли действие сегодня
      *
      * @param mills long миллисекунды за какой день запрос
-     * @return
      */
     private boolean isItDayActive(long mills) {
 
         // Если будни запрещены
-        if (isItWeekDay(mills) && !settings.allowWeekDays()) return false;
+        if (DateTimeHelper.isItWeekDay(mills) && !settings.allowWeekDays()) return false;
 
         // Если выходные запрщены
-        return !isItWeekEnd(mills) || settings.allowWeekEnds();
+        return !DateTimeHelper.isItWeekEnd(mills) || settings.allowWeekEnds();
     }
 }

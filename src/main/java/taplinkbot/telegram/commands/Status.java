@@ -40,7 +40,7 @@ public class Status implements CommandInterface {
         builder.append(settings.allowWeekEnds() ? "да" : "нет");
 
         builder.append("\r\n");
-        builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "пора" : "не пора");
+        builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "скоро сработает" : "не сработает");
         builder.append(trigger.getConditions(Profile.Canvas).toString());
 
         return ResponseFactory.buildSuccessReponse(builder.toString());
