@@ -10,7 +10,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/restart")
-public class Restart implements TelegramCommandInterface {
+public class Restart implements CommandInterface {
 
     private final ConfigurableApplicationContext context;
 

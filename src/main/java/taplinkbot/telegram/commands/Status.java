@@ -3,15 +3,19 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import taplinkbot.bot.Profile;
+import taplinkbot.schedulers.Trigger;
 import taplinkbot.service.Settings;
 import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/status")
-public class Status implements TelegramCommandInterface {
+public class Status implements CommandInterface {
 
     private final Settings settings;
+
+    private final Trigger trigger;
 
     @Override
     public String getDescription() {
@@ -34,6 +38,10 @@ public class Status implements TelegramCommandInterface {
 
         builder.append("В быходные дни: \t\t\t");
         builder.append(settings.allowWeekEnds() ? "да" : "нет");
+
+        builder.append("\r\n");
+        builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "пора" : "не пора");
+        builder.append(trigger.getConditions(Profile.Canvas).toString());
 
         return ResponseFactory.buildSuccessReponse(builder.toString());
     }

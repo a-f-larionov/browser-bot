@@ -8,7 +8,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/set_number")
-public class SetNumber implements TelegramCommandInterface {
+public class SetNumber implements CommandInterface {
 
     private final TelegramBot telegramBot;
 

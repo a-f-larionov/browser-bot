@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 @Component
@@ -19,22 +19,28 @@ public class Commands {
 
     private final Router router;
 
+    /**
+     * Hashtable no have null and synchronized
+     */
     @Getter
-    private static final Map<String, TelegramCommandInterface> commands = new HashMap<>();
+    private static final Map<String, CommandInterface> commands = new Hashtable<>();
 
     @PostConstruct
     private void init() {
         router.setCommands(this);
     }
 
-    public static void addCommand(String name, TelegramCommandInterface commandObject) {
+    public static void addCommand(String name, CommandInterface commandObject) {
 
+        if (commands.containsKey(name)) {
+            //@todo
+        }
         commands.put(name, commandObject);
     }
 
     public Response execute(Message request) {
 
-        TelegramCommandInterface command = commands.get(request.cammand);
+        CommandInterface command = commands.get(request.cammand);
 
         if (command == null) {
             return new Response("Команда не найдена");

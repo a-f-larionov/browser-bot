@@ -9,7 +9,7 @@ import taplinkbot.telegram.*;
 @Component
 @RequiredArgsConstructor
 @TelegramCommand(name = "/weekends_disallow")
-public class WeekEndsDisallow implements TelegramCommandInterface {
+public class WeekEndsDisallow implements CommandInterface {
 
     private final Settings settings;
 

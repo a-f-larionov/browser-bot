@@ -118,6 +118,22 @@ public class Trigger {
         public Conditions(long millis) {
             this.millis = millis;
         }
+
+        @Override
+        public String toString() {
+            return "Conditions{" +
+                    "millis=" + millis +
+                    ", isItActiveDay=" + isItActiveDay +
+                    ", isActiveTomorrow=" + isActiveTomorrow +
+                    ", isNineteenHoursAfter=" + isNineteenHoursAfter +
+                    ", isIntervalLeft=" + isIntervalLeft +
+                    ", isBeginOfInterval=" + isBeginOfInterval +
+                    ", isItWeekend=" + isItWeekend +
+                    ", isItWeekday=" + isItWeekday +
+                    ", isItTimeToChange=" + isItTimeToChange +
+                    ", isSchedulerActive=" + isSchedulerActive +
+                    '}';
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 //FIN
 package taplinkbot.telegram;
 
-public interface TelegramCommandInterface {
+public interface CommandInterface {
 
     String getDescription();
 
