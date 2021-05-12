@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 import taplinkbot.browser.Browser;
+import taplinkbot.browser.BrowserException;
 import taplinkbot.telegram.TelegramBot;
 
 @Component
@@ -21,11 +22,11 @@ public class MultiPageActions {
 
     private final Profiles profiles;
 
-    public void checkPhoneNumber(String phoneNumber) throws Exception {
+    public void checkPhoneNumber(Profile profile, String phoneNumber) throws Exception {
 
         WebElement we;
 
-        String url = profiles.current().getPageUrl();
+        String url = profile.getPageUrl();
 
         try {
             if (!phoneNumber.matches("^\\+7\\d{10}$")) {
@@ -76,7 +77,7 @@ public class MultiPageActions {
         }
     }
 
-    public String getNumber(Profile profile) throws BotException{
+    public String getNumber(Profile profile) {
 
         String url = profile.getPageUrl();
 
@@ -89,10 +90,10 @@ public class MultiPageActions {
         we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
         if (!we.getText().equals("Узнать цену в WhatsApp")) {
-            throw new BotException("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser);
+            throw new BrowserException("Не нашелся блок Whatsup по признаку getText(), на странице " + url, browser);
         }
         if (!we.isDisplayed()) {
-            throw new BotException("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser);
+            throw new BrowserException("Не нашелся блок Whatsup по признаку isDisplayed(), на странице " + url, browser);
         }
 
         /* Удаляем знак '+' из номера */

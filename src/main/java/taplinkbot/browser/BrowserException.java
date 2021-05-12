@@ -1,6 +1,8 @@
 package taplinkbot.browser;
 
-public class BrowserException extends RuntimeException {
+import taplinkbot.TapLinkBotException;
+
+public class BrowserException extends TapLinkBotException {
 
     private String screenShotUrl = "";
 
@@ -14,12 +16,6 @@ public class BrowserException extends RuntimeException {
         super(message);
         this.comment = browser.getComment();
         this.screenShotUrl = browser.takeScreenshot();
-    }
-
-    public BrowserException(String message, String screenShotUrl, String comment) {
-        super(message);
-        this.screenShotUrl = screenShotUrl;
-        this.comment = comment;
     }
 
     @Override

@@ -21,7 +21,7 @@ public class WeekDaysDisallow implements CommandInterface {
     @Override
     public Response run(Message msg) {
 
-        settings.setAllowWeekDays(false);
+        settings.setAllowWeekDays(msg.profile, false);
 
         return ResponseFactory.buildSuccessReponse();
     }

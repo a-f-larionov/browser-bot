@@ -1,10 +1,11 @@
+//FIN
 package taplinkbot.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import taplinkbot.entities.Settings;
+import taplinkbot.entities.Setting;
 import taplinkbot.bot.Profile;
 
-public interface SettingsRepository extends CrudRepository<Settings, Integer> {
+public interface SettingsRepository extends CrudRepository<Setting, Integer> {
 
-    Settings findByNameAndProfile(String name, Profile profile);
+    Setting findByNameAndProfile(String name, Profile profile);
 }

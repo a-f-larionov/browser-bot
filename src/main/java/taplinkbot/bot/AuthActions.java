@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 import taplinkbot.browser.Browser;
+import taplinkbot.browser.BrowserException;
 
 /**
  * @todo move mini actions, and group actions
@@ -40,7 +41,7 @@ public class AuthActions {
         authSubmit();
 
         if (!checkIsAuthorized(login)) {
-            throw new BotException("Не удалось авторизоваться.");
+            throw new BrowserException("Не удалось авторизоваться.", browser);
         }
     }
 

@@ -3,6 +3,7 @@ package taplinkbot.managers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import taplinkbot.bot.Profile;
 import taplinkbot.entities.Manager;
 import taplinkbot.repositories.ManagerRepository;
 import taplinkbot.service.Settings;
@@ -34,39 +35,35 @@ public class ManagerRotator {
         }
     }
 
-    public Manager getNextManager() {
+    public Manager getNextManager(Profile profile) {
 
-        incrementIndex(settings.getManagerIndex());
+        incrementIndex(profile, settings.getManagerIndex(profile));
 
-        return getCurrentManager();
+        return getCurrentManager(profile);
     }
 
-    private void incrementIndex(int startIndex) {
+    private void incrementIndex(Profile profile, int startIndex) {
 
-        int index = settings.getManagerIndex();
+        int index = settings.getManagerIndex(profile);
 
         index++;
 
         if (index >= managers.length) index = 0;
 
-        settings.setManagerIndex(index);
+        settings.setManagerIndex(profile, index);
 
-        if (!getCurrentManager().isWorking()) {
-            if (startIndex != getCurrentManager().getIndex()) {
-                incrementIndex(startIndex);
+        if (!getCurrentManager(profile).isWorking()) {
+            if (startIndex != getCurrentManager(profile).getIndex()) {
+                incrementIndex(profile, startIndex);
             }
         }
     }
 
-    public Manager getCurrentManager() {
+    public Manager getCurrentManager(Profile profile) {
 
-        int index = settings.getManagerIndex();
+        int index = settings.getManagerIndex(profile);
 
         return managers[index];
-    }
-
-    public void setIndex(int i) {
-        settings.setManagerIndex(i);
     }
 
     public Manager[] getList() {

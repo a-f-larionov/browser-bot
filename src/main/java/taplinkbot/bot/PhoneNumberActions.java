@@ -15,8 +15,6 @@ public class PhoneNumberActions {
 
     protected final TelegramBot telegram;
 
-    private WebElement we;
-
     /**
      * Установить новый номер телефона
      * Необходимо авторизоваться прежде чем использовать этот метод
@@ -37,7 +35,7 @@ public class PhoneNumberActions {
             browser.get(url);
 
             browser.setComment("Обращение к блоку WhatsUp.");
-            we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
+            WebElement we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
 
             if (!we.isDisplayed()) {
                 telegram.alert("Блок Whatsup не удалось найти по признаку displayed().", browser.takeScreenshot());

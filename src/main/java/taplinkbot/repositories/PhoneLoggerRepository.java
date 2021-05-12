@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.repositories;
 
 import org.springframework.data.repository.CrudRepository;

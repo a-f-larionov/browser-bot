@@ -27,17 +27,17 @@ public class Status implements CommandInterface {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Расписание: \t");
-        builder.append(settings.schedulerIsActive() ? "включено" : "выключено");
+        builder.append(settings.schedulerIsActive(msg.profile) ? "включено" : "выключено");
 
         builder.append("\r\n");
 
         builder.append("В будние дни: \t\t\t");
-        builder.append(settings.allowWeekDays() ? "да" : "нет");
+        builder.append(settings.allowWeekDays(msg.profile) ? "да" : "нет");
 
         builder.append("\r\n");
 
         builder.append("В быходные дни: \t\t\t");
-        builder.append(settings.allowWeekEnds() ? "да" : "нет");
+        builder.append(settings.allowWeekEnds(msg.profile) ? "да" : "нет");
 
         builder.append("\r\n");
         builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "скоро сработает" : "не сработает");

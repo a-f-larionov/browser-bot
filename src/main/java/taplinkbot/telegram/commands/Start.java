@@ -29,7 +29,7 @@ public class Start implements CommandInterface {
 
         if (msg.arg1.equals(Message.noArgumentValue)) {
 
-            settings.schedulerSetActive(true);
+            settings.schedulerSetActive(msg.profile, true);
 
             //@todo execute
             Message message = new Message();
@@ -61,7 +61,7 @@ public class Start implements CommandInterface {
                     //@Todo
                     //telegram.info("Расписание запущено по таймаута. Запрос минут назад: " + minutes);
 
-                    settings.schedulerSetActive(true);
+                    settings.schedulerSetActive(msg.profile, true);
                 });
 
                 return new Response("Расписание будет запущено, черзе" + minutes + " минут(у,ы)");

@@ -21,7 +21,7 @@ public class Stop implements CommandInterface {
     @Override
     public Response run(Message msg) {
 
-        settings.schedulerSetActive(false);
+        settings.schedulerSetActive(msg.profile, false);
 
         return ResponseFactory.buildSuccessReponse("Расписание выключенно");
     }

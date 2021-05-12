@@ -3,7 +3,8 @@ package taplinkbot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Profiles;
+import taplinkbot.bot.Profile;
+import taplinkbot.entities.Setting;
 import taplinkbot.repositories.SettingsRepository;
 
 /**
@@ -16,71 +17,69 @@ public class Settings {
 
     private final SettingsRepository settingsRepository;
 
-    private final Profiles profiles;
-
-    public void schedulerSetActive(boolean value) {
-        setBooleanValue(taplinkbot.entities.Settings.SETTING_SCHEDULER_ACTIVE, value);
+    public void schedulerSetActive(Profile profile, boolean value) {
+        setBooleanValue(profile, Setting.SETTING_SCHEDULER_ACTIVE, value);
     }
 
-    public boolean schedulerIsActive() {
-        return getBooleanValue(taplinkbot.entities.Settings.SETTING_SCHEDULER_ACTIVE);
+    public boolean schedulerIsActive(Profile profile) {
+        return getBooleanValue(profile, Setting.SETTING_SCHEDULER_ACTIVE);
     }
 
-    public long getIntervalledLastTimestamp() {
-        return getLongValue(taplinkbot.entities.Settings.SETTING_LAST_TIMESTAMP);
+    public long getIntervalledLastTimestamp(Profile profile) {
+        return getLongValue(profile, Setting.SETTING_LAST_TIMESTAMP);
     }
 
-    public void updateLastTimestamp(long timestamp) {
-        saveLongValue(taplinkbot.entities.Settings.SETTING_LAST_TIMESTAMP, timestamp);
+    public void updateLastTimestamp(Profile profile, long timestamp) {
+        saveLongValue(profile, Setting.SETTING_LAST_TIMESTAMP, timestamp);
     }
 
-    private taplinkbot.entities.Settings getStateByName(String name) {
+    private Setting getStateByName(Profile profile, String name) {
 
-        taplinkbot.entities.Settings settings;
-        settings = settingsRepository.findByNameAndProfile(name, profiles.current());
-        if (settings == null) {
-            settings = new taplinkbot.entities.Settings(name, profiles.current());
-            settingsRepository.save(settings);
+        Setting setting;
+        setting = settingsRepository.findByNameAndProfile(name, profile);
+        if (setting == null) {
+            setting = new Setting(name, profile);
+            settingsRepository.save(setting);
         }
-        return settings;
+        return setting;
     }
 
-    private boolean getBooleanValue(String name) {
-        return getStateByName(name).getBooleanValue();
+    private boolean getBooleanValue(Profile profile, String name) {
+        return getStateByName(profile, name).getBooleanValue();
     }
 
-    private void setBooleanValue(String name, boolean value) {
-        taplinkbot.entities.Settings settings = getStateByName(name);
-        settings.setBooleanValue(value);
-        settingsRepository.save(settings);
+    private void setBooleanValue(Profile profile, String name, boolean value) {
+        Setting setting = getStateByName(profile, name);
+        setting.setBooleanValue(value);
+        settingsRepository.save(setting);
     }
 
-    private long getLongValue(String name) {
-        return getStateByName(name).getLongValue();
+    private long getLongValue(Profile profile, String name) {
+        return getStateByName(profile, name).getLongValue();
     }
 
-    private void saveLongValue(String name, long value) {
-        taplinkbot.entities.Settings settings = getStateByName(name);
-        settings.setLongValue(value);
-        settingsRepository.save(settings);
+    private void saveLongValue(Profile profile, String name, long value) {
+        Setting setting = getStateByName(profile, name);
+        setting.setLongValue(value);
+        settingsRepository.save(setting);
     }
 
-    private int getIntValue(String name) {
-        return getStateByName(name).getIntValue();
+    private int getIntValue(Profile profile, String name) {
+        return getStateByName(profile, name).getIntValue();
     }
 
-    private void saveIntValue(String name, int value) {
-        taplinkbot.entities.Settings settings = getStateByName(name);
-        settings.setIntValue(value);
-        settingsRepository.save(settings);
+    private void saveIntValue(Profile profile, String name, int value) {
+        Setting setting = getStateByName(profile, name);
+        setting.setIntValue(value);
+        settingsRepository.save(setting);
     }
 
-    public int getManagerIndex() {
-        return getIntValue(taplinkbot.entities.Settings.SETTING_LAST_MANAGER_INDEX);
+    public int getManagerIndex(Profile profile) {
+        return getIntValue(profile, Setting.SETTING_LAST_MANAGER_INDEX);
     }
 
-    public void setManagerIndex(int lastIndex) {
-        saveIntValue(taplinkbot.entities.Settings.SETTING_LAST_MANAGER_INDEX, lastIndex);
+    public void setManagerIndex(Profile profile, int lastIndex) {
+        saveIntValue(profile, Setting.SETTING_LAST_MANAGER_INDEX, lastIndex);
     }
 
     /**
@@ -88,25 +87,25 @@ public class Settings {
      *
      * @return
      */
-    public long getManagerInterval() {
-        long interval = getLongValue(taplinkbot.entities.Settings.SETTING_MANAGER_INTERVAL);
+    public long getManagerInterval(Profile profile) {
+        long interval = getLongValue(profile, Setting.SETTING_MANAGER_INTERVAL);
         if (interval == 0) interval = 30 * 60 * 1000;
         return interval;
     }
 
-    public void setAllowWeekDays(boolean b) {
-        setBooleanValue(taplinkbot.entities.Settings.SETTING_ALLOW_WEEKDAYS, b);
+    public void setAllowWeekDays(Profile profile, boolean b) {
+        setBooleanValue(profile, Setting.SETTING_ALLOW_WEEKDAYS, b);
     }
 
-    public void setAllowWeekEnds(boolean b) {
-        setBooleanValue(taplinkbot.entities.Settings.SETTING_ALLOW_WEEKENDS, b);
+    public void setAllowWeekEnds(Profile profile, boolean b) {
+        setBooleanValue(profile, Setting.SETTING_ALLOW_WEEKENDS, b);
     }
 
-    public boolean allowWeekDays() {
-        return getBooleanValue(taplinkbot.entities.Settings.SETTING_ALLOW_WEEKDAYS);
+    public boolean allowWeekDays(Profile profile) {
+        return getBooleanValue(profile, Setting.SETTING_ALLOW_WEEKDAYS);
     }
 
-    public boolean allowWeekEnds() {
-        return getBooleanValue(taplinkbot.entities.Settings.SETTING_ALLOW_WEEKENDS);
+    public boolean allowWeekEnds(Profile profile) {
+        return getBooleanValue(profile, Setting.SETTING_ALLOW_WEEKENDS);
     }
 }

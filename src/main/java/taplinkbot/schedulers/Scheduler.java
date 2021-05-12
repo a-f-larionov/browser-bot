@@ -75,20 +75,20 @@ public class Scheduler {
             return;
         }
 
-        Manager manager = rotator.getNextManager();
+        Manager manager = rotator.getNextManager(profile);
 
-        log.info("Установка менеджера(" + profiles.current().name + "):" + manager.getDescription());
+        log.info("Установка менеджера(" + profile.name + "):" + manager.getDescription());
 
         setNewManager(manager, profile);
 
-        trigger.updateLastTime();
+        trigger.updateLastTime(profile);
 
         profiles.clear();
     }
 
     private void setNewManager(Manager manager, Profile profile) throws Exception {
         profiles.set(profile);
-        telegram.info("Смена номера: " + profiles.current().name + " " + manager.getDescription());
+        telegram.info("Смена номера: " + profile.name + " " + manager.getDescription());
 
         actions.setPhoneNumber(manager.getPhone(), profile);
     }

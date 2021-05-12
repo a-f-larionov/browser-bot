@@ -1,5 +1,6 @@
 package taplinkbot.controllers;
 
+//@Todo response spring responseentity
 public class BooleanResponse {
 
     public boolean isIt;

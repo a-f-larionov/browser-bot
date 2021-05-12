@@ -38,8 +38,8 @@ public class Trigger {
         return getConditions(profile, Calendar.getInstance().getTimeInMillis());
     }
 
-    public void updateLastTime() {
-        settings.updateLastTimestamp(Calendar.getInstance().getTimeInMillis());
+    public void updateLastTime(Profile profile) {
+        settings.updateLastTimestamp(profile, Calendar.getInstance().getTimeInMillis());
     }
 
     /**
@@ -52,14 +52,14 @@ public class Trigger {
 
         Conditions cond = new Conditions(millis);
 
-        cond.isItActiveDay = isActiveToDay(millis);
-        cond.isActiveTomorrow = isActiveTomorrow(millis);
+        cond.isItActiveDay = isActiveToDay(profile, millis);
+        cond.isActiveTomorrow = isActiveTomorrow(profile, millis);
         cond.isNineteenHoursAfter = DateTimeHelper.getHours(millis) >= 19;
-        cond.isIntervalLeft = isIntervalLeft(millis);
-        cond.isBeginOfInterval = isBeginOfInterval(millis);
+        cond.isIntervalLeft = isIntervalLeft(profile, millis);
+        cond.isBeginOfInterval = isBeginOfInterval(profile, millis);
         cond.isItWeekday = DateTimeHelper.isItWeekDay(millis);
         cond.isItWeekend = DateTimeHelper.isItWeekEnd(millis);
-        cond.isSchedulerActive = settings.schedulerIsActive();
+        cond.isSchedulerActive = settings.schedulerIsActive(profile);
 
         cond.isItTimeToChange = true;
 
@@ -73,12 +73,12 @@ public class Trigger {
     }
 
 
-    private boolean isIntervalLeft(long millis) {
-        return getElapsedTime(millis) >= (settings.getManagerInterval() - getIntervalDeviation() * 1.5);
+    private boolean isIntervalLeft(Profile profile, long millis) {
+        return getElapsedTime(profile, millis) >= (settings.getManagerInterval(profile) - getIntervalDeviation(profile) * 1.5);
     }
 
-    private long getElapsedTime(long millis) {
-        return millis - settings.getIntervalledLastTimestamp();
+    private long getElapsedTime(Profile profile, long millis) {
+        return millis - settings.getIntervalledLastTimestamp(profile);
     }
 
     /**
@@ -87,16 +87,16 @@ public class Trigger {
      *
      * @return long time deviation
      */
-    private long getIntervalDeviation() {
-        return settings.getManagerInterval() / 3;
+    private long getIntervalDeviation(Profile profile) {
+        return settings.getManagerInterval(profile) / 3;
     }
 
-    private boolean isBeginOfInterval(long millis) {
+    private boolean isBeginOfInterval(Profile profile, long millis) {
 
-        int countIntervals = (int) (getStartOfTheDayMillis(millis) / settings.getManagerInterval());
-        long offset = getStartOfTheDayMillis(millis) - (countIntervals * settings.getManagerInterval());
+        int countIntervals = (int) (getStartOfTheDayMillis(millis) / settings.getManagerInterval(profile));
+        long offset = getStartOfTheDayMillis(millis) - (countIntervals * settings.getManagerInterval(profile));
 
-        return offset <= getIntervalDeviation();
+        return offset <= getIntervalDeviation(profile);
     }
 
     private long getStartOfTheDayMillis(long millis) {
@@ -109,19 +109,19 @@ public class Trigger {
         return millis - c.getTimeInMillis();
     }
 
-    private boolean isActiveToDay(long millis) {
+    private boolean isActiveToDay(Profile profile, long millis) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(millis);
 
-        return isItDayActive(c.getTimeInMillis());
+        return isItDayActive(profile, c.getTimeInMillis());
     }
 
-    private boolean isActiveTomorrow(long millis) {
+    private boolean isActiveTomorrow(Profile profile, long millis) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(millis);
         c.add(Calendar.DAY_OF_MONTH, 1);
 
-        return isItDayActive(c.getTimeInMillis());
+        return isItDayActive(profile, c.getTimeInMillis());
     }
 
     /**
@@ -129,12 +129,12 @@ public class Trigger {
      *
      * @param mills long миллисекунды за какой день запрос
      */
-    private boolean isItDayActive(long mills) {
+    private boolean isItDayActive(Profile profile, long mills) {
 
         // Если будни запрещены
-        if (DateTimeHelper.isItWeekDay(mills) && !settings.allowWeekDays()) return false;
+        if (DateTimeHelper.isItWeekDay(mills) && !settings.allowWeekDays(profile)) return false;
 
         // Если выходные запрщены
-        return !DateTimeHelper.isItWeekEnd(mills) || settings.allowWeekEnds();
+        return !DateTimeHelper.isItWeekEnd(mills) || settings.allowWeekEnds(profile);
     }
 }

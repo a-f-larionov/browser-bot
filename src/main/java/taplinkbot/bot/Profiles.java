@@ -26,10 +26,6 @@ public class Profiles {
         this.profile = profile;
     }
 
-    public Profile current() {
-        return profile;
-    }
-
     public static Profile findByName(String arg) {
 
         for (Profile botProfile : Profile.values()) {

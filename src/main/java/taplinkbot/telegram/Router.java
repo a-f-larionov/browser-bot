@@ -3,6 +3,7 @@ package taplinkbot.telegram;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import taplinkbot.TapLinkBotException;
 import taplinkbot.bot.Profiles;
 
 @Component
@@ -33,7 +34,7 @@ public class Router {
         try {
             Message msg = parser.parse(message, chatId);
 
-            if (!accessor.check(msg)) throw new ClientRequestException("Нет доступа");
+            if (!accessor.check(msg)) throw new TapLinkBotException("Нет доступа");
 
             String[] args = Message.getFilledArgs(msg);
 
@@ -44,7 +45,7 @@ public class Router {
             msg.arg2 = args[3];
             response = processCommand(msg);
 
-        } catch (ClientRequestException e) {
+        } catch (TapLinkBotException e) {
 
             log.info("Ошибка запроса пользователя." + e.getMessage() + " chatId:" + chatId);
             response = new Response("Невозможно обработать команду", e);

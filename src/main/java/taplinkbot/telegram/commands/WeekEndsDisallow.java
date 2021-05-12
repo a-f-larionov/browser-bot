@@ -24,7 +24,7 @@ public class WeekEndsDisallow implements CommandInterface {
     @Override
     public Response run(Message msg) {
 
-        settings.setAllowWeekEnds(false);
+        settings.setAllowWeekEnds(msg.profile, false);
 
         return ResponseFactory.buildSuccessReponse();
     }

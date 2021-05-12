@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Settings {
+public class Setting {
 
     final public static String SETTING_SCHEDULER_ACTIVE = "schedulerActive";
 
@@ -38,12 +38,12 @@ public class Settings {
 
     private Profile profile;
 
-    public Settings(String name, Profile profile) {
+    public Setting(String name, Profile profile) {
         this.name = name;
         this.profile = profile;
     }
 
-    public Settings() {
+    public Setting() {
 
     }
 
@@ -51,7 +51,7 @@ public class Settings {
         return name;
     }
 
-    public Settings setName(String name) {
+    public Setting setName(String name) {
         this.name = name;
         return this;
     }
@@ -60,7 +60,7 @@ public class Settings {
         return intValue;
     }
 
-    public Settings setIntValue(int intValue) {
+    public Setting setIntValue(int intValue) {
         this.intValue = intValue;
         return this;
     }
@@ -81,7 +81,7 @@ public class Settings {
         return booleanValue;
     }
 
-    public Settings setBooleanValue(boolean booleanValue) {
+    public Setting setBooleanValue(boolean booleanValue) {
         this.booleanValue = booleanValue;
         return this;
     }

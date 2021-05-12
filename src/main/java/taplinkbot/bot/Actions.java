@@ -3,6 +3,7 @@ package taplinkbot.bot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import taplinkbot.TapLinkBotException;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.helpers.PhoneNumber;
 import taplinkbot.repositories.PhoneLoggerRepository;
@@ -44,7 +45,7 @@ public class Actions {
 
         //@Todo message from Hibernate validator
         if (!PhoneNumber.validate(phoneNumber)) {
-            throw new BotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
+            throw new TapLinkBotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
         }
 
         authActions.webLogin(taplinkAcсount.getLogin(), taplinkAcсount.getPassword());
@@ -54,8 +55,8 @@ public class Actions {
         try {
             phoneNumberActions.setPhoneNumber(phoneNumber);
 
-            taplinkMultiPageActions.checkPhoneNumber(phoneNumber);
-        }catch (Exception e){
+            taplinkMultiPageActions.checkPhoneNumber(profile, phoneNumber);
+        } catch (Exception e) {
             //@Todo use BotExceptions
             e.printStackTrace();
         }
@@ -66,14 +67,14 @@ public class Actions {
      *
      * @throws Exception ошибки бота и вебдрайвера
      */
-    synchronized public void multiPageControl(Profile profile) throws BotException {
+    synchronized public void multiPageControl(Profile profile) {
 
         String phoneNumber = getNumber(profile);
 
         phoneLoggerRep.save(new PhoneLogger(phoneNumber, profile));
     }
 
-    synchronized public String getNumber(Profile profile) throws BotException {
+    synchronized public String getNumber(Profile profile) {
 
         return taplinkMultiPageActions.getNumber(profile);
     }
