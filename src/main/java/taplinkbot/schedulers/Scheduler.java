@@ -8,8 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
 import taplinkbot.bot.Profile;
-import taplinkbot.bot.Profiles;
-import taplinkbot.browser.Browser;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
 import taplinkbot.telegram.TelegramBot;
@@ -22,15 +20,11 @@ public class Scheduler {
 
     private final TelegramBot telegram;
 
-    private final Profiles profiles;
-
     private final Trigger trigger;
 
     private final ManagerRotator rotator;
 
     private final Actions actions;
-
-    private final Browser browser;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void tick() {
@@ -57,15 +51,15 @@ public class Scheduler {
 
     private void onIdleTestBugErrConnectionClosed() {
 
-        browser.testBugErrConnectionClosed();
+        actions.testBugErrConnectionClosed();
     }
 
-    private void onIdlePinger(Profile profile) throws Exception {
+    private void onIdlePinger(Profile profile) {
 
         multiPageControl(profile);
     }
 
-    private void onIdleManagerChange(Profile profile) throws Exception {
+    private void onIdleManagerChange(Profile profile) {
 
         if (!trigger.isItTimeToChange(profile)) {
             return;

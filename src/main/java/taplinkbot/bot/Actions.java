@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
+import taplinkbot.browser.Browser;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.helpers.PhoneNumber;
 import taplinkbot.repositories.PhoneLoggerRepository;
@@ -27,6 +28,8 @@ public class Actions {
     private final MultiPageActions taplinkMultiPageActions;
 
     private final TapLinkAccount tapLinkAccount;
+
+    private final Browser browser;
 
     /**
      * Установить номер телефона
@@ -60,8 +63,6 @@ public class Actions {
 
     /**
      * Проверяем оновную страницу.
-     *
-     * @throws Exception ошибки бота и вебдрайвера
      */
     synchronized public void multiPageControl(Profile profile) {
 
@@ -73,5 +74,10 @@ public class Actions {
     synchronized public String getNumber(Profile profile) {
 
         return taplinkMultiPageActions.getNumber(profile);
+    }
+
+    synchronized public void testBugErrConnectionClosed() {
+
+        browser.testBugErrConnectionClosed();
     }
 }

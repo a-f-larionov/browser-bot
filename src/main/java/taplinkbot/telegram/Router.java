@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
-import taplinkbot.bot.Profiles;
 
 @Component
 @RequiredArgsConstructor

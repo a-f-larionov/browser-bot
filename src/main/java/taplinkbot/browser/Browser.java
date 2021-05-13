@@ -71,7 +71,7 @@ public class Browser implements WebDriver {
      * @param url url страницы для открытия
      */
     @Override
-    synchronized public void get(String url) {
+    public void get(String url) {
         pageLoadProfiler.start();
 
         log.info(url);
@@ -247,7 +247,8 @@ public class Browser implements WebDriver {
             if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
                 fixBugErrConnectionClosed();
             } else {
-                throw e;
+                //@todo
+///                throw e;
             }
         }
     }

@@ -28,7 +28,6 @@ public class Application {
 
     @PostConstruct
     private void init() {
-
         /* Приложение работает по московскому времени. */
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
     }
