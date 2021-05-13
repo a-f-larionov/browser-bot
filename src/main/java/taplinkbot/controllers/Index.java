@@ -76,7 +76,7 @@ public class Index {
 
         log.info("GUI. get_manager_list  ");
 
-        Manager[] source = managerRotator.getList();
+        Manager[] source = managerRotator.getManagers();
 
         ManagerResponse[] response;
         response = new ManagerResponse[source.length];

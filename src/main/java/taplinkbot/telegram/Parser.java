@@ -3,7 +3,6 @@ package taplinkbot.telegram;
 import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
 import taplinkbot.bot.Profile;
-import taplinkbot.bot.Profiles;
 
 //@Todo
 @Component
@@ -23,14 +22,15 @@ public class Parser {
 
         if (parts.length == 0) throw new TapLinkBotException("Неверная команда. см. /help");
 
-        if (parts.length < 2)
-            throw new TapLinkBotException("Не указан аргумент кабинета. /command [кабинет]." + taplinkbot.bot.Profiles.getValuesCommaString());
+        if (parts.length < 2) {
+            throw new TapLinkBotException("Не указан аргумент кабинета. /command [кабинет]." + Profile.getListOfAll());
+        }
 
-        Profile profile = Profiles.findByName(parts[1]);
+        Profile profile = Profile.searchByName(parts[1]);
 
-        if (profile == null) throw new TapLinkBotException("Не удалось определить кабинет." +
-                Profiles.getValuesCommaString()
-        );
+        if (profile == null) {
+            throw new TapLinkBotException("Не удалось определить кабинет." + Profile.getListOfAll());
+        }
 
         return buildCommandRequest(parts, profile);
     }

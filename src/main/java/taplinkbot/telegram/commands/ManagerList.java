@@ -24,9 +24,10 @@ public class ManagerList extends Command {
 
         StringBuilder builder = new StringBuilder();
 
-        Manager[] manager = managerRotator.getList();
+        Manager[] manager = managerRotator.getManagers();
 
         for (int i = 0; i < manager.length; i++) {
+
             builder.append(i);
             builder.append(" - ");
             builder.append(manager[i].getDescription());

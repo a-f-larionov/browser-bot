@@ -3,6 +3,9 @@ package taplinkbot.bot;
 
 import lombok.Getter;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 public enum Profile {
 
@@ -49,5 +52,40 @@ public enum Profile {
      */
     public String getPageUrl() {
         return "https://" + this.getDomainName();
+    }
+
+    /**
+     * Найти соответствующий профиль
+     *
+     * @param needle текст для поиска
+     * @return Profile соотвественный тексту или null
+     */
+    public static Profile searchByName(String needle) {
+
+        return Stream.of(Profile.values())
+                .filter(row -> row.searchMatches(needle))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Соответсвует ли текстовому поиску этот профиль.
+     *
+     * @param needle текст для поиска
+     * @return true - если соответствует, false - иначе
+     */
+    private boolean searchMatches(String needle) {
+
+        return name.equals(needle) || alias.equals(needle);
+    }
+
+    /**
+     * Вызвращает список профиелей строкой.
+     */
+    public static String getListOfAll() {
+
+        return Stream.of(Profile.values())
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
     }
 }

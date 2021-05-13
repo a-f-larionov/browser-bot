@@ -1,3 +1,4 @@
+
 package taplinkbot.managers;
 
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,15 @@ import java.util.List;
 @Slf4j
 public class ManagerRotator {
 
-    private Manager[] managers;
-
     private final Settings settings;
 
     private final ManagerRepository managerRepository;
 
+    private Manager[] managers;
+
     @PostConstruct
     private void init() {
+        //@todo list?
         List<Manager> all = managerRepository.findAll();
 
         managers = new Manager[all.size()];
@@ -66,8 +68,7 @@ public class ManagerRotator {
         return managers[index];
     }
 
-    public Manager[] getList() {
-
+    public Manager[] getManagers() {
         return managers;
     }
 
