@@ -1,27 +1,26 @@
-//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.Settings;
+import taplinkbot.bot.Actions;
 import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@CommandClass(name = "/weekdays_disallow")
-public class WeekDaysDisallow extends Command {
+@CommandClass(name = "/control_multi_pag")
+public class ControlMultiPage extends Command {
 
-    private final Settings settings;
+    private final Actions actions;
 
     @Override
     public String getDescription() {
-        return "Запретит работу бота в будние";
+        return "Проверяет доступность страницы, номер и логирует его.";
     }
 
     @Override
     public Message run(Request msg) {
 
-        settings.setAllowWeekDays(msg.profile, false);
+        actions.multiPageControl(msg.profile);
 
         return MessageBuilder.buildResult();
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
+import taplinkbot.bot.Profile;
 
 import javax.annotation.PostConstruct;
 import java.util.Hashtable;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class CommandExecutor {
 
     private final CommandProccesor commandProccesor;
+
+    private final RequestBuilder requestBuilder;
 
     private final Accessor accessor;
 
@@ -44,7 +47,7 @@ public class CommandExecutor {
         commands.put(name, commandObject);
     }
 
-    public void execute(Request request) {
+    synchronized public void execute(Request request) {
 
         Message message;
 
@@ -59,9 +62,27 @@ public class CommandExecutor {
 
         } catch (Exception e) {
 
-            message = MessageBuilder.buildFailed("Не удалось выполнить команду.", e);
+            message = MessageBuilder.buildAlert("Не удалось выполнить команду.", e);
         }
 
         telegramBot.notify(request, message);
+    }
+
+    synchronized public void execute(Class<? extends Command> commandClass) {
+
+        execute(commandClass, null);
+    }
+
+    synchronized public void execute(Class<? extends Command> commandClass, Profile profile) {
+
+        Request request;
+
+        request = requestBuilder.buildFromCommandClass(commandClass);
+
+        request.profile = profile;
+        //@todo strange
+        request.skipCheckRights = true;
+
+        execute(request);
     }
 }

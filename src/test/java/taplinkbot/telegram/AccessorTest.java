@@ -21,7 +21,7 @@ public class AccessorTest {
 
         Request msg = new Request();
 
-        msg.chatId = String.valueOf(149798103);
+        msg.initiatorChatId = String.valueOf(149798103);
 
         assertThat(accessor.check(msg)).isTrue();
     }
@@ -31,7 +31,7 @@ public class AccessorTest {
 
         Request msg = new Request();
 
-        msg.chatId = String.valueOf(-1001232151616L);
+        msg.initiatorChatId = String.valueOf(-1001232151616L);
 
         assertThat(accessor.check(msg)).isTrue();
     }
@@ -41,7 +41,7 @@ public class AccessorTest {
 
         Request msg = new Request();
 
-        msg.chatId = String.valueOf(-439603549);
+        msg.initiatorChatId = String.valueOf(-439603549);
 
         assert accessor != null;
 
@@ -56,7 +56,7 @@ public class AccessorTest {
 
         for (String chatId : chatIds) {
             Request msg = new Request();
-            msg.chatId = chatId;
+            msg.initiatorChatId = chatId;
             assertThat(accessor.check(msg)).isFalse();
         }
     }

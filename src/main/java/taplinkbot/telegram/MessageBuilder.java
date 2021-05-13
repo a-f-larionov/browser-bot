@@ -6,19 +6,24 @@ package taplinkbot.telegram;
  */
 public class MessageBuilder {
 
-    public static Message buildSuccess() {
-        return new Message("Успешно.", true);
+    public static Message buildInfo(String message) {
+        return new Message(message, Message.Type.INFO);
     }
 
-    public static Message buildSuccess(String messsage) {
-        return new Message(messsage, true);
+    public static Message buildResult() {
+        return new Message("Успешно.", Message.Type.RESULT);
     }
 
-    public static Message buildFailed(String message) {
-        return new Message(message, false);
+    public static Message buildResult(String message) {
+        return new Message(message, Message.Type.RESULT);
     }
 
-    public static Message buildFailed(String message, Exception e) {
-        return new Message(message, false, e);
+    public static Message buildAlert(String message) {
+        return new Message(message, Message.Type.ALERT);
+    }
+
+    public static Message buildAlert(String message, Exception e) {
+
+        return new Message(message, Message.Type.ALERT, e);
     }
 }

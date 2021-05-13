@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/help")
+@CommandClass(name = "/help")
 public class Help extends Command {
 
     @Override
@@ -42,6 +42,6 @@ public class Help extends Command {
             builder.append("\r\n");
         }
 
-        return MessageBuilder.buildSuccess(builder.toString());
+        return MessageBuilder.buildResult(builder.toString());
     }
 }

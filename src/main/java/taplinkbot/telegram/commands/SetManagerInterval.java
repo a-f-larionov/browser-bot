@@ -1,4 +1,3 @@
-//FIN
 package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
@@ -8,21 +7,23 @@ import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@CommandClass(name = "/stop")
-public class Stop extends Command {
+@CommandClass(name = "/set_manager_interval")
+public class SetManagerInterval extends Command {
 
     private final Settings settings;
 
     @Override
     public String getDescription() {
-        return "Выключит расписание";
+        return "Установить интервал смены менеджеров";
     }
 
     @Override
     public Message run(Request msg) {
 
-        settings.schedulerSetActive(msg.profile, false);
+        long interval = Long.parseLong(msg.arg1);
 
-        return MessageBuilder.buildResult("Расписание выключенно");
+        settings.setManagerInterval(msg.profile, interval);
+
+        return MessageBuilder.buildResult();
     }
 }

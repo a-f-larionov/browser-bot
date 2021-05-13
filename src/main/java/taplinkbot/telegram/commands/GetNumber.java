@@ -8,7 +8,7 @@ import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/get_number")
+@CommandClass(name = "/get_number")
 public class GetNumber extends Command {
 
     private final Actions actions;
@@ -32,7 +32,7 @@ public class GetNumber extends Command {
 
         finish = System.currentTimeMillis();
 
-        return MessageBuilder.buildSuccess(
+        return MessageBuilder.buildResult(
                 "Номер телефона: " +
                         phoneNumber + ", " +
                         (finish - start) + " мсек."

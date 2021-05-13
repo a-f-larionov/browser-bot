@@ -40,7 +40,7 @@ public class Actions {
      *
      * @param phoneNumber номер телефона
      */
-    synchronized public void setPhoneNumber(String phoneNumber, Profile profile) {
+    synchronized public boolean setPhoneNumber(String phoneNumber, Profile profile) {
 
         //@Todo message from Hibernate validator
         if (!PhoneNumber.validate(phoneNumber)) {
@@ -54,11 +54,13 @@ public class Actions {
         try {
             phoneNumberActions.setPhoneNumber(phoneNumber);
 
-            taplinkMultiPageActions.checkPhoneNumber(profile, phoneNumber);
+            return taplinkMultiPageActions.checkPhoneNumber(profile, phoneNumber);
+
         } catch (Exception e) {
             //@Todo use BotExceptions
             e.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -76,8 +78,8 @@ public class Actions {
         return taplinkMultiPageActions.getNumber(profile);
     }
 
-    synchronized public void testBugErrConnectionClosed() {
+    synchronized public boolean testBugErrConnectionClosed() {
 
-        browser.testBugErrConnectionClosed();
+        return browser.testBugErrConnectionClosed();
     }
 }

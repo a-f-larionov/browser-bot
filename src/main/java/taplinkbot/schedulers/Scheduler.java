@@ -6,11 +6,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
 import taplinkbot.bot.Profile;
-import taplinkbot.entities.Manager;
-import taplinkbot.managers.ManagerRotator;
-import taplinkbot.telegram.TelegramBot;
+import taplinkbot.telegram.CommandExecutor;
+import taplinkbot.telegram.commands.CheckAndExecuteRotator;
+import taplinkbot.telegram.commands.ControlMultiPage;
+import taplinkbot.telegram.commands.FixBugErrConnectionClosed;
 
 @Component
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -18,71 +18,39 @@ import taplinkbot.telegram.TelegramBot;
 @Slf4j
 public class Scheduler {
 
-    private final TelegramBot telegram;
-
-    private final Trigger trigger;
-
-    private final ManagerRotator rotator;
-
-    private final Actions actions;
+    private final CommandExecutor commandExecutor;
 
     @Scheduled(cron = "0 * * * * 1-7")
     public void tick() {
 
-        try {
-            log.info("tick");
+        log.info("tick");
 
-            onIdleTestBugErrConnectionClosed();
+        onIdleTestBugErrConnectionClosed();
 
-            onIdleManagerChange(Profile.Canvas);
+        onIdleManagerChange(Profile.Canvas);
 
-            onIdleManagerChange(Profile.LadyArt);
+        onIdleManagerChange(Profile.LadyArt);
 
-            onIdlePinger(Profile.Canvas);
+        onIdleManagerChange(Profile.Test1);
 
-            onIdlePinger(Profile.LadyArt);
+        onIdlePinger(Profile.Canvas);
 
-        } catch (Exception e) {
-            //@Todo create annotation @BotExceptionHandler
-            e.printStackTrace();
-            telegram.alert(e.getMessage());
-        }
+        onIdlePinger(Profile.LadyArt);
     }
 
     private void onIdleTestBugErrConnectionClosed() {
 
-        actions.testBugErrConnectionClosed();
-    }
-
-    private void onIdlePinger(Profile profile) {
-
-        multiPageControl(profile);
+        commandExecutor.execute(FixBugErrConnectionClosed.class);
     }
 
     private void onIdleManagerChange(Profile profile) {
 
-        if (!trigger.isItTimeToChange(profile)) {
-            return;
-        }
-
-        Manager manager = rotator.getNextManager(profile);
-
-        log.info("Установка менеджера(" + profile.name + "):" + manager.getDescription());
-
-        setNewManager(manager, profile);
-
-        trigger.updateLastTime(profile);
+        commandExecutor.execute(CheckAndExecuteRotator.class, profile);
     }
 
-    private void setNewManager(Manager manager, Profile profile) {
-        telegram.info("Смена номера: " + profile.name + " " + manager.getDescription());
+    private void onIdlePinger(Profile profile) {
 
-        actions.setPhoneNumber(manager.getPhone(), profile);
-    }
-
-    private void multiPageControl(Profile profile) {
-
-        actions.multiPageControl(profile);
+        commandExecutor.execute(ControlMultiPage.class, profile);
     }
 }
 

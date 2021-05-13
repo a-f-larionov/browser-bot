@@ -236,19 +236,23 @@ public class Browser implements WebDriver {
 
     /**
      * Проверка бага обрыва связи с браузером.
+     *
+     * @return true - в случае перезапуска браузера, иначе false
      */
-    public void testBugErrConnectionClosed() {
+    public boolean testBugErrConnectionClosed() {
         try {
-
             get(Profile.Canvas.getPageUrl());
+            return false;
 
         } catch (Exception e) {
 
             if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
+
                 fixBugErrConnectionClosed();
+                return true;
+
             } else {
-                //@todo
-///                throw e;
+                throw e;
             }
         }
     }

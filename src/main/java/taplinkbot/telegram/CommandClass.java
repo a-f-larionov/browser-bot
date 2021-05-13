@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TelegramCommand {
+public @interface CommandClass {
 
     /**
      * Имя команды /command-name

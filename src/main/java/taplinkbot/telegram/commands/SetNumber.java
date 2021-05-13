@@ -7,7 +7,7 @@ import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/set_number")
+@CommandClass(name = "/set_number")
 public class SetNumber extends Command {
 
     private final TelegramBot telegramBot;
@@ -20,22 +20,22 @@ public class SetNumber extends Command {
     }
 
     /**
-     * @param msg
+     * @param req
      * @return
-     * @todo telegramBot to informator.send("message here",request.chatId);
+     * @todo telegramBot to informator.send("message here",request.initiatorChatId);
      */
     @Override
-    public Message run(Request msg) {
+    public Message run(Request req) {
 
         //@todo validation
-        if (!msg.arg1.matches("^\\+7\\d{10}$")) {
-            return MessageBuilder.buildFailed("Номер телефона должен быть в формате +71234567890, передано:'" + msg.arg1 + "'");
+        if (!req.arg1.matches("^\\+7\\d{10}$")) {
+            return MessageBuilder.buildAlert("Номер телефона должен быть в формате +71234567890, передано:'" + req.arg1 + "'");
         }
 
-        telegramBot.sendMessage("Начинаю смену номера:" + msg.arg1, msg.chatId);
+        telegramBot.notify(req, MessageBuilder.buildInfo("Начинаю смену номера:" + req.arg1));
 
-        actions.setPhoneNumber(msg.arg1, msg.profile);
+        actions.setPhoneNumber(req.arg1, req.profile);
 
-        return MessageBuilder.buildSuccess();
+        return MessageBuilder.buildResult();
     }
 }

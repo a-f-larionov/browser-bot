@@ -20,7 +20,7 @@ public class TelegramCommandAnnotationBeanPostProcessor implements BeanPostProce
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
-        if (bean.getClass().isAnnotationPresent(TelegramCommand.class)) {
+        if (bean.getClass().isAnnotationPresent(CommandClass.class)) {
             beans.put(beanName, (Command) bean);
         }
 
@@ -33,7 +33,7 @@ public class TelegramCommandAnnotationBeanPostProcessor implements BeanPostProce
         Command command = beans.get(beanName);
 
         if (command != null) {
-            String commandName = bean.getClass().getAnnotation(TelegramCommand.class).name();
+            String commandName = bean.getClass().getAnnotation(CommandClass.class).name();
             command.setName(commandName);
             CommandExecutor.addCommand(commandName, command);
         }

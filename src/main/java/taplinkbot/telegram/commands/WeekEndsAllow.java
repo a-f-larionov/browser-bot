@@ -8,7 +8,7 @@ import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/weekends_allow")
+@CommandClass(name = "/weekends_allow")
 public class WeekEndsAllow extends Command {
 
     private final Settings settings;
@@ -23,6 +23,6 @@ public class WeekEndsAllow extends Command {
 
         settings.setAllowWeekEnds(msg.profile, true);
 
-        return MessageBuilder.buildSuccess();
+        return MessageBuilder.buildResult();
     }
 }

@@ -73,7 +73,6 @@ public class PhoneNumberActions {
             Thread.sleep(45 * 1000);
 
         } catch (Exception e) {
-            telegram.alert("Установить номер не удалось.", browser.takeScreenshot());
             throw e;
         }
     }

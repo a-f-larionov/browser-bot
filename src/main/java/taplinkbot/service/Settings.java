@@ -82,10 +82,12 @@ public class Settings {
         saveIntValue(profile, Setting.SETTING_LAST_MANAGER_INDEX, lastIndex);
     }
 
+    public void setManagerInterval(Profile profile, long interval) {
+        saveLongValue(profile, Setting.SETTING_MANAGER_INTERVAL, interval);
+    }
+
     /**
      * Интервал в миллисекундах
-     *
-     * @return
      */
     public long getManagerInterval(Profile profile) {
         long interval = getLongValue(profile, Setting.SETTING_MANAGER_INTERVAL);

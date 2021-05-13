@@ -18,7 +18,7 @@ public class MultiPageActions {
 
     private final Browser browser;
 
-    public void checkPhoneNumber(Profile profile, String phoneNumber) throws Exception {
+    public boolean checkPhoneNumber(Profile profile, String phoneNumber) throws Exception {
 
         WebElement we;
 
@@ -62,7 +62,7 @@ public class MultiPageActions {
             browser.setComment("Ожидание нажатие на номер телефона.");
             Thread.sleep(45 * 1000);
 
-            telegram.info("Номер на странице " + url + " соответствует:" + phoneNumber, browser.takeScreenshot());
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();

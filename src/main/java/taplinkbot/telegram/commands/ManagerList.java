@@ -7,7 +7,7 @@ import taplinkbot.managers.ManagerRotator;
 import taplinkbot.telegram.*;
 
 @Component
-@TelegramCommand(name = "/manager_list")
+@CommandClass(name = "/manager_list")
 @RequiredArgsConstructor
 public class ManagerList extends Command {
 
@@ -33,6 +33,6 @@ public class ManagerList extends Command {
             builder.append("\r\n");
         }
 
-        return MessageBuilder.buildSuccess(builder.toString());
+        return MessageBuilder.buildResult(builder.toString());
     }
 }

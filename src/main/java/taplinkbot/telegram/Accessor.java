@@ -17,8 +17,9 @@ public class Accessor {
      */
     public boolean check(Request request) {
 
-        return request.chatId.equals("-1001232151616") ||
-                request.chatId.equals("-439603549") ||
-                request.chatId.equals("149798103");
+        return request.skipCheckRights ||
+                request.initiatorChatId.equals("-1001232151616") ||
+                request.initiatorChatId.equals("-439603549") ||
+                request.initiatorChatId.equals("149798103");
     }
 }

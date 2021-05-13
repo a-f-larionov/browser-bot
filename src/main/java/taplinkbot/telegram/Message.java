@@ -11,34 +11,38 @@ import lombok.Getter;
 @Data
 public class Message {
 
+    public enum Type {
+        INFO,
+        ALERT,
+        RESULT
+    }
+
     @Getter
-    private final boolean isSuccess;
+    private final Type type;
 
     private final String message;
 
     private Exception exception;
 
-    public Message(String message, boolean isSuccess) {
+    public Message(String message, Type type) {
 
         this.message = message;
-        this.isSuccess = isSuccess;
+        this.type = type;
     }
 
-    public Message(String message, boolean isSuccess, Exception exception) {
+    public Message(String message, Type type, Exception exception) {
 
-        this(message, isSuccess);
+        this(message, type);
 
         this.exception = exception;
     }
 
     /**
      * Описание ответа.
-     *
-     * @return
      */
     public String getDescription() {
         if (exception != null) {
-            return message + " " + exception.getMessage();
+            return message + " Ошибка:" + exception.getMessage();
         } else {
             return message;
         }

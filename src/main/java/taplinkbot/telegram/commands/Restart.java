@@ -9,7 +9,7 @@ import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/restart")
+@CommandClass(name = "/restart")
 public class Restart extends Command {
 
     private final ConfigurableApplicationContext context;
@@ -29,6 +29,6 @@ public class Restart extends Command {
 
         Runtime.getRuntime().exit(0);
 
-        return MessageBuilder.buildSuccess();
+        return MessageBuilder.buildResult();
     }
 }

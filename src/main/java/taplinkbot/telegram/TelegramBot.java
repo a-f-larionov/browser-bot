@@ -121,16 +121,40 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     /**
-     * Оповестить о выполненнии команды
+     * Отправить сообщение.
      *
      * @param request
      * @param message
      */
     public void notify(Request request, Message message) {
-        if (message.isSuccess()) {
-            sendMessage(message.getDescription(), request.chatId);
+        String infoChatId, alertChatId;
+
+        // определим адресацию собщений
+        if (request.initiatorChatId != null) {
+            infoChatId = alertChatId = request.initiatorChatId;
         } else {
-            sendMessage(message.getDescription(), request.chatId);
+            infoChatId = this.infoChatId;
+            alertChatId = this.alertChatId;
+        }
+
+        // отправим сообщение
+        switch (message.getType()) {
+            case ALERT:
+                if (message.getException() != null) {
+                    message.getException().printStackTrace();
+                }
+                sendMessage(message.getDescription(), alertChatId);
+                break;
+
+            case INFO:
+                sendMessage(message.getDescription(), infoChatId);
+                break;
+
+            case RESULT:
+                if (request.initiatorChatId != null) {
+                    sendMessage(message.getDescription(), request.initiatorChatId);
+                }
+                break;
         }
     }
 }

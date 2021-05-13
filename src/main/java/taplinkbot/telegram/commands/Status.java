@@ -3,14 +3,13 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Profile;
 import taplinkbot.schedulers.Trigger;
 import taplinkbot.service.Settings;
 import taplinkbot.telegram.*;
 
 @Component
 @RequiredArgsConstructor
-@TelegramCommand(name = "/status")
+@CommandClass(name = "/status")
 public class Status extends Command {
 
     private final Settings settings;
@@ -40,9 +39,15 @@ public class Status extends Command {
         builder.append(settings.allowWeekEnds(msg.profile) ? "да" : "нет");
 
         builder.append("\r\n");
-        builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "скоро сработает" : "не сработает");
-        builder.append(trigger.getConditions(Profile.Canvas).toString());
 
-        return MessageBuilder.buildSuccess(builder.toString());
+        builder.append("Интервал: ");
+        builder.append(settings.getManagerInterval(msg.profile));
+
+        builder.append("\r\n");
+
+        builder.append(trigger.isItTimeToChange(msg.profile) ? "скоро сработает" : "не сработает");
+        builder.append(trigger.getConditions(msg.profile).toString());
+
+        return MessageBuilder.buildResult(builder.toString());
     }
 }

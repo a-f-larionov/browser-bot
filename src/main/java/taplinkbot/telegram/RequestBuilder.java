@@ -14,7 +14,16 @@ public class RequestBuilder {
         Request req;
 
         req = parser.parse(message);
-        req.chatId = chatId;
+        req.initiatorChatId = chatId;
+
+        return req;
+    }
+
+    public Request buildFromCommandClass(Class<? extends Command> commandClass) {
+
+        Request req = new Request();
+
+        req.command = commandClass.getAnnotation(CommandClass.class).name();
 
         return req;
     }

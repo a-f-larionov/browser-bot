@@ -11,11 +11,14 @@ public class Request {
 
     public String arg2;
 
-    public String chatId;
+    /**
+     * chatId, если запрос из телеграмма.
+     */
+    public String initiatorChatId;
+
+    public boolean skipCheckRights;
 
     public Profile profile;
-
-    public String[] args;
 
     public final static String noArgumentValue = "нет аргумента";
 
