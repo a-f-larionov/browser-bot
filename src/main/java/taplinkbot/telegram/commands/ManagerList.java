@@ -20,7 +20,7 @@ public class ManagerList extends Command {
 
     @Override
     //@todo StringBuilder
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         StringBuilder builder = new StringBuilder();
 
@@ -33,6 +33,6 @@ public class ManagerList extends Command {
             builder.append("\r\n");
         }
 
-        return ResponseFactory.buildSuccessResponse(builder.toString());
+        return MessageBuilder.buildSuccess(builder.toString());
     }
 }

@@ -1,52 +1,46 @@
+//FIN
 package taplinkbot.telegram;
 
-import taplinkbot.bot.Profile;
+import lombok.Data;
+import lombok.Getter;
 
-import java.util.Arrays;
-
-//todo Validation annotations
+/**
+ * Ответ может содержать текст,
+ * в случае ошибки еще и Exception этой ошибки.
+ */
+@Data
 public class Message {
 
-    public String sourceText;
+    @Getter
+    private final boolean isSuccess;
 
-    public String chatId;
+    private final String message;
 
-    public String[] args;
+    private Exception exception;
 
-    public String cammand;
+    public Message(String message, boolean isSuccess) {
 
-    public Profile profile;
+        this.message = message;
+        this.isSuccess = isSuccess;
+    }
 
-    public final static String noArgumentValue = "нет аргумента";
-    public String arg1;
+    public Message(String message, boolean isSuccess, Exception exception) {
 
-    public String arg2;
+        this(message, isSuccess);
 
-    public static String[] getFilledArgs(Message msg) {
-        String[] args = new String[4];
-
-        Arrays.fill(args, noArgumentValue);
-
-        for (int i = 0; i < msg.args.length; i++) {
-            args[i] = msg.args[i];
-        }
-        return args;
+        this.exception = exception;
     }
 
     /**
+     * Описание ответа.
+     *
      * @return
-     * @todo use @ToString from lombok
      */
-    @Override
-    public String toString() {
-
-        String str;
-        str = "text:" + sourceText + ", len: " + args.length + "\r\n";
-
-        for (String arg : args) {
-            str += arg + "\r\n";
+    public String getDescription() {
+        if (exception != null) {
+            return message + " " + exception.getMessage();
+        } else {
+            return message;
         }
-        return str;
     }
-
 }

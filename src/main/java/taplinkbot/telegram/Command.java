@@ -31,5 +31,5 @@ public abstract class Command {
      * @param msg сообщение от пользователя системы.
      * @return Ответ работы команды
      */
-    public abstract Response run(Message msg);
+    public abstract Message run(Request msg);
 }

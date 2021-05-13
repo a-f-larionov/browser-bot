@@ -23,11 +23,11 @@ public class Help extends Command {
      * @todo рефакторинг
      */
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         StringBuilder builder = new StringBuilder();
 
-        Map<String, Command> commands = Commands.getCommands();
+        Map<String, Command> commands = CommandExecutor.getCommands();
 
         Object keys[] = commands.keySet().toArray();
 
@@ -42,6 +42,6 @@ public class Help extends Command {
             builder.append("\r\n");
         }
 
-        return ResponseFactory.buildSuccessResponse(builder.toString());
+        return MessageBuilder.buildSuccess(builder.toString());
     }
 }

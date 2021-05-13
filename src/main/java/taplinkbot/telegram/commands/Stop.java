@@ -19,10 +19,10 @@ public class Stop extends Command {
     }
 
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         settings.schedulerSetActive(msg.profile, false);
 
-        return ResponseFactory.buildSuccessResponse("Расписание выключенно");
+        return MessageBuilder.buildSuccess("Расписание выключенно");
     }
 }

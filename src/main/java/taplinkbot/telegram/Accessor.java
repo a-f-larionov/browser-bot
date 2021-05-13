@@ -12,13 +12,13 @@ public class Accessor {
      * Группа c Дмитрием Фоминым(заказчик), TapLinkBot: -1001232151616
      * Группа тестовая: -439603549
      *
-     * @param message
+     * @param request
      * @return
      */
-    public boolean check(Message message) {
+    public boolean check(Request request) {
 
-        return message.chatId.equals("-1001232151616") ||
-                message.chatId.equals("-439603549") ||
-                message.chatId.equals("149798103");
+        return request.chatId.equals("-1001232151616") ||
+                request.chatId.equals("-439603549") ||
+                request.chatId.equals("149798103");
     }
 }

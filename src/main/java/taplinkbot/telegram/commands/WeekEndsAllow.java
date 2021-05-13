@@ -19,10 +19,10 @@ public class WeekEndsAllow extends Command {
     }
 
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         settings.setAllowWeekEnds(msg.profile, true);
 
-        return ResponseFactory.buildSuccessResponse();
+        return MessageBuilder.buildSuccess();
     }
 }

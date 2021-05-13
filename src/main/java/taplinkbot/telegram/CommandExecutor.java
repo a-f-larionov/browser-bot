@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import taplinkbot.TapLinkBotException;
 
 import javax.annotation.PostConstruct;
 import java.util.Hashtable;
@@ -15,9 +16,13 @@ import java.util.Map;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RequiredArgsConstructor
 @Slf4j
-public class Commands {
+public class CommandExecutor {
 
-    private final Router router;
+    private final CommandProccesor commandProccesor;
+
+    private final Accessor accessor;
+
+    private final TelegramBot telegramBot;
 
     /**
      * Hashtable no have null and synchronized
@@ -27,7 +32,7 @@ public class Commands {
 
     @PostConstruct
     private void init() {
-        router.setCommands(this);
+        commandProccesor.setCommandExecutor(this);
     }
 
     public static void addCommand(String name, Command commandObject) {
@@ -39,14 +44,24 @@ public class Commands {
         commands.put(name, commandObject);
     }
 
-    public Response execute(Message request) {
+    public void execute(Request request) {
 
-        Command command = commands.get(request.cammand);
+        Message message;
 
-        if (command == null) {
-            return new Response("Команда не найдена");
+        try {
+            if (!accessor.check(request)) throw new TapLinkBotException("Нет доступа.");
+
+            Command command = commands.get(request.command);
+
+            if (command == null) throw new TapLinkBotException("Не удалось найти команду.");
+
+            message = command.run(request);
+
+        } catch (Exception e) {
+
+            message = MessageBuilder.buildFailed("Не удалось выполнить команду.", e);
         }
 
-        return command.run(request);
+        telegramBot.notify(request, message);
     }
 }

@@ -36,7 +36,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Value("${telegram.alertChatId}")
     private String alertChatId;
 
-    private final Router router;
+    private final CommandProccesor commandProccesor;
 
     /**
      * @link https://core.telegram.org/bots/samples
@@ -75,9 +75,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             String chatId = update.getMessage().getChatId().toString();
             String message = update.getMessage().getText();
 
-            String answer = router.processMessage(message, chatId);
+            try {
+                commandProccesor.processTelegramMessage(message, chatId);
 
-            sendMessage(answer, chatId);
+            } catch (Exception e) {
+
+                sendMessage(e.getMessage(), chatId);
+            }
         }
     }
 
@@ -114,5 +118,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public void info(String message, String url) {
         sendMessage(message + " " + url, infoChatId);
+    }
+
+    /**
+     * Оповестить о выполненнии команды
+     *
+     * @param request
+     * @param message
+     */
+    public void notify(Request request, Message message) {
+        if (message.isSuccess()) {
+            sendMessage(message.getDescription(), request.chatId);
+        } else {
+            sendMessage(message.getDescription(), request.chatId);
+        }
     }
 }

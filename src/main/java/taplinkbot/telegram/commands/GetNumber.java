@@ -22,7 +22,7 @@ public class GetNumber extends Command {
      * Получить текущий номер на мульте-странице.
      */
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
         String phoneNumber;
         long start, finish;
 
@@ -32,7 +32,7 @@ public class GetNumber extends Command {
 
         finish = System.currentTimeMillis();
 
-        return ResponseFactory.buildSuccessResponse(
+        return MessageBuilder.buildSuccess(
                 "Номер телефона: " +
                         phoneNumber + ", " +
                         (finish - start) + " мсек."

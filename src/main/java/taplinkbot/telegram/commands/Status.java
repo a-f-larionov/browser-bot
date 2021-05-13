@@ -23,7 +23,7 @@ public class Status extends Command {
     }
 
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Расписание: \t");
@@ -43,6 +43,6 @@ public class Status extends Command {
         builder.append(trigger.isItTimeToChange(Profile.Canvas) ? "скоро сработает" : "не сработает");
         builder.append(trigger.getConditions(Profile.Canvas).toString());
 
-        return ResponseFactory.buildSuccessResponse(builder.toString());
+        return MessageBuilder.buildSuccess(builder.toString());
     }
 }

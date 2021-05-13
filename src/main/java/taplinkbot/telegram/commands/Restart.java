@@ -24,11 +24,11 @@ public class Restart extends Command {
      * Перезагрузку соврешит shell скрипт. см. init.d/taplinkb
      */
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
         SpringApplication.exit(context);
 
         Runtime.getRuntime().exit(0);
 
-        return ResponseFactory.buildSuccessResponse();
+        return MessageBuilder.buildSuccess();
     }
 }

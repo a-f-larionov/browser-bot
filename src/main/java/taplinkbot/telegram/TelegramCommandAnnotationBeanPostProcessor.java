@@ -35,7 +35,7 @@ public class TelegramCommandAnnotationBeanPostProcessor implements BeanPostProce
         if (command != null) {
             String commandName = bean.getClass().getAnnotation(TelegramCommand.class).name();
             command.setName(commandName);
-            Commands.addCommand(commandName, command);
+            CommandExecutor.addCommand(commandName, command);
         }
 
         return bean;

@@ -19,7 +19,7 @@ public class AccessorTest {
     @Test
     void checkLarionov() {
 
-        Message msg = new Message();
+        Request msg = new Request();
 
         msg.chatId = String.valueOf(149798103);
 
@@ -29,7 +29,7 @@ public class AccessorTest {
     @Test
     void checkAdminGroup() {
 
-        Message msg = new Message();
+        Request msg = new Request();
 
         msg.chatId = String.valueOf(-1001232151616L);
 
@@ -39,7 +39,7 @@ public class AccessorTest {
     @Test
     void checkTestGroup() {
 
-        Message msg = new Message();
+        Request msg = new Request();
 
         msg.chatId = String.valueOf(-439603549);
 
@@ -55,7 +55,7 @@ public class AccessorTest {
         String[] chatIds = {"123", "0", "-12321", "123213", "lkj", "", null};
 
         for (String chatId : chatIds) {
-            Message msg = new Message();
+            Request msg = new Request();
             msg.chatId = chatId;
             assertThat(accessor.check(msg)).isFalse();
         }

@@ -17,7 +17,7 @@ public class Start extends Command {
 
     private final Settings settings;
 
-    private final Commands commands;
+    private final CommandExecutor commandExecutor;
 
     @Override
     public String getDescription() {
@@ -25,22 +25,22 @@ public class Start extends Command {
     }
 
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
-        if (msg.arg1.equals(Message.noArgumentValue)) {
+        if (msg.arg1.equals(Request.noArgumentValue)) {
 
             settings.schedulerSetActive(msg.profile, true);
 
             //@todo execute
-            Message message = new Message();
-            message.profile = msg.profile;
-            message.chatId = msg.chatId;
-            message.cammand = "/status";
+            Request request = new Request();
+            request.profile = msg.profile;
+            request.chatId = msg.chatId;
+            request.command = "/status";
 
             //Commands.execute(CommandClass.class, profile, chatId);
-            commands.execute(message);
+            commandExecutor.execute(request);
 
-            return new Response("Расписание запущено");
+            return MessageBuilder.buildSuccess("Расписание запущено.");
 
         } else {
 
@@ -64,11 +64,11 @@ public class Start extends Command {
                     settings.schedulerSetActive(msg.profile, true);
                 });
 
-                return new Response("Расписание будет запущено, черзе" + minutes + " минут(у,ы)");
+                return MessageBuilder.buildFailed("Расписание будет запущено, черзе" + minutes + " минут(у,ы)");
 
             } catch (NumberFormatException e) {
 
-                return new Response("Не верный аргумент, " +
+                return MessageBuilder.buildFailed("Не верный аргумент, " +
                         "должно быть целлое число минут. Передано `" + msg.arg1 + "`");
             }
         }

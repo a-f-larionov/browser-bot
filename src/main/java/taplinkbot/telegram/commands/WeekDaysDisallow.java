@@ -19,10 +19,10 @@ public class WeekDaysDisallow extends Command {
     }
 
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         settings.setAllowWeekDays(msg.profile, false);
 
-        return ResponseFactory.buildSuccessResponse();
+        return MessageBuilder.buildSuccess();
     }
 }

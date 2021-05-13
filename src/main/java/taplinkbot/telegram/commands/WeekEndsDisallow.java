@@ -22,10 +22,10 @@ public class WeekEndsDisallow extends Command {
      * Запретить работу бота в выходные.
      */
     @Override
-    public Response run(Message msg) {
+    public Message run(Request msg) {
 
         settings.setAllowWeekEnds(msg.profile, false);
 
-        return ResponseFactory.buildSuccessResponse();
+        return MessageBuilder.buildSuccess();
     }
 }

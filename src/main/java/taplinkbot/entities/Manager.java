@@ -1,5 +1,8 @@
 package taplinkbot.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,46 +10,29 @@ public class Manager {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Getter
     private long id;
 
+    @Getter
+    //@tdod Validator phone number
     private String phone;
 
+    @Getter
     private String comment;
 
+    @Getter
+    @Setter
     private boolean isWorking;
 
+    /**
+     * ManagerRotator использует это
+     */
     @Transient
+    @Getter
+    @Setter
     private int index;
-
-    public long getId() {
-        return id;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public boolean isWorking() {
-        return isWorking;
-    }
-
-    public void setWorking(boolean working) {
-        isWorking = working;
-    }
 
     public String getDescription() {
         return getComment() + " " + getPhone();
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 }
