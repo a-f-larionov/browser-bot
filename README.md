@@ -19,11 +19,13 @@ TapLinkBot
 
     Технологии:
     
+    //@todo review it
+    
     - Language: Java 8+ 
     - Spring, Spring boot, Maven
     - Lombok
     - Mysql server
-    - Selenium, WebDriver
+    - WebDriver
     - Telegram Bot API
 
 # Installation
@@ -33,22 +35,27 @@ TapLinkBot
     apt update
     apt upgrade
 
+### Download WebDriver
+
 ### MySql
 
     apt install mysql-server
     mysql_secure_installation
 
-    CREATE USER 'taplinkbot'@'%' IDENTIFIED BY 'taplinkbot';
+    CREATE DATABASE taplinkbot DEFAULT CHARACTER SET utf_8;
+
+    CREATE USER 'taplinkbot'@'' IDENTIFIED BY 'taplinkbot';
     GRANT ALL PRIVILEGES ON taplinkbot.* TO 'taplinkbot'@'%';
     FLUSH PRIVILEGES;
 
 ### Run on startup ubuntu
 
     cp ./init.d/taplinkbot to /etc/init.d
-
     sudo chmod 755 /etc/init.d/taplinkbot
     sudo chown root:root /etc/init.d/taplinkbot
     sudo dos2unix /etc/init.d/taplinkbot
+    
     sudo update-rc.d taplinkbot defaults
     sudo update-rc.d taplinkbot enable
+    
     sudo service taplinkbot start
