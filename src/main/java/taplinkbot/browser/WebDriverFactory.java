@@ -66,11 +66,13 @@ public class WebDriverFactory {
         if (env.getProperty("webdriver.--no-sandbox") != null &&
                 env.getProperty("webdriver.--no-sandbox").equals("true")) {
             options.addArguments("--no-sandbox");
-
             //--disable-setuid-sandbox
         }
 
-        options.addArguments("--headless");
+        if (env.getProperty("webdriver.--headless") != null &&
+                env.getProperty("webdriver.--headless").equals("true")) {
+            options.addArguments("--headless");
+        }
 
         // Windows only
         if (env.getProperty("webdriver.--disable-gpu") != null &&
