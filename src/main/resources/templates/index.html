@@ -48,6 +48,8 @@
 
     <control-form v-if="controlFormShow"></control-form>
 
+    <register-form v-if="false"></register-form>
+
 </div>
 
 <template id="templateLoginForm">
@@ -97,6 +99,27 @@
         </div>
     </div>
 
+</template>
+
+<template id="templateRegisterUser">
+    <main class="form-signin">
+
+        <h1 class="h3 mb-3 fw-normal">Пожалуйста, введите пароль.</h1>
+
+        <div class="form-floating">
+            <input v-model="username" class="form-control" id="floatingUserName2" placeholder="username">
+            <label for="floatingUserName2">Имя пользователя</label>
+        </div>
+
+        <div class="form-floating">
+            <input v-model="password" type="password" class="form-control" id="floatingPassword2" placeholder="Пароль">
+            <label for="floatingPassword2">Пароль</label>
+        </div>
+
+        <button v-on:click="registerDo" class="w-100 btn btn-lg btn-primary" type="button">Зарегистрировать</button>
+        <p class="mt-5 mb-3 text-muted">TapLinkBot Control GUI</p>
+
+    </main>
 </template>
 
 <!-- Vue JS -->

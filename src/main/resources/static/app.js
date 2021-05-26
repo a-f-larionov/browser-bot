@@ -11,14 +11,53 @@ Vue.component("login-form", {
     methods: {
         loginDo: function () {
 
-            axios.post("/login", {
-                password: this.password
 
-            }).then(function (answer) {
+            var params = new URLSearchParams();
+            //@todo username is default
+            params.append('username', 'username');
+            params.append('password', this.password);
+
+            var config = {
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded'
+                }
+            };
+
+            axios.post("/authorize", params, config).then(function (answer) {
+                console.log(answer);
                 eventBus.$emit(eventBus.EVENT_CHECK_AUTH);
 
             }).catch(function () {
 
+                alert("Что то пошло не так. Обратитесь к разработчику.");
+            });
+        }
+    }
+});
+
+Vue.component("register-form", {
+
+    template: "#templateRegisterUser",
+
+    data: function () {
+        return {
+            username: "",
+            password: ""
+        }
+    },
+
+    created: function () {
+
+    },
+    methods: {
+        registerDo: function () {
+
+            axios.post("/register-user", {
+                username: this.username,
+                password: this.password
+            }).then(function (answer) {
+                //@todo
+            }).catch(function () {
                 alert("Что то пошло не так. Обратитесь к разработчику.");
             });
         }

@@ -4,18 +4,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import taplinkbot.entities.Manager;
+import taplinkbot.entities.User;
 import taplinkbot.managers.ManagerRotator;
+import taplinkbot.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @Slf4j
 public class Index {
 
     public static final String HTTP_SESSION_ATTR_IS_AUTHORIZED = "isAuthorized";
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private Environment env;
@@ -28,19 +35,41 @@ public class Index {
         return "index";
     }
 
-    @PostMapping(value = "/login")
+    @PostMapping("/register-user")
     @ResponseBody
-    public String login(
-            @RequestBody LoginForm loginForm,
+    public String registerUser(@RequestBody @Valid User user) {
+
+        if (userService.registerUser(user)) {
+            return "OK";
+        } else {
+            return "FAILED";
+        }
+    }
+
+    @PostMapping(value = "/testpost")
+    @ResponseBody
+    public String testPost() {
+        return "test-ok";
+    }
+
+    @PostMapping(value = "/authorize2222")
+    @ResponseBody
+    public String authorize(
+            @RequestBody User user,
             HttpSession httpSession
     ) {
 
+        log.info(user.toString());
+
+        /**
+         * how to auth?
+         */
 
         String password = env.getProperty("app.userPassword");
 
-        log.info("GUI. is it login " + loginForm.password);
+        log.info("GUI. is it login " + user.getPassword());
 
-        if (password.equals(loginForm.password)) {
+        if (password.equals(user.getPassword())) {
             httpSession.setAttribute(HTTP_SESSION_ATTR_IS_AUTHORIZED, true);
             log.info("set it");
             return "OK!";
@@ -105,10 +134,13 @@ public class Index {
     }
 
     private boolean isAuth(HttpSession httpSession) {
-        //@todo-r refactoring it
-        Boolean isAuth = (Boolean) httpSession.getAttribute(HTTP_SESSION_ATTR_IS_AUTHORIZED);
-        isAuth = isAuth != null ? isAuth : false;
-        return isAuth;
-    }
 
+        Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (object instanceof User) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
