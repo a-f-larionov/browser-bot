@@ -9,6 +9,11 @@
       "name": "app.userPassword",
       "type": "java.lang.String",
       "description": "Пароль для входа через ВЕБ в систему."
+    },
+    {
+      "name": "webdriver.--no-sandbox",
+      "type": "java.lang.String",
+      "description": "Description for webdriver.--no-sandbox."
     }
   ]
 }

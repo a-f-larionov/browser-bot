@@ -1,6 +1,7 @@
 package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -90,6 +91,7 @@ public class AuthActions {
         }
     }
 
+    @SneakyThrows
     private boolean checkIsAuthorized(String login) {
         //@todo cabinet?
 
@@ -99,7 +101,10 @@ public class AuthActions {
         browser.setComment("Открытие страницы:" + url);
         browser.get(url);
 
-        String xpath = "/html/body/div[1]/div[4]/div/div[3]/div/div[1]/div[2]/div/div/div/div[1]/div/p/div/div/div/div/input";
+        // поле пустое, Если не ждать @Todo
+        Thread.sleep(5000);
+
+        String xpath = "//input[@type='email']";
 
         if (!browser.isElementPresent(By.xpath(xpath), 5)) {
             return false;

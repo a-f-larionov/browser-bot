@@ -22,8 +22,6 @@ public class FixBugErrConnectionClosed extends Command {
 
         actions.testBugErrConnectionClosed();
 
-
-
         return MessageBuilder.buildResult();
     }
 }

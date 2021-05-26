@@ -1,6 +1,7 @@
 package taplinkbot.browser;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.entities.PageLoads;
 import taplinkbot.repositories.PageLoadsRepository;
@@ -9,6 +10,7 @@ import taplinkbot.repositories.PageLoadsRepository;
  * Компонент профилирует время загрузки страниц.
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class PageLoadProfiler {
 
@@ -22,7 +24,11 @@ public class PageLoadProfiler {
      * Начианет отсчёт времени перед запросом страницы.
      */
     public void start() {
-        if (inProgress) throw new Error("Вложенный профайлинг.");
+        //@todo test in Progress сбрасывается
+        if (inProgress) {
+            inProgress = false;
+            log.info("Вложенный профайлинг старт");
+        }
         inProgress = true;
 
         start = System.currentTimeMillis();
@@ -34,7 +40,10 @@ public class PageLoadProfiler {
      * @param url URL проилируемой страницы
      */
     public void finish(String url) {
-        if (!inProgress) throw new Error("Завершение без начала. Нужно вызвать start() перед finish()");
+        if (!inProgress) {
+            log.info("Вложенный профайлинг финиш");
+            return;
+        }
         long finish = System.currentTimeMillis();
 
         logProfiling(url, start, finish);

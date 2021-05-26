@@ -146,7 +146,12 @@ public class Browser implements WebDriver {
     public WebElement waitElement(By by, int seconds) {
 
         WebDriverWait wait = new WebDriverWait(driver, seconds);
+        wait.ignoring(ElementClickInterceptedException.class);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        driver.manage().window().maximize();
+        js.executeScript("window.scrollBy(0,1000)");
 
         return findElement(by);
     }
@@ -159,6 +164,8 @@ public class Browser implements WebDriver {
      */
     @Override
     public WebElement findElement(By by) {
+
+        log.info(by.toString());
 
         try {
             return driver.findElement(by);
@@ -263,6 +270,11 @@ public class Browser implements WebDriver {
      * Это избавлет от проблемы "unknown error: net::ERR_CONNECTION_CLOSED".
      */
     public void fixBugErrConnectionClosed() {
+
+        resetBrowser();
+    }
+
+    public void resetBrowser() {
 
         if (driver != null) driver.quit();
 

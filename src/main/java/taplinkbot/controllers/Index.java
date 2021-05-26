@@ -41,7 +41,6 @@ public class Index {
 
         log.info("GUI. is it login " + loginForm.password);
 
-
         if (password.equals(loginForm.password)) {
             httpSession.setAttribute(HTTP_SESSION_ATTR_IS_AUTHORIZED, true);
             log.info("set it");

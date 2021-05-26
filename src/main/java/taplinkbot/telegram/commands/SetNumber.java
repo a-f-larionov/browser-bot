@@ -34,8 +34,10 @@ public class SetNumber extends Command {
 
         telegramBot.notify(req, MessageBuilder.buildInfo("Начинаю смену номера:" + req.arg1));
 
-        actions.setPhoneNumber(req.arg1, req.profile);
-
-        return MessageBuilder.buildResult();
+        if (actions.setPhoneNumber(req.arg1, req.profile)) {
+            return MessageBuilder.buildResult();
+        } else {
+            return MessageBuilder.buildResult("Не удалось");
+        }
     }
 }

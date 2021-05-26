@@ -38,6 +38,24 @@ public class Trigger {
         return getConditions(profile, Calendar.getInstance().getTimeInMillis());
     }
 
+    public String getNext(Profile profile) {
+        Conditions cond;
+        long millis = Calendar.getInstance().getTimeInMillis();
+        for (int i = 0; i < 100; i++) {
+            cond = getConditions(profile,
+                    millis +
+                            (i * 1000 * 60)
+            );
+            if (cond.isItTimeToChange) {
+                Calendar calendar;
+                calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(millis + i * 1000 * 60);
+                return calendar.getTime().toString();
+            }
+        }
+        return "n/a";
+    }
+
     public void updateLastTime(Profile profile) {
         settings.updateLastTimestamp(profile, Calendar.getInstance().getTimeInMillis());
     }
@@ -63,7 +81,7 @@ public class Trigger {
 
         cond.isItTimeToChange = true;
 
-        if (!cond.isSchedulerActive) cond.isActiveTomorrow = false;
+        if (!cond.isSchedulerActive) cond.isItTimeToChange = false;
         if (!cond.isItActiveDay) cond.isItTimeToChange = false;
         if (!cond.isActiveTomorrow && cond.isNineteenHoursAfter) cond.isItTimeToChange = false;
         if (!cond.isIntervalLeft) cond.isItTimeToChange = false;

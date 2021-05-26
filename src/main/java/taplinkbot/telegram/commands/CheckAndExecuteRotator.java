@@ -42,9 +42,10 @@ public class CheckAndExecuteRotator extends Command {
 
         log.info("Установка менеджера(" + req.profile.name + "):" + manager.getDescription());
 
-        telegram.notify(req, MessageBuilder.buildInfo("Смена номера: " + req.profile.name + " " + manager.getDescription()));
+        telegram.notify(req, MessageBuilder.buildInfo("Начинаю снену номера: " + req.profile.name + " " + manager.getDescription()));
 
         if (actions.setPhoneNumber(manager.getPhone(), req.profile)) {
+
             telegram.notify(req, MessageBuilder.buildInfo(
                     "Номер на странице " +
                             browser.getCurrentUrl() +
@@ -54,6 +55,8 @@ public class CheckAndExecuteRotator extends Command {
             ));
 
             trigger.updateLastTime(req.profile);
+
+            browser.resetBrowser();
 
             return MessageBuilder.buildResult();
 

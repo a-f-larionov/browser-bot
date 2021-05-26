@@ -1,5 +1,8 @@
 package taplinkbot.browser;
 
+import com.github.mike10004.xvfbmanager.Screenshot;
+import com.github.mike10004.xvfbmanager.XvfbController;
+import com.github.mike10004.xvfbmanager.XvfbManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,7 +11,11 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Component
 @RequiredArgsConstructor
@@ -19,17 +26,57 @@ public class WebDriverFactory {
 
     public ChromeDriver buildWebDriver() {
 
-        System.setProperty("webdriver.chrome.driver", Objects.requireNonNull(env.getProperty("webdriver.path")));
+//        XvfbManager xvfbManager = new XvfbManager();
+//
+//        try (final XvfbController controller = xvfbManager.start(1)) {
+//            controller.waitUntilReady();
+//
+//            Future<Process> processFuture = Executors.newSingleThreadExecutor().submit(new Callable<Process>() {
+//                @Override
+//                public Process call() throws Exception {
+//                    ProcessBuilder pb = new ProcessBuilder();
+//                    pb.environment().put("DISPLAY", controller.getDisplay());
+//
+//                    log.info("DISPLAY IS: " + controller.getDisplay());
+//
+//                    return pb.command("xclock").start();
+//                }
+//            });
+//
+//            Screenshot screenshot = controller.getScreenshooter().capture();
+//            processFuture.cancel(true);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        System.setProperty("webdriver.chrome.driver",
+                Objects.requireNonNull(env.getProperty("webdriver.path")));
+
+        //System.setProperty("webdriver.chrome.logfile", "chromedriver.log");
+        //System.setProperty("webdriver.chrome.verboseLogging", "true");
 
         ChromeOptions options = new ChromeOptions();
 
-        if (!env.getProperty("webdriver.guiEnabled").equals("true")) {
-            options.addArguments("--headless");
-            options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--start-maximized");
+        options.addArguments("window-size=1000,2400");
+
+        //  because a root
+        if (env.getProperty("webdriver.--no-sandbox") != null &&
+                env.getProperty("webdriver.--no-sandbox").equals("true")) {
             options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
+
+            //--disable-setuid-sandbox
         }
 
+        options.addArguments("--headless");
+
+        // Windows only
+        if (env.getProperty("webdriver.--disable-gpu") != null &&
+                env.getProperty("webdriver.--disable-gpu").equals("true")) {
+            options.addArguments("--disable-gpu");
+        }
 
         if (false) {
             //@todo need to check it
@@ -46,7 +93,7 @@ public class WebDriverFactory {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("UNHANDLED_PROMPT_BEHAVIOUR", "ignore");
+        if (false) capabilities.setCapability("UNHANDLED_PROMPT_BEHAVIOUR", "ignore");
         options.merge(capabilities);
 
         ChromeDriver chromeDriver = new ChromeDriver(options);

@@ -8,6 +8,8 @@ import taplinkbot.browser.Browser;
 import taplinkbot.entities.PhoneLogger;
 import taplinkbot.helpers.PhoneNumber;
 import taplinkbot.repositories.PhoneLoggerRepository;
+import taplinkbot.telegram.MessageBuilder;
+import taplinkbot.telegram.TelegramBot;
 
 /**
  * Алгоритмы действий на сайте taplink.
@@ -30,6 +32,8 @@ public class Actions {
     private final TapLinkAccount tapLinkAccount;
 
     private final Browser browser;
+
+    private final TelegramBot telegramBot;
 
     /**
      * Установить номер телефона
@@ -59,6 +63,8 @@ public class Actions {
         } catch (Exception e) {
             //@Todo use BotExceptions
             e.printStackTrace();
+
+            telegramBot.alert(e.getMessage(), browser.takeScreenshot());
         }
         return false;
     }

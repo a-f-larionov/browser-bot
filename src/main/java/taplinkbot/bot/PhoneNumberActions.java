@@ -35,7 +35,7 @@ public class PhoneNumberActions {
 
             browser.setComment("Обращение к блоку WhatsUp.");
             //WebElement we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
-            WebElement we = browser.waitElement(By.xpath("//span[contains(text(),'Узнать цену в WhatsApp')]/.."));
+            WebElement we = browser.waitElement(By.xpath("//span[contains(text(),'Узнать цену в WhatsApp')]/parent::a/parent::div"));
 
             if (!we.isDisplayed()) {
                 telegram.alert("Блок Whatsup не удалось найти по признаку displayed().", browser.takeScreenshot());
@@ -52,7 +52,8 @@ public class PhoneNumberActions {
 
 
             browser.setComment("Обращение к полю телефонного номера");
-            we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/section/section[2]/div/div/div/div[2]/div[3]/div/div/input"));
+       //     we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/section/section[2]/div/div/div/div[2]/div[3]/div/div/input"));
+            we = browser.waitElement(By.xpath("//input[@type='tel' and @data-title='Страна']"));
 
             browser.setComment("Ввод телефонного номера");
             we.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");

@@ -42,6 +42,13 @@ TapLinkBot
     GRANT ALL PRIVILEGES ON taplinkbot.* TO 'taplinkbot'@'%';
     FLUSH PRIVILEGES;
 
+### Install WebDriver
+
+wget https://chromedriver.chromium.org/downloads
+./chromedriver --version
+
+unzip   chromedriver_linux64.zip
+
 ### Run on startup ubuntu
 
     cp ./init.d/taplinkbot to /etc/init.d

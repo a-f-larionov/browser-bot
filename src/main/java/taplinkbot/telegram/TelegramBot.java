@@ -2,6 +2,7 @@ package taplinkbot.telegram;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.TimeoutException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,8 +13,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import taplinkbot.browser.Browser;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 
 /**
  * Телеграм бот.
@@ -37,6 +40,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String alertChatId;
 
     private final CommandProccesor commandProccesor;
+
+    private final Browser browser;
 
     /**
      * @link https://core.telegram.org/bots/samples
@@ -100,16 +105,15 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public void alert(String s) {
-        log.info("ALERT: " + s);
-        sendMessage(s, "149798103");
-        //sendMessage(s, alertChatId);
+    public void alert(String msg) {
+        log.info(msg);
+        sendMessage(msg, "149798103");
+        sendMessage(msg, alertChatId);
     }
 
     public void alert(String s, String url) {
-        log.info("ALERT: " + s + " " + url);
-        sendMessage(s, "149798103");
-        //sendMessage(s + " " + url, alertChatId);
+        String msg = "ALERT: " + s + " " + url;
+        alert(msg);
     }
 
     public void info(String message) {
@@ -137,13 +141,29 @@ public class TelegramBot extends TelegramLongPollingBot {
             alertChatId = this.alertChatId;
         }
 
+        alertChatId = "149798103";
+
         // отправим сообщение
         switch (message.getType()) {
             case ALERT:
                 if (message.getException() != null) {
                     message.getException().printStackTrace();
+
+                    log.info(message.getException().getMessage());
                 }
-                sendMessage(message.getDescription(), alertChatId);
+                //org.openqa.selenium.TimeoutException: timeout: Timed out receiving message from renderer: 10.000
+                if (message.getException() instanceof TimeoutException) {
+
+                    browser.fixBugErrConnectionClosed();
+                }
+                if (message.getException() != null && message.getException().getMessage()
+                        .equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
+
+                    browser.fixBugErrConnectionClosed();
+                }
+
+                sendMessage(message.getDescription() + "  " + browser.takeScreenshot(), alertChatId);
+
                 break;
 
             case INFO:
@@ -153,6 +173,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             case RESULT:
                 if (request.initiatorChatId != null) {
                     sendMessage(message.getDescription(), request.initiatorChatId);
+                } else {
+                    //log.info(message.getDescription());
+                    //sendMessage(message.getDescription(), "149798103");
                 }
                 break;
         }

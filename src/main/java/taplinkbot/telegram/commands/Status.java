@@ -7,6 +7,11 @@ import taplinkbot.schedulers.Trigger;
 import taplinkbot.service.Settings;
 import taplinkbot.telegram.*;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+
 @Component
 @RequiredArgsConstructor
 @CommandClass(name = "/status")
@@ -47,6 +52,13 @@ public class Status extends Command {
 
         builder.append(trigger.isItTimeToChange(msg.profile) ? "скоро сработает" : "не сработает");
         builder.append(trigger.getConditions(msg.profile).toString());
+
+        builder.append("\r\n");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm");
+        //DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mma z");
+
+        builder.append("След срабатывание:" + trigger.getNext(msg.profile));
 
         return MessageBuilder.buildResult(builder.toString());
     }
