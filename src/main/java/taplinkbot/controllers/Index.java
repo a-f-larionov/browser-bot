@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 public class Index {
 
-
     public static final String HTTP_SESSION_ATTR_IS_AUTHORIZED = "isAuthorized";
 
     @Autowired
@@ -63,7 +62,6 @@ public class Index {
             return new BooleanResponse(false);
         }
     }
-
 
     @RequestMapping(value = "/get_manager_list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
