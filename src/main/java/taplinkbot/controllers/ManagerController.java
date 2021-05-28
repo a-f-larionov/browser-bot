@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import taplinkbot.dto.ManagerDto;
 import taplinkbot.entities.Manager;
 import taplinkbot.managers.ManagerRotator;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//@Todo @RestController
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ManagerController {
 
@@ -29,7 +29,6 @@ public class ManagerController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/managers/list")
-    @ResponseBody
     public List<ManagerDto> list() {
 
         List<Manager> list = managerRepository.findAll();
@@ -51,7 +50,7 @@ public class ManagerController {
         Optional<Manager> manager = managerRepository.findById(managerId);
 
         if (!manager.isPresent()) {
-            return new ResponseEntity("Менеджер не найден.", HttpStatus.OK);
+            return new ResponseEntity("Менеджер не найден.", HttpStatus.BAD_REQUEST);
         }
 
         managerRotator.switchManagerWorks(managerId);
