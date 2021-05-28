@@ -52,7 +52,7 @@ Vue.component("register-form", {
     methods: {
         registerDo: function () {
 
-            axios.post("/register-user", {
+            axios.post("/admin/register-user", {
                 username: this.username,
                 password: this.password
             }).then(function (answer) {
@@ -77,7 +77,7 @@ Vue.component("control-form", {
     created: function () {
         let self = this;
         eventBus.$on(eventBus.EVENT_REQUEST_MANAGER_UPDATE, function () {
-            axios.get("/get_manager_list")
+            axios.get("/managers/list")
                 .then(function (answer) {
                     eventBus.$emit(eventBus.EVENT_UPDATE_MANAGER_LIST, answer.data);
                 })
@@ -111,7 +111,7 @@ Vue.component("manager-item", {
         onWorkingchange: function () {
             let self = this;
 
-            axios.get("/manager_working_switch?managerId=" + self.manager.id, {
+            axios.get("/managers/works-switch?managerId=" + self.manager.id, {
                 managerId: self.manager.id
             }).then(function () {
 
@@ -136,7 +136,7 @@ let app = new Vue({
 
     created: function () {
 
-        eventBus.$on(eventBus.EVENT_CHECK_AUTH, this.updateAuthorization);
+        eventBus.$on(eventBus.EVENT_CHECK_AUTH, this.updateUserProfile);
     },
     mounted: function () {
 
@@ -146,15 +146,18 @@ let app = new Vue({
     data: {
         loginFormShow: false,
         controlFormShow: false,
+        userProfile: null,
     },
 
     methods: {
-        updateAuthorization: function () {
+        updateUserProfile: function () {
             let self = this;
-            axios.get("is_it_auth")
+            axios.get("/users/get")
                 .then(function (answer) {
 
-                    if (answer.data.isIt) {
+                    self.userProfile = answer.data;
+
+                    if (self.userProfile.id) {
                         self.loginFormShow = false;
                         self.controlFormShow = true;
                     } else {

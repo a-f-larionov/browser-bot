@@ -72,11 +72,14 @@ public class ManagerRotator {
         return managers;
     }
 
-    public void isWorkingChange(int managerId) {
+    public void switchManagerWorks(Long managerId) {
 
         for (Manager manager : managers) {
+
             if (manager.getId() == managerId) {
+
                 manager.setWorking(!manager.isWorking());
+
                 managerRepository.save(manager);
             }
         }

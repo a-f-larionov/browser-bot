@@ -38,7 +38,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/?auth=success")
                 .permitAll();
 
-        http.authorizeRequests().anyRequest().permitAll();
+        //@todo tests: /maangers/list isnt accesing with out auth
+        http.authorizeRequests()
+
+                .antMatchers("/app.js").permitAll()
+                .antMatchers("/main.css").permitAll()
+
+                .antMatchers("/users/get").permitAll()
+                .antMatchers("/managers/list").authenticated()
+
+                .antMatchers("/admin/register-user").hasRole("ADMIN")
+
+                .anyRequest().authenticated();
     }
 
     @Autowired

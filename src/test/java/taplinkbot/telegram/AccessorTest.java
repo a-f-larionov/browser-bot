@@ -2,14 +2,16 @@ package taplinkbot.telegram;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
+@SpringBootTest
 public class AccessorTest {
 
     @Autowired
-    public Accessor accessor;
+    private Accessor accessor;
 
     /**
      * Ларионов(разработчик): 149798103
@@ -29,35 +31,47 @@ public class AccessorTest {
     @Test
     void checkAdminGroup() {
 
-        Request msg = new Request();
+        Request req = new Request();
 
-        msg.initiatorChatId = String.valueOf(-1001232151616L);
+        req.initiatorChatId = String.valueOf(-1001232151616L);
 
-        assertThat(accessor.check(msg)).isTrue();
+        assertThat(accessor.check(req)).isTrue();
     }
 
     @Test
     void checkTestGroup() {
 
-        Request msg = new Request();
+        Request req = new Request();
 
-        msg.initiatorChatId = String.valueOf(-439603549);
+        req.initiatorChatId = String.valueOf(-439603549);
 
         assert accessor != null;
 
-        assertThat(accessor.check(msg)).isTrue();
+        assertThat(accessor.check(req)).isTrue();
     }
-
 
     @Test
     void negativeTest1() {
 
-        String[] chatIds = {"123", "0", "-12321", "123213", "lkj", "", null};
+        String[] chatIds = {"123", "0", "-12321", "123213", "lkj", ""};
 
         for (String chatId : chatIds) {
-            Request msg = new Request();
-            msg.initiatorChatId = chatId;
-            assertThat(accessor.check(msg)).isFalse();
+            Request req = new Request();
+            req.initiatorChatId = chatId;
+
+            assertThat(
+                    accessor.check(req)
+            ).isFalse();
         }
+    }
+
+    @Test
+    void nullPointerCheck() {
+
+        Request req = new Request();
+        req.initiatorChatId = null;
+
+        assertThatThrownBy(() -> accessor.check(req))
+                .isInstanceOf(NullPointerException.class);
     }
 }
