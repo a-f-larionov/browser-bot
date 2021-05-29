@@ -80,7 +80,6 @@ public class AuthActions {
         we.click();
 
         browser.setComment("Проверка начилия иконки профиля(проверка авторизации)");
-
         browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img"));
 
         try {

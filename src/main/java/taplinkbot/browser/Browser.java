@@ -41,7 +41,7 @@ public class Browser implements WebDriver {
      * Секунды.
      */
     @Value("${webdriver.waitElementSeconds:300}")
-    private static int waitElementSeconds;
+    private int waitElementSeconds;
 
     /**
      * "Последний комментарий".
@@ -149,6 +149,7 @@ public class Browser implements WebDriver {
         wait.ignoring(ElementClickInterceptedException.class);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
+        //@todo, windows is mazimazed ...
         JavascriptExecutor js = (JavascriptExecutor) driver;
         driver.manage().window().maximize();
         js.executeScript("window.scrollBy(0,1000)");
