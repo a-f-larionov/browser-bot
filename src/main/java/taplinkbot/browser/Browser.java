@@ -41,7 +41,7 @@ public class Browser implements WebDriver {
      * Секунды.
      */
     @Value("${webdriver.defaultTimeout:300}")
-    public int DEFAULT_WAIT_TIME;
+    public static int DEFAULT_TIMEOUT;
 
     /**
      * "Последний комментарий".
@@ -117,7 +117,7 @@ public class Browser implements WebDriver {
      * @param by org.openqa.selenium.By
      */
     public WebElement waitElement(By by) {
-        return waitElement(by, DEFAULT_WAIT_TIME);
+        return waitElement(by, DEFAULT_TIMEOUT);
     }
 
     /**
