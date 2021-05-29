@@ -39,6 +39,6 @@ class BrowserTest {
     //@Todo
     public void test() {
 
-        browser.waitElement(By.xpath());
+        browser.waitElement(By.xpath("//"));
     }
 }
