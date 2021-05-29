@@ -19,7 +19,7 @@ class BrowserTest {
     public void testConfig() {
 
         assertThat(
-                env.getProperty("webdriver.elementTimeoutSeconds")
+                env.getProperty("webdriver.waitElementSeconds")
         ).isNotEmpty();
     }
 

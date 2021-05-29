@@ -40,8 +40,8 @@ public class Browser implements WebDriver {
      * Время по умолчанию для ожидания элементов на странице.
      * Секунды.
      */
-    @Value("${webdriver.elementTimeoutSeconds:300}")
-    private static int elementTimeoutSeconds;
+    @Value("${webdriver.waitElementSeconds:300}")
+    private static int waitElementSeconds;
 
     /**
      * "Последний комментарий".
@@ -112,12 +112,12 @@ public class Browser implements WebDriver {
 
     /**
      * Ожидать элемент.
-     * По умолчанию ждёт elementTimeoutSeconds секунд.
+     * По умолчанию ждёт waitElementSeconds секунд.
      *
      * @param by org.openqa.selenium.By
      */
     public WebElement waitElement(By by) {
-        return waitElement(by, elementTimeoutSeconds);
+        return waitElement(by, waitElementSeconds);
     }
 
     /**
