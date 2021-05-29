@@ -103,7 +103,7 @@ public class Browser implements WebDriver {
     /**
      * Найти элементы
      *
-     * @param by org.openqa.selenium
+     * @param by org.openqa.selenium.By
      */
     @Override
     public List<WebElement> findElements(By by) {
