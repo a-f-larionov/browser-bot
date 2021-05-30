@@ -111,16 +111,6 @@ public class Browser implements WebDriver {
     }
 
     /**
-     * Ожидать элемент.
-     * По умолчанию ждёт waitElementSeconds секунд.
-     *
-     * @param by org.openqa.selenium.By
-     */
-    public WebElement waitElement(By by) {
-        return waitElement(by, waitElementSeconds);
-    }
-
-    /**
      * Проверяет наличие элемента.
      *
      * @param by      org.openqa.selenium.By
@@ -138,13 +128,24 @@ public class Browser implements WebDriver {
     }
 
     /**
+     * Ожидать элемент.
+     * По умолчанию ждёт waitElementSeconds секунд.
+     *
+     * @param by org.openqa.selenium.By
+     */
+    public WebElement waitElement(By by) {
+        log.info("waitElement(By by)");
+        return waitElement(by, waitElementSeconds);
+    }
+
+    /**
      * Ждёт элемент.
      *
      * @param by      селектор элемента.
      * @param seconds ожидание в секундах.
      */
     public WebElement waitElement(By by, int seconds) {
-
+        log.info("waitElment(By by, int seconds) " + seconds);
         WebDriverWait wait = new WebDriverWait(driver, seconds);
         wait.ignoring(ElementClickInterceptedException.class);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));

@@ -1,23 +1,17 @@
 package taplinkbot.browser;
 
-import org.assertj.core.api.Assertions;
+import com.sun.xml.internal.ws.spi.db.FieldSetter;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 
-import javax.xml.xpath.XPath;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class BrowserTest {
@@ -30,15 +24,30 @@ class BrowserTest {
 
     @Test
     public void testConfig() {
-
         assertThat(
                 env.getProperty("webdriver.waitElementSeconds")
         ).isNotEmpty();
     }
 
-    //@Todo
+    @Test
     public void test() {
 
-        browser.waitElement(By.xpath("//"));
+        By by = By.xpath("/");
+
+        int waitElementSeconds = Integer.parseInt(
+                Objects.requireNonNull(
+                        env.getProperty("webdriver.waitElementSeconds")
+                )
+        );
+
+        Browser spy = Mockito.spy(browser);
+
+        Mockito.doReturn(null)
+                .when(spy)
+                .waitElement(ArgumentMatchers.any(), ArgumentMatchers.anyInt());
+
+        spy.waitElement(by);
+
+        Mockito.verify(spy).waitElement(by, waitElementSeconds);
     }
 }
