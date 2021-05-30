@@ -134,7 +134,6 @@ public class Browser implements WebDriver {
      * @param by org.openqa.selenium.By
      */
     public WebElement waitElement(By by) {
-        log.info("waitElement(By by)");
         return waitElement(by, waitElementSeconds);
     }
 
@@ -145,7 +144,7 @@ public class Browser implements WebDriver {
      * @param seconds ожидание в секундах.
      */
     public WebElement waitElement(By by, int seconds) {
-        log.info("waitElment(By by, int seconds) " + seconds);
+
         WebDriverWait wait = new WebDriverWait(driver, seconds);
         wait.ignoring(ElementClickInterceptedException.class);
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
