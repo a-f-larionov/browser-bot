@@ -44,7 +44,9 @@ class BrowserTest {
 
         Mockito.doReturn(null)
                 .when(spy)
-                .waitElement(ArgumentMatchers.any(), ArgumentMatchers.anyInt());
+                .waitElement(
+                        ArgumentMatchers.any(),
+                        ArgumentMatchers.anyInt());
 
         spy.waitElement(by);
 
