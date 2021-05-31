@@ -150,7 +150,7 @@ public class Browser implements WebDriver {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
         //@todo, windows is mazimazed ...
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = driver;
         driver.manage().window().maximize();
         js.executeScript("window.scrollBy(0,1000)");
 
@@ -175,7 +175,7 @@ public class Browser implements WebDriver {
             throw new BrowserException(
                     "Не удалось найти элемент." +
                             " Обратитесь к разработчику." +
-                            " Элемент:" + " `" + by.toString() + "`"
+                            " Элемент:" + " `" + by + "`"
                     , this
             );
         }

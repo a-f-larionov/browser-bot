@@ -79,9 +79,7 @@ public class Trigger {
         cond.isItWeekend = DateTimeHelper.isItWeekEnd(millis);
         cond.isSchedulerActive = settings.schedulerIsActive(profile);
 
-        cond.isItTimeToChange = true;
-
-        if (!cond.isSchedulerActive) cond.isItTimeToChange = false;
+        cond.isItTimeToChange = cond.isSchedulerActive;
         if (!cond.isItActiveDay) cond.isItTimeToChange = false;
         if (!cond.isActiveTomorrow && cond.isNineteenHoursAfter) cond.isItTimeToChange = false;
         if (!cond.isIntervalLeft) cond.isItTimeToChange = false;

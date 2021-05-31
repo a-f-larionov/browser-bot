@@ -29,7 +29,7 @@ public class Help extends Command {
 
         Map<String, Command> commands = CommandExecutor.getCommands();
 
-        Object keys[] = commands.keySet().toArray();
+        Object[] keys = commands.keySet().toArray();
 
         Arrays.sort(keys);
 

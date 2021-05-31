@@ -1,6 +1,7 @@
 package taplinkbot.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +9,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import taplinkbot.service.UserService;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
+@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -24,23 +28,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         // POST Запросы без этого никак @todo доработать post запросы?
         http.csrf().disable();
-
-        //Настройка для входа в систему
-        http.formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/authorize")
-                //Перенарпавление на главную страницу после успешного входа
-                .defaultSuccessUrl("/?auth=success")
-                .permitAll();
-
-        //@todo tests: /maangers/list isnt accesing with out auth
+//
+//        //@todo tests: /maangers/list isnt accesing with out auth
         http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/test").permitAll()
 
+                .antMatchers("/").permitAll()
                 .antMatchers("/app.js").permitAll()
                 .antMatchers("/main.css").permitAll()
 
@@ -49,7 +53,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/register-user").hasRole("ADMIN")
 
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+        ;
+
+        //@Todo test authorize
+        //@todo migrations for default users
+        //Настройка для входа в систему
+        http.formLogin((customize) -> {
+            customize.loginProcessingUrl("/authorize");
+            customize.failureHandler(authenticationFailureHandler());
+        });
     }
 
     @Autowired

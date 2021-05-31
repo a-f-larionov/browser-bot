@@ -1,20 +1,31 @@
+var catchRequest = function (error) {
+    if (error.response && error.response.status && error.response.data &&
+        error.response.status == 400) {
+
+        alert(error.response.data);
+
+    } else {
+        alert("Что то пошло не так. Обратитесь к разработчику.");
+    }
+};
+
 Vue.component("login-form", {
 
     template: "#templateLoginForm",
 
     data: function () {
         return {
-            password: ""
+            password: "",
+            username: ""
         };
     },
 
     methods: {
         loginDo: function () {
 
-
             var params = new URLSearchParams();
             //@todo username is default
-            params.append('username', 'username');
+            params.append('username', this.username);
             params.append('password', this.password);
 
             var config = {
@@ -27,9 +38,9 @@ Vue.component("login-form", {
                 console.log(answer);
                 eventBus.$emit(eventBus.EVENT_CHECK_AUTH);
 
-            }).catch(function () {
+            }).catch(function (error) {
 
-                alert("Что то пошло не так. Обратитесь к разработчику.");
+                catchRequest(error);
             });
         }
     }
@@ -57,8 +68,8 @@ Vue.component("register-form", {
                 password: this.password
             }).then(function (answer) {
                 //@todo
-            }).catch(function () {
-                alert("Что то пошло не так. Обратитесь к разработчику.");
+            }).catch(function (error) {
+                catchRequest(error);
             });
         }
     }

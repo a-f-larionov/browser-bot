@@ -1,21 +1,32 @@
 package taplinkbot.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import taplinkbot.components.LangComponent;
 import taplinkbot.entities.User;
 import taplinkbot.service.UserService;
 
 import javax.validation.Valid;
 
+//@todo rest controller
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
 
+    private final LangComponent lang;
+
     private final UserService userService;
+
+    @GetMapping("/test")
+    public @ResponseBody
+    String test() {
+        return lang.get("label.test");
+    }
 
     @PostMapping("/admin/register-user")
     public ResponseEntity registerUser(@RequestBody @Valid User user) {

@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class TelegramCommandAnnotationBeanPostProcessor implements BeanPostProcessor {
 
-    private Map<String, Command> beans = new HashMap<>();
+    private final Map<String, Command> beans = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
