@@ -53,10 +53,7 @@
 
 <main class="container" id="vueapp">
 
-    <div class="row">
-        <div class="col-sm" style="height: 25px;"></div>
-    </div>
-    <div class="row">
+    <div class="row h-100">
 
         <div class="col-sm">
 
@@ -93,10 +90,9 @@
             <label for="floatingPassword">Пароль</label>
         </div>
 
-        <p class="mt-5 mb-3 text-muted"></p>
-
-        <button v-on:click="loginDo" class="w-100 btn btn-lg btn-primary" type="button">Войти</button>
-
+        <div class="form-floating mt-4">
+            <button v-on:click="loginDo" class="w-100 btn btn-lg btn-primary" type="button">Войти</button>
+        </div>
     </div>
 
 </template>
