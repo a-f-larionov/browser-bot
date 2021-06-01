@@ -51,19 +51,12 @@ class ManagerControllerTest {
     @Test
     void listIsJsonLength() throws Exception {
 
-        class ManagersListRow {
-            int id;
-            String phone;
-            String comment;
-            boolean isWorking;
-        }
-
         String content = mvc.perform(get("/managers/list"))
                 .andReturn().getResponse().getContentAsString();
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        List<ManagersListRow> list = objectMapper.readValue(content, List.class);
+        List<Object> list = objectMapper.readValue(content, List.class);
 
         assertThat(list.size()).isEqualTo(4);
     }
@@ -71,7 +64,5 @@ class ManagerControllerTest {
     @Test
     void managerWorkingSwitch() {
         //@todo
-
-
     }
 }
