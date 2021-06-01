@@ -4,13 +4,10 @@ package taplinkbot.telegram.commands;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import taplinkbot.schedulers.Trigger;
-import taplinkbot.service.Settings;
+import taplinkbot.services.Settings;
 import taplinkbot.telegram.*;
 
-import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 
 @Component
 @RequiredArgsConstructor

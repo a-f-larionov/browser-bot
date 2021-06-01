@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
 import taplinkbot.entities.Manager;
 import taplinkbot.repositories.ManagerRepository;
-import taplinkbot.service.Settings;
+import taplinkbot.services.Settings;
 
 import javax.annotation.PostConstruct;
 import java.util.List;

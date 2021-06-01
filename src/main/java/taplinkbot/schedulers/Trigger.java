@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
 import taplinkbot.helpers.DateTimeHelper;
-import taplinkbot.service.Settings;
+import taplinkbot.services.Settings;
 
 import java.util.Calendar;
 

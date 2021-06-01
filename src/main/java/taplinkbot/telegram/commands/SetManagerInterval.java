@@ -2,7 +2,7 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.service.Settings;
+import taplinkbot.services.Settings;
 import taplinkbot.telegram.*;
 
 @Component

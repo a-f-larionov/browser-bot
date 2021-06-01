@@ -1,4 +1,4 @@
-package taplinkbot.service;
+package taplinkbot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
