@@ -1,3 +1,4 @@
+//@Todo html-stylized-notification
 var catchRequest = function (error) {
     if (error.response && error.response.status && error.response.data &&
         error.response.status == 400) {
@@ -130,9 +131,8 @@ Vue.component("manager-item", {
 
                     eventBus.$emit(eventBus.EVENT_REQUEST_MANAGER_UPDATE);
 
-                }).catch(function () {
-                //@todo bootstrap notificator
-                alert("ERR 85");
+                }).catch(function (error) {
+                catchRequest(error);
             })
         },
     }
