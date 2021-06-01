@@ -1,5 +1,5 @@
 
-package taplinkbot.managers;
+package taplinkbot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 import taplinkbot.bot.Profile;
 import taplinkbot.entities.Manager;
 import taplinkbot.repositories.ManagerRepository;
-import taplinkbot.services.Settings;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+//@Todo one big todo
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -23,8 +23,7 @@ public class ManagerRotator {
 
     private Manager[] managers;
 
-    @PostConstruct
-    private void init() {
+    public void reloadData() {
         //@todo list?
         List<Manager> all = managerRepository.findAll();
 
@@ -37,7 +36,14 @@ public class ManagerRotator {
         }
     }
 
+    @PostConstruct
+    private void init() {
+        reloadData();
+    }
+
     public Manager getNextManager(Profile profile) {
+
+        reloadData();
 
         incrementIndex(profile, settings.getManagerIndex(profile));
 
@@ -45,6 +51,8 @@ public class ManagerRotator {
     }
 
     private void incrementIndex(Profile profile, int startIndex) {
+
+        reloadData();
 
         int index = settings.getManagerIndex(profile);
 
@@ -62,6 +70,7 @@ public class ManagerRotator {
     }
 
     public Manager getCurrentManager(Profile profile) {
+        reloadData();
 
         int index = settings.getManagerIndex(profile);
 
@@ -69,20 +78,9 @@ public class ManagerRotator {
     }
 
     public Manager[] getManagers() {
+
+        reloadData();
+
         return managers;
-    }
-
-    public void switchManagerWorks(Long managerId) {
-
-        for (Manager manager : managers) {
-
-            if (manager.getId() == managerId) {
-
-                manager.setWorking(!manager.isWorking());
-
-                managerRepository.save(manager);
-            }
-        }
-
     }
 }

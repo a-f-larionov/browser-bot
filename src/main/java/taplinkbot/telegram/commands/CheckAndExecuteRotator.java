@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import taplinkbot.bot.Actions;
 import taplinkbot.browser.Browser;
 import taplinkbot.entities.Manager;
-import taplinkbot.managers.ManagerRotator;
+import taplinkbot.services.ManagerRotator;
 import taplinkbot.schedulers.Trigger;
 import taplinkbot.telegram.*;
 

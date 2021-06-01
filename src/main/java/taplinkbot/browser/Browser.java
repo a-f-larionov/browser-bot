@@ -75,6 +75,7 @@ public class Browser implements WebDriver {
         pageLoadProfiler.start();
 
         log.info(url);
+
         driver.get(url);
 
         pageLoadProfiler.finish(url);

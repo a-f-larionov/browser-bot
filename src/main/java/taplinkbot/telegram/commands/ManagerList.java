@@ -3,7 +3,7 @@ package taplinkbot.telegram.commands;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import taplinkbot.entities.Manager;
-import taplinkbot.managers.ManagerRotator;
+import taplinkbot.services.ManagerRotator;
 import taplinkbot.telegram.*;
 
 @Component
