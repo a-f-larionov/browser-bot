@@ -122,13 +122,15 @@ Vue.component("manager-item", {
         onWorkingchange: function () {
             let self = this;
 
-            axios.post("/managers/works-switch", {
-                managerId: self.manager.id
-            }).then(function () {
+            let params = new URLSearchParams();
+            params.append("managerId", self.manager.id);
 
-                eventBus.$emit(eventBus.EVENT_REQUEST_MANAGER_UPDATE);
+            axios.post("/managers/works-switch", params)
+                .then(function () {
 
-            }).catch(function () {
+                    eventBus.$emit(eventBus.EVENT_REQUEST_MANAGER_UPDATE);
+
+                }).catch(function () {
                 //@todo bootstrap notificator
                 alert("ERR 85");
             })
