@@ -2,6 +2,7 @@ package taplinkbot.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,5 +47,23 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return true;
+    }
+
+    /**
+     * Возвращает текущего авторизованного пользователя.
+     *
+     * @return User текущий авторизованный пользователь или пустой объект User.
+     */
+    public User getCurrentUser() {
+        Object object = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (object instanceof User) {
+            return (User) object;
+        } else {
+            return new User();
+        }
     }
 }
