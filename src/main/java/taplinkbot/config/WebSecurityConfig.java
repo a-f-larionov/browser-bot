@@ -59,8 +59,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //@todo migrations for default users
         //Настройка для входа в систему
         http.formLogin((customize) -> {
+            customize.loginPage("/");
             customize.loginProcessingUrl("/authorize");
             customize.failureHandler(authenticationFailureHandler());
+        });
+        http.logout((customize) -> {
+            customize.logoutSuccessUrl("/");
         });
     }
 

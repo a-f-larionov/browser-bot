@@ -1,6 +1,9 @@
+//FIN
 package taplinkbot.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +22,13 @@ public class AdminController {
     private final UserService userService;
 
     @PostMapping("/admin/register-user")
-    public String registerUser(@RequestBody @Valid User user) {
+    public ResponseEntity<String> registerUser(@RequestBody @Valid User user) {
 
         if (userService.registerUser(user)) {
-            return lang.get("admin.register_user.success");
+            return ResponseEntity.ok(lang.get("admin.register_user.success"));
         } else {
-            return lang.get("admin.register_user.failed");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(lang.get("admin.register_user.failed"));
         }
     }
 }
