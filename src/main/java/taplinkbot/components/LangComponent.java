@@ -16,5 +16,4 @@ public class LangComponent {
     public String get(String s) {
         return messageSource.getMessage(s, null, LocaleContextHolder.getLocale());
     }
-
 }
