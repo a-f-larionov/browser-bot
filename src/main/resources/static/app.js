@@ -122,7 +122,7 @@ Vue.component("manager-item", {
         onWorkingchange: function () {
             let self = this;
 
-            axios.get("/managers/works-switch?managerId=" + self.manager.id, {
+            axios.post("/managers/works-switch", {
                 managerId: self.manager.id
             }).then(function () {
 
