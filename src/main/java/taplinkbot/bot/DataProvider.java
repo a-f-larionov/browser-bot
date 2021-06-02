@@ -82,14 +82,34 @@ public class DataProvider {
      * xpath: блок Whatsup в админке
      */
     public static String xpathAdminWhatsUpBlock = "//span[contains(text(),'Узнать цену в WhatsApp')]/parent::a/parent::div";
+
     /**
      * xpath: поле номера телефона блока Whatsup
      */
     public static String xpathAdminWhatsupPhoneElement = "//input[@type='tel' and @data-title='Страна']";
 
-
     /**
      * xpath: в админке кнопка сохранить номер
      */
     public static String xpathAdminSaveButton = "/html/body/div[4]/div[2]/div/footer/div[2]/button";
+
+    /**
+     * url: страница профилей
+     */
+    public static String urlProfilePages = "https://taplink.ru/profile/2988200/pages/";
+
+    /**
+     * xpath: страница профилей, попап меню
+     */
+    public static String xpathProfilesPopUpMenu = "/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img";
+
+    /**
+     * xpath: старница профилей, мои профили
+     */
+    public static String xpathProfilesMyProfiles = "/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[3]/div[1]/a";
+
+    /**
+     * текст: страница профилей, мои профили
+     */
+    public static String textMyProfiles = "Мои профили";
 }
