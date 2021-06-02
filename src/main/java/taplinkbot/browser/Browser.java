@@ -255,7 +255,7 @@ public class Browser implements WebDriver {
      */
     public boolean testBugErrConnectionClosed() {
         try {
-            get(Profile.Canvas.getPageUrl());
+            get(Profile.Canvas.getMultiPageUrl());
             return false;
 
         } catch (Exception e) {

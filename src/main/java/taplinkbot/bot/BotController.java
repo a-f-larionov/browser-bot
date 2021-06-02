@@ -72,8 +72,8 @@ public class BotController {
     /**
      * Получить номер с мультистраницы
      *
-     * @param profile
-     * @return
+     * @param profile профиль
+     * @return номер телефона
      */
     synchronized public String getNumber(Profile profile) {
 

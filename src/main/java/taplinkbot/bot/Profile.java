@@ -50,7 +50,7 @@ public enum Profile {
      *
      * @return мультиссылка
      */
-    public String getPageUrl() {
+    public String getMultiPageUrl() {
         return "https://" + this.getDomainName();
     }
 

@@ -52,4 +52,24 @@ public class DataProvider {
      * xpath: на странице профиля, поле емейл
      */
     public static String xpathAccountSettingsEmailField = "//input[@type='email']";
+
+    /**
+     * текст: блока ватсап узнать цену
+     */
+    public static String textWhatsUpPrice = "Узнать цену в WhatsApp";
+
+    /**
+     * часть текста блока Whatsup
+     */
+    public static String textWhatsupHrefPostText = "%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D1%85%D0%BE%D1%87%D1%83%20%D1%83%D0%B7%D0%BD%D0%B0%D1%82%D1%8C%20%D1%86%D0%B5%D0%BD%D1%83%20%D0%BD%D0%B0%20%D0%BF%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82.";
+
+    /**
+     * xpath кнопкаи [Перейти в чат] на странице https://api.whatsapp.com/send?phone=79102790307&text=Здравствуйте%21%20Я%20хочу%20узнать%20цену%20на%20портрет.
+     */
+    public static String xpathApiWhatsUpComChatButton = "//div/a[contains(text(), 'Перейти в чат')]";
+
+    /**
+     * xpath блока Узнать цену в WhatsUp
+     **/
+    public static String xpathWhatsUpPrice = "//span[contains(text(),'Узнать цену в WhatsApp')]/..";
 }
