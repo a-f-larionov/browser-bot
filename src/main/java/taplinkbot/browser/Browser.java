@@ -1,4 +1,3 @@
-//FIN
 package taplinkbot.browser;
 
 import lombok.Getter;
@@ -290,5 +289,14 @@ public class Browser implements WebDriver {
         driver = webDriverFactory.buildWebDriver();
 
         log.info("Web Driver перезапущен.");
+    }
+
+    public void waitElementDisappear(String xpathAdminSaveButton) {
+        //@Todo isNotPresent\waitForGoway?
+        try {
+            Thread.sleep(45 * 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

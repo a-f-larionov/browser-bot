@@ -72,4 +72,24 @@ public class DataProvider {
      * xpath блока Узнать цену в WhatsUp
      **/
     public static String xpathWhatsUpPrice = "//span[contains(text(),'Узнать цену в WhatsApp')]/..";
+
+    /**
+     * url: главная страница таплинка
+     */
+    public static String urlTapLinkIndex = "https://taplink.ru/";
+
+    /**
+     * xpath: блок Whatsup в админке
+     */
+    public static String xpathAdminWhatsUpBlock = "//span[contains(text(),'Узнать цену в WhatsApp')]/parent::a/parent::div";
+    /**
+     * xpath: поле номера телефона блока Whatsup
+     */
+    public static String xpathAdminWhatsupPhoneElement = "//input[@type='tel' and @data-title='Страна']";
+
+
+    /**
+     * xpath: в админке кнопка сохранить номер
+     */
+    public static String xpathAdminSaveButton = "/html/body/div[4]/div[2]/div/footer/div[2]/button";
 }
