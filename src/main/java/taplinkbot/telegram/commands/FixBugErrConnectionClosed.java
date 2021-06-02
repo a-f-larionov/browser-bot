@@ -2,7 +2,7 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotController;
 import taplinkbot.telegram.*;
 
 @Component
@@ -10,7 +10,7 @@ import taplinkbot.telegram.*;
 @CommandClass(name = "/fix_bug_err_connection_closed")
 public class FixBugErrConnectionClosed extends Command {
 
-    private final Actions actions;
+    private final BotController botController;
 
     @Override
     public String getDescription() {
@@ -20,7 +20,7 @@ public class FixBugErrConnectionClosed extends Command {
     @Override
     public Message run(Request msg) {
 
-        actions.testBugErrConnectionClosed();
+        botController.testBugErrConnectionClosed();
 
         return MessageBuilder.buildResult();
     }

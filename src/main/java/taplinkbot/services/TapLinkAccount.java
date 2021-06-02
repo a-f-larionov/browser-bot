@@ -1,12 +1,15 @@
 //FIN
-package taplinkbot.bot;
+package taplinkbot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+/**
+ * Компонент ответчает за аккуант на таплинке
+ */
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class TapLinkAccount {

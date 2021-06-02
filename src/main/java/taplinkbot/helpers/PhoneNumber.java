@@ -17,6 +17,8 @@ public class PhoneNumber {
      */
     public static boolean validate(String phoneNumber) {
 
+
+        //@Todo message from Hibernate validator
         Pattern pattern = Pattern.compile("^\\+7\\d{10}$");
 
         Matcher matcher = pattern.matcher(phoneNumber);

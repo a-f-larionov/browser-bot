@@ -2,7 +2,7 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotController;
 import taplinkbot.telegram.*;
 
 @Component
@@ -12,7 +12,7 @@ public class SetNumber extends Command {
 
     private final TelegramBot telegramBot;
 
-    private final Actions actions;
+    private final BotController botController;
 
     @Override
     public String getDescription() {
@@ -34,7 +34,7 @@ public class SetNumber extends Command {
 
         telegramBot.notify(req, MessageBuilder.buildInfo("Начинаю смену номера:" + req.arg1));
 
-        if (actions.setPhoneNumber(req.arg1, req.profile)) {
+        if (botController.setPhoneNumber(req.arg1, req.profile)) {
             return MessageBuilder.buildResult();
         } else {
             return MessageBuilder.buildResult("Не удалось");

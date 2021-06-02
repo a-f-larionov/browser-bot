@@ -3,7 +3,7 @@ package taplinkbot.telegram.commands;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotController;
 import taplinkbot.browser.Browser;
 import taplinkbot.entities.Manager;
 import taplinkbot.services.ManagerRotator;
@@ -18,7 +18,7 @@ public class CheckAndExecuteRotator extends Command {
 
     private final ManagerRotator rotator;
 
-    private final Actions actions;
+    private final BotController botController;
 
     private final Trigger trigger;
 
@@ -44,7 +44,7 @@ public class CheckAndExecuteRotator extends Command {
 
         telegram.notify(req, MessageBuilder.buildInfo("Начинаю снену номера: " + req.profile.name + " " + manager.getDescription()));
 
-        if (actions.setPhoneNumber(manager.getPhone(), req.profile)) {
+        if (botController.setPhoneNumber(manager.getPhone(), req.profile)) {
 
             telegram.notify(req, MessageBuilder.buildInfo(
                     "Номер на странице " +

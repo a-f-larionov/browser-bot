@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import taplinkbot.TapLinkWebException;
+import taplinkbot.TapLinkBotException;
 import taplinkbot.components.LangComponent;
 import taplinkbot.dto.ManagerDto;
 import taplinkbot.entities.Manager;
@@ -39,7 +39,7 @@ public class ManagerController {
     public ResponseEntity<String> managerWorkingSwitch(@RequestParam Long managerId) {
 
         Manager manager = managerRepository.findById(managerId)
-                .orElseThrow(() -> new TapLinkWebException(
+                .orElseThrow(() -> new TapLinkBotException(
                         lang.get("managers.not_found"))
                 );
 

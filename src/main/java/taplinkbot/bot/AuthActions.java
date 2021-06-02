@@ -1,16 +1,17 @@
+//FIN
 package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
+import taplinkbot.TapLinkBotException;
 import taplinkbot.browser.Browser;
-import taplinkbot.browser.BrowserException;
+import taplinkbot.components.LangComponent;
 
 /**
- * @todo move mini actions, and group actions
+ * Действия авторизии.
  */
 @Component
 @Slf4j
@@ -19,20 +20,20 @@ public class AuthActions {
 
     private final Browser browser;
 
+    private final LangComponent lang;
+
     private WebElement we;
 
     public void webLogin(String login, String password) {
 
-        String url = "https://taplink.ru/profile/auth/signin/";
+        String url = DataProvider.urlSignIn;
 
         // Если уже авторизованы, ничего не делаем
         if (checkIsAuthorized(login)) return;
 
-        //@todo logout method here!
         logout();
 
-        //@todo format string?
-        browser.setComment("Открытие страницы для авторизации: " + url);
+        browser.setComment(lang.get("actions.auth.openAuthPage", url));
         browser.get(url);
 
         enterLogin(login);
@@ -42,7 +43,7 @@ public class AuthActions {
         authSubmit();
 
         if (!checkIsAuthorized(login)) {
-            throw new BrowserException("Не удалось авторизоваться.", browser);
+            throw new TapLinkBotException(lang.get("actions.auth.auth_failed"));
         }
     }
 
@@ -50,69 +51,73 @@ public class AuthActions {
      * Выполняет выход.
      */
     private void logout() {
-        browser.fixBugErrConnectionClosed();
+
+        browser.setComment(lang.get("actions.auth.do_logout"));
+        browser.get(DataProvider.urlLogout);
     }
 
+    /**
+     * Ввести логин
+     *
+     * @param login логин
+     */
     private void enterLogin(String login) {
 
-        browser.setComment("Обращение к полю ввода логина.");
-        we = browser.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[1]/div/input"));
+        browser.setComment(lang.get("actions.auth.field_login_access"));
+        we = browser.findElement(By.xpath(DataProvider.xpathSignInFieldLogin));
 
-        browser.setComment("Ввод логина.");
+        browser.setComment(lang.get("actions.auth.field_login_enter"));
         we.sendKeys(login);
     }
 
+    /**
+     * Ввод пароля
+     *
+     * @param password пароль
+     */
     private void enterPassword(String password) {
 
-        browser.setComment("Обращение к поле ввода пароля");
-        we = browser.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/div[2]/div[2]/input"));
+        browser.setComment(lang.get("actions.auth.field_password_access"));
+        we = browser.findElement(By.xpath(DataProvider.xpathSigInFieldPassword));
 
-        browser.setComment("Ввод пароля");
+        browser.setComment(lang.get("actions.auth.field_password_enter"));
         we.sendKeys(password);
     }
 
+    /**
+     * Нажатие кнопки submit формы авторизации
+     */
     private void authSubmit() {
 
-        browser.setComment("Обращение к кнопки авторизации");
-        we = browser.findElement(By.xpath("/html/body/div[1]/div[4]/section/div[2]/div/div[2]/form/button"));
+        browser.setComment(lang.get("actions.auth.button_submit_access"));
+        we = browser.findElement(By.xpath(DataProvider.xpathSignInButtonSubmit));
 
-        browser.setComment("Нажатие кнопки авторизации");
+        browser.setComment(lang.get("actions.auth.button_submit_click"));
         we.click();
 
-        browser.setComment("Проверка начилия иконки профиля(проверка авторизации)");
-        browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[2]/header/div/div[1]/div[2]/div/div/div[2]/img"));
-
-        try {
-            //@todo for what?
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        browser.setComment(lang.get("actions.auth.check_profile_icon"));
+        browser.waitElement(By.xpath(DataProvider.xpathProfileIcon));
     }
 
-    @SneakyThrows
+    /**
+     * Проверка авторизации
+     *
+     * @param login логин
+     * @return boolean true - если авторизация под запрашиваемым логином, иначе - false
+     */
     private boolean checkIsAuthorized(String login) {
-        //@todo cabinet?
 
-        //@Todo data provider
-        String url = "https://taplink.ru/profile/2988200/account/settings/";
+        String url = DataProvider.urlAccountSettings;
 
-        browser.setComment("Открытие страницы:" + url);
+        browser.setComment(lang.get("actions.get_url", url));
         browser.get(url);
 
-        // поле пустое, Если не ждать @Todo
-        Thread.sleep(5000);
-
-        String xpath = "//input[@type='email']";
-
-        if (!browser.isElementPresent(By.xpath(xpath), 5)) {
+        if (!browser.isElementPresent(By.xpath(DataProvider.xpathAccountSettingsEmailField))) {
             return false;
         }
 
-        we = browser.waitElement(By.xpath(xpath), 5);
+        we = browser.waitElement(By.xpath(DataProvider.xpathAccountSettingsEmailField));
 
-        String value = we.getAttribute("value");
-
-        return login.equals(value);
+        return login.equals(we.getAttribute("value"));
     }
 }

@@ -2,7 +2,7 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotController;
 import taplinkbot.telegram.*;
 
 @Component
@@ -10,7 +10,7 @@ import taplinkbot.telegram.*;
 @CommandClass(name = "/control_multi_pag")
 public class ControlMultiPage extends Command {
 
-    private final Actions actions;
+    private final BotController botController;
 
     @Override
     public String getDescription() {
@@ -20,7 +20,7 @@ public class ControlMultiPage extends Command {
     @Override
     public Message run(Request msg) {
 
-        actions.multiPageControl(msg.profile);
+        botController.multiPageControl(msg.profile);
 
         return MessageBuilder.buildResult();
     }

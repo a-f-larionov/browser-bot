@@ -3,7 +3,7 @@ package taplinkbot.telegram.commands;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import taplinkbot.bot.Actions;
+import taplinkbot.bot.BotController;
 import taplinkbot.telegram.*;
 
 @Component
@@ -11,7 +11,7 @@ import taplinkbot.telegram.*;
 @CommandClass(name = "/get_number")
 public class GetNumber extends Command {
 
-    private final Actions actions;
+    private final BotController botController;
 
     @Override
     public String getDescription() {
@@ -28,7 +28,7 @@ public class GetNumber extends Command {
 
         start = System.currentTimeMillis();
 
-        phoneNumber = actions.getNumber(msg.profile);
+        phoneNumber = botController.getNumber(msg.profile);
 
         finish = System.currentTimeMillis();
 

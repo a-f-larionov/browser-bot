@@ -111,6 +111,10 @@ public class Browser implements WebDriver {
         return driver.findElements(by);
     }
 
+    public boolean isElementPresent(By by) {
+        return isElementPresent(by, waitElementSeconds);
+    }
+
     /**
      * Проверяет наличие элемента.
      *
@@ -122,6 +126,7 @@ public class Browser implements WebDriver {
 
         try {
             waitElement(by, seconds);
+
             return true;
         } catch (TimeoutException | NotFoundException e) {
             return false;
@@ -270,6 +275,8 @@ public class Browser implements WebDriver {
      * Перезагрузка браузера.
      * В случае его не доступности.
      * Это избавлет от проблемы "unknown error: net::ERR_CONNECTION_CLOSED".
+     *
+     * @todo auto restorn on cathc Exception!
      */
     public void fixBugErrConnectionClosed() {
 

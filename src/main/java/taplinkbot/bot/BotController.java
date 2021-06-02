@@ -1,3 +1,4 @@
+//FIN
 package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
@@ -5,11 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import taplinkbot.TapLinkBotException;
 import taplinkbot.browser.Browser;
-import taplinkbot.entities.PhoneLogger;
+import taplinkbot.components.LangComponent;
 import taplinkbot.helpers.PhoneNumber;
-import taplinkbot.repositories.PhoneLoggerRepository;
-import taplinkbot.telegram.MessageBuilder;
-import taplinkbot.telegram.TelegramBot;
+import taplinkbot.services.PhoneControlService;
+import taplinkbot.services.TapLinkAccount;
 
 /**
  * Алгоритмы действий на сайте taplink.
@@ -17,9 +17,9 @@ import taplinkbot.telegram.TelegramBot;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class Actions {
+public class BotController {
 
-    private final PhoneLoggerRepository phoneLoggerRep;
+    private final LangComponent lang;
 
     private final AuthActions authActions;
 
@@ -27,13 +27,13 @@ public class Actions {
 
     private final ProfileActions profileActions;
 
-    private final MultiPageActions taplinkMultiPageActions;
+    private final MultiPageActions multiPageActions;
 
     private final TapLinkAccount tapLinkAccount;
 
-    private final Browser browser;
+    private final PhoneControlService multiPageControl;
 
-    private final TelegramBot telegramBot;
+    private final Browser browser;
 
     /**
      * Установить номер телефона
@@ -46,27 +46,17 @@ public class Actions {
      */
     synchronized public boolean setPhoneNumber(String phoneNumber, Profile profile) {
 
-        //@Todo message from Hibernate validator
         if (!PhoneNumber.validate(phoneNumber)) {
-            throw new TapLinkBotException("Номер телефона должен быть в формате +71234567890, передано:'" + phoneNumber + "'");
+            throw new TapLinkBotException(lang.get("actions.phone_number_invalid", phoneNumber));
         }
 
         authActions.webLogin(tapLinkAccount.getLogin(), tapLinkAccount.getPassword());
 
         profileActions.changeTo(profile);
 
-        try {
-            phoneNumberActions.setPhoneNumber(phoneNumber);
+        phoneNumberActions.setPhoneNumber(phoneNumber);
 
-            return taplinkMultiPageActions.checkPhoneNumber(profile, phoneNumber);
-
-        } catch (Exception e) {
-            //@Todo use BotExceptions
-            e.printStackTrace();
-
-            telegramBot.alert(e.getMessage(), browser.takeScreenshot());
-        }
-        return false;
+        return multiPageActions.checkPhoneNumber(profile, phoneNumber);
     }
 
     /**
@@ -76,12 +66,18 @@ public class Actions {
 
         String phoneNumber = getNumber(profile);
 
-        phoneLoggerRep.save(new PhoneLogger(phoneNumber, profile));
+        multiPageControl.save(phoneNumber, profile);
     }
 
+    /**
+     * Получить номер с мультистраницы
+     *
+     * @param profile
+     * @return
+     */
     synchronized public String getNumber(Profile profile) {
 
-        return taplinkMultiPageActions.getNumber(profile);
+        return multiPageActions.getNumber(profile);
     }
 
     synchronized public boolean testBugErrConnectionClosed() {

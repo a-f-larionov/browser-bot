@@ -1,9 +1,11 @@
 package taplinkbot.bot;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
+import taplinkbot.TapLinkBotException;
 import taplinkbot.browser.Browser;
 import taplinkbot.telegram.TelegramBot;
 
@@ -23,58 +25,50 @@ public class PhoneNumberActions {
      * @throws Exception
      * @see AuthActions
      */
-    public void setPhoneNumber(String phoneNumber) throws Exception {
+    @SneakyThrows
+    public void setPhoneNumber(String phoneNumber) {
 
         //@todo props data provider
         String url = "https://taplink.ru/";
 
-        try {
+        browser.setComment("Открытие страницы:" + url);
+        browser.get(url);
 
-            browser.setComment("Открытие страницы:" + url);
-            browser.get(url);
+        browser.setComment("Обращение к блоку WhatsUp.");
 
-            browser.setComment("Обращение к блоку WhatsUp.");
-            //WebElement we = browser.waitElement(By.xpath("/html/body/div[1]/div[4]/div/div[3]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[7]/div/div/div[2]/div/div/a"));
-            WebElement we = browser.waitElement(By.xpath("//span[contains(text(),'Узнать цену в WhatsApp')]/parent::a/parent::div"));
+        WebElement we = browser.waitElement(By.xpath("//span[contains(text(),'Узнать цену в WhatsApp')]/parent::a/parent::div"));
 
-            if (!we.isDisplayed()) {
-                telegram.alert("Блок Whatsup не удалось найти по признаку displayed().", browser.takeScreenshot());
-                throw new Exception("see telegram alerts");
-            }
-
-            if (!we.getText().equals("Узнать цену в WhatsApp")) {
-                telegram.alert("Блок Whatsup не удалось найти по признаку getText().", browser.takeScreenshot());
-                throw new Exception("see telegram alerts");
-            }
-
-            browser.setComment("Нажатие на блок WhatsUp");
-            we.click();
-
-
-            browser.setComment("Обращение к полю телефонного номера");
-       //     we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/section/section[2]/div/div/div/div[2]/div[3]/div/div/input"));
-            we = browser.waitElement(By.xpath("//input[@type='tel' and @data-title='Страна']"));
-
-            browser.setComment("Ввод телефонного номера");
-            we.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-            we.sendKeys(phoneNumber);
-
-            //@todo
-
-            browser.setComment("Обращение к кнопке [Сохранить]");
-            we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/footer/div[2]/button"));
-
-            browser.setComment("Нажатие кнопки [Сохранить]");
-
-            /** Главная кнопка! */
-            we.click();
-
-
-            browser.setComment("Ожидание Сохранения номера.");
-            Thread.sleep(45 * 1000);
-
-        } catch (Exception e) {
-            throw e;
+        if (!we.isDisplayed()) {
+            throw new TapLinkBotException("Блок Whatsup не удалось найти по признаку displayed().");
         }
+
+        if (!we.getText().equals("Узнать цену в WhatsApp")) {
+            throw new TapLinkBotException("Блок Whatsup не удалось найти по признаку getText().");
+        }
+
+        browser.setComment("Нажатие на блок WhatsUp");
+        we.click();
+
+
+        browser.setComment("Обращение к полю телефонного номера");
+        //     we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/section/section[2]/div/div/div/div[2]/div[3]/div/div/input"));
+        we = browser.waitElement(By.xpath("//input[@type='tel' and @data-title='Страна']"));
+
+        browser.setComment("Ввод телефонного номера");
+        we.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+        we.sendKeys(phoneNumber);
+
+        //@todo
+
+        browser.setComment("Обращение к кнопке [Сохранить]");
+        we = browser.waitElement(By.xpath("/html/body/div[4]/div[2]/div/footer/div[2]/button"));
+
+        browser.setComment("Нажатие кнопки [Сохранить]");
+
+        /** Главная кнопка! */
+        we.click();
+
+        browser.setComment("Ожидание Сохранения номера.");
+        Thread.sleep(45 * 1000);
     }
 }
