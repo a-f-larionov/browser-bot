@@ -42,10 +42,10 @@ TapLinkBot
     apt install mysql-server
     mysql_secure_installation
 
-    CREATE DATABASE taplinkbot DEFAULT CHARACTER SET utf_8;
+    CREATE DATABASE browserbot DEFAULT CHARACTER SET utf_8;
 
-    CREATE USER 'taplinkbot'@'' IDENTIFIED BY 'taplinkbot';
-    GRANT ALL PRIVILEGES ON taplinkbot.* TO 'taplinkbot'@'%';
+    CREATE USER 'browserbot'@'' IDENTIFIED BY 'browserbot';
+    GRANT ALL PRIVILEGES ON browserbot.* TO 'browserbot'@'%';
     FLUSH PRIVILEGES;
 
 ### Install WebDriver
@@ -57,12 +57,12 @@ unzip   chromedriver_linux64.zip
 
 ### Run on startup ubuntu
 
-    cp ./init.d/taplinkbot to /etc/init.d
-    sudo chmod 755 /etc/init.d/taplinkbot
-    sudo chown root:root /etc/init.d/taplinkbot
-    sudo dos2unix /etc/init.d/taplinkbot
+    cp ./init.d/browserbot to /etc/init.d
+    sudo chmod 755 /etc/init.d/browserbot
+    sudo chown root:root /etc/init.d/browserbot
+    sudo dos2unix /etc/init.d/browserbot
     
-    sudo update-rc.d taplinkbot defaults
-    sudo update-rc.d taplinkbot enable
+    sudo update-rc.d browserbot defaults
+    sudo update-rc.d browserbot enable
     
-    sudo service taplinkbot start
+    sudo service browserbot start

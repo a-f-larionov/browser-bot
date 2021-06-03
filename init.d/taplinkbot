@@ -1,12 +1,12 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:	taplinkbot
+# Provides:	browserbot
 # Required-Start: $all
 # Required-Stop: $all
 # Default-Start: 2 3 4 5
 # Default-Stop:  0 1 6
-# Short-Description: Start/stop taplinkbot
-# Description: taplinkbot Server init.
+# Short-Description: Start/stop browserbot
+# Description: browserbot Server init.
 ### END INIT INFO
 
 DAEMON_PATH="/var/www/taplinkbot/"
@@ -17,7 +17,7 @@ DAEMONOPTS=""
 
 OUTPUT_FILE="/var/www/taplinkbot/daemon.log"
 
-NAME=taplinkbot
+NAME=browserbot
 
 DESC="taplinkbot service daemon description"
 

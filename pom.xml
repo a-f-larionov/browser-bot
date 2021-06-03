@@ -11,7 +11,7 @@
     <groupId>org.noname</groupId>
     <artifactId>taplinkbot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>taplinkbot</name>
+    <name>browserbot</name>
     <description>TapLinkBot</description>
     <properties>
         <java.version>1.8</java.version>
