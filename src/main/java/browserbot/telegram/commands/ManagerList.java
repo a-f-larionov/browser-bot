@@ -1,17 +1,20 @@
+//FIN
 package browserbot.telegram.commands;
 
+import browserbot.entities.Manager;
+import browserbot.repositories.ManagerRepository;
+import browserbot.telegram.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import browserbot.entities.Manager;
-import browserbot.services.ManagerRotator;
-import browserbot.telegram.*;
+
+import java.util.List;
 
 @Component
-@CommandClass(name = "/manager_list")
 @RequiredArgsConstructor
+@CommandClass(name = "/manager_list")
 public class ManagerList extends Command {
 
-    private final ManagerRotator managerRotator;
+    private final ManagerRepository managerRepository;
 
     @Override
     public String getDescription() {
@@ -19,20 +22,18 @@ public class ManagerList extends Command {
     }
 
     @Override
-    //@todo StringBuilder
     public Message run(Request msg) {
 
         StringBuilder builder = new StringBuilder();
 
-        Manager[] manager = managerRotator.getManagers();
+        List<Manager> all = managerRepository.findAll();
 
-        for (int i = 0; i < manager.length; i++) {
-
-            builder.append(i);
+        all.forEach((Manager m) -> {
+            builder.append(m.getId());
             builder.append(" - ");
-            builder.append(manager[i].getDescription());
+            builder.append(m.getDescription());
             builder.append("\r\n");
-        }
+        });
 
         return MessageBuilder.buildResult(builder.toString());
     }

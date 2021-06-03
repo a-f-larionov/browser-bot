@@ -1,12 +1,12 @@
 
 package browserbot.services;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import browserbot.bots.taplink.Profile;
 import browserbot.entities.Manager;
 import browserbot.repositories.ManagerRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -77,10 +77,4 @@ public class ManagerRotator {
         return managers[index];
     }
 
-    public Manager[] getManagers() {
-
-        reloadData();
-
-        return managers;
-    }
 }
