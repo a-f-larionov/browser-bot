@@ -15,8 +15,8 @@ public class PhoneControlService {
 
     private final PhoneLoggerRepository phoneLoggerRepository;
 
-    public void save(String phoneNumber, Profile profile) {
+    public void save(String phone, Profile profile) {
 
-        phoneLoggerRepository.save(new PhoneLogger(phoneNumber, profile));
+        phoneLoggerRepository.save(new PhoneLogger(phone, profile));
     }
 }

@@ -1,5 +1,7 @@
 package browserbot.services;
 
+import browserbot.entities.User;
+import browserbot.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import browserbot.entities.User;
-import browserbot.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -55,15 +55,20 @@ public class UserService implements UserDetailsService {
      * @return User текущий авторизованный пользователь или пустой объект User.
      */
     public User getCurrentUser() {
+        User user;
+
         Object object = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
 
         if (object instanceof User) {
-            return (User) object;
+            user = (User) object;
         } else {
-            return new User();
+            user = new User();
         }
+        user.setPassword(null);
+
+        return user;
     }
 }

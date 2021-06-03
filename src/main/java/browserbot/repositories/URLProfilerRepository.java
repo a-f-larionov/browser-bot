@@ -2,8 +2,8 @@
 package browserbot.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import browserbot.entities.PageLoads;
+import browserbot.entities.PageLoadTime;
 
-public interface URLProfilerRepository extends CrudRepository<PageLoads, Long> {
+public interface URLProfilerRepository extends CrudRepository<PageLoadTime, Long> {
 
 }

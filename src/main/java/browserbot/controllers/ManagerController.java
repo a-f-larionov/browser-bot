@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import browserbot.BrowserBotException;
 import browserbot.services.LangService;
-import browserbot.dto.ManagerDto;
+import browserbot.dto.ManagerDTO;
 import browserbot.entities.Manager;
 import browserbot.repositories.ManagerRepository;
 
@@ -26,12 +26,12 @@ public class ManagerController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/list")
-    public List<ManagerDto> list() {
+    public List<ManagerDTO> list() {
 
         List<Manager> list = managerRepository.findAll();
 
         return list.stream()
-                .map((Manager manager) -> modelMapper.map(manager, ManagerDto.class))
+                .map((Manager manager) -> modelMapper.map(manager, ManagerDTO.class))
                 .collect(Collectors.toList());
     }
 

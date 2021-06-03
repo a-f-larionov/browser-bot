@@ -9,7 +9,7 @@ import browserbot.entities.Manager;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class ManagerDtoTest {
+class ManagerDTOTest {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -28,7 +28,7 @@ class ManagerDtoTest {
         manager.setComment(comment);
         manager.setPhone(phone);
 
-        ManagerDto managerDto = modelMapper.map(manager, ManagerDto.class);
+        ManagerDTO managerDto = modelMapper.map(manager, ManagerDTO.class);
 
         assertThat(managerDto.getId()).isEqualTo(manager.getId());
         assertThat(managerDto.getPhone()).isEqualTo(manager.getPhone());

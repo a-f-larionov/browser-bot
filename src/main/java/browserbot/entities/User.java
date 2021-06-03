@@ -1,3 +1,4 @@
+//FIN
 package browserbot.entities;
 
 import lombok.Data;

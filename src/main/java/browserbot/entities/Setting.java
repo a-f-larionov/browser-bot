@@ -1,3 +1,4 @@
+//@Todo
 package browserbot.entities;
 
 import browserbot.bots.taplink.Profile;
@@ -17,8 +18,6 @@ public class Setting {
     final public static String SETTING_LAST_MANAGER_INDEX = "lastManagerIndex";
 
     final public static String SETTING_MANAGER_INTERVAL = "managerInterval";
-
-    final public static String SETTING_ALLOW_EVERY_DAY = "isEveryDay";
 
     final public static String SETTING_ALLOW_WEEKDAYS = "allowWeekdays";
 

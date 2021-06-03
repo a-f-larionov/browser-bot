@@ -1,6 +1,6 @@
 package browserbot.services;
 
-import browserbot.entities.PageLoads;
+import browserbot.entities.PageLoadTime;
 import browserbot.repositories.URLProfilerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +59,6 @@ public class UrlProfiler {
      */
     private void logProfiling(String url, long start, long finish) {
 
-        URLProfilerRepository.save(new PageLoads(url, finish - start));
+        URLProfilerRepository.save(new PageLoadTime(url, finish - start));
     }
 }

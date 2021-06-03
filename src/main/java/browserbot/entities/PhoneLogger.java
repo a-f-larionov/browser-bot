@@ -1,32 +1,36 @@
+//FIN
 package browserbot.entities;
 
-import org.hibernate.annotations.CreationTimestamp;
 import browserbot.bots.taplink.Profile;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
-//@todo valdations
 @Entity
 public class PhoneLogger {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @CreationTimestamp
     private LocalDateTime localDateTime;
 
-    private String phoneNumber;
+    @Pattern(regexp = "^\\+7\\d{10}$")
+    private String phone;
 
+    @NotNull
     private Profile profile;
 
-    public PhoneLogger(String phoneNumber, Profile profile) {
+    public PhoneLogger(String phone, Profile profile) {
 
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
         this.profile = profile;
     }
 
