@@ -19,6 +19,7 @@ public class ManagerRotator {
 
     private final Settings settings;
 
+    
     private final ManagerRepository managerRepository;
 
     private Manager[] managers;
