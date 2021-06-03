@@ -1,5 +1,8 @@
+//FIN
 package browserbot.config;
 
+import browserbot.services.LangService;
+import browserbot.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import browserbot.services.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -19,8 +21,7 @@ import browserbot.services.UserService;
 @Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    //private UserService userService;
+    private final LangService lang;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -29,16 +30,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
+        return new CustomAuthenticationFailureHandler(lang);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // POST Запросы без этого никак @todo доработать post запросы?
         http.csrf().disable();
-//
-//        //@todo tests: /maangers/list isnt accesing with out auth
+
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/test").permitAll()
@@ -52,17 +51,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/register-user").hasRole("ADMIN")
 
-                .anyRequest().authenticated()
-        ;
+                .anyRequest().authenticated();
 
-        //@Todo test authorize
-        //@todo migrations for default users
         // Настройка для входа в систему
         http.formLogin((customize) -> {
             customize.loginPage("/");
             customize.loginProcessingUrl("/authorize");
             customize.failureHandler(authenticationFailureHandler());
         });
+
         // Настройка выхода из системы
         http.logout((customize) -> {
             customize.logoutSuccessUrl("/");
