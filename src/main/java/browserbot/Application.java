@@ -1,6 +1,7 @@
 //FIN
 package browserbot;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +18,7 @@ import java.util.TimeZone;
  */
 @SpringBootApplication
 @EnableScheduling
+@RequiredArgsConstructor
 public class Application {
 
     @Value("${app.timezone}")

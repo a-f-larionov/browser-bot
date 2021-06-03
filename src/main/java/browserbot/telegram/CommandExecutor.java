@@ -1,13 +1,14 @@
 package browserbot.telegram;
 
+import browserbot.BrowserBotException;
+import browserbot.bots.taplink.Profile;
+import browserbot.services.ExceptionHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import browserbot.BrowserBotException;
-import browserbot.bots.taplink.Profile;
 
 import javax.annotation.PostConstruct;
 import java.util.Hashtable;
@@ -26,6 +27,8 @@ public class CommandExecutor {
     private final Accessor accessor;
 
     private final TelegramBot telegramBot;
+
+    private final ExceptionHandler exceptionHandler;
 
     /**
      * Hashtable no have null and synchronized
@@ -47,6 +50,11 @@ public class CommandExecutor {
         commands.put(name, commandObject);
     }
 
+    /**
+     * Выполняет команду из запроса команды.
+     *
+     * @param request
+     */
     synchronized public void execute(Request request) {
 
         Message message;
@@ -62,7 +70,7 @@ public class CommandExecutor {
 
         } catch (Exception e) {
 
-            message = MessageBuilder.buildAlert("Не удалось выполнить команду.", e);
+            message = exceptionHandler.handle(e);
         }
 
         telegramBot.notify(request, message);

@@ -1,19 +1,19 @@
 //FIN
 package browserbot.bots.taplink;
 
+import browserbot.BrowserBotException;
 import browserbot.bots.taplink.actions.AuthActions;
 import browserbot.bots.taplink.actions.MultiPageActions;
 import browserbot.bots.taplink.actions.PhoneNumberActions;
 import browserbot.bots.taplink.actions.ProfileActions;
+import browserbot.browser.Browser;
+import browserbot.helpers.PhoneNumber;
+import browserbot.services.LangService;
+import browserbot.services.PhoneControlService;
+import browserbot.services.TapLinkAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import browserbot.BrowserBotException;
-import browserbot.browser.Browser;
-import browserbot.services.LangService;
-import browserbot.helpers.PhoneNumber;
-import browserbot.services.PhoneControlService;
-import browserbot.services.TapLinkAccount;
 
 /**
  * Алгоритмы действий на сайте taplink.
@@ -82,10 +82,5 @@ public class BotController {
     synchronized public String getNumber(Profile profile) {
 
         return multiPageActions.getNumber(profile);
-    }
-
-    synchronized public boolean testBugErrConnectionClosed() {
-
-        return browser.testBugErrConnectionClosed();
     }
 }

@@ -1,11 +1,12 @@
+//FIN
 package browserbot.browser;
 
 import browserbot.BrowserBotException;
 import browserbot.bots.taplink.Profile;
+import browserbot.services.LangService;
 import browserbot.services.UrlProfiler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -34,6 +35,8 @@ public class Browser implements WebDriver {
 
     private final ScreenShooter screenShooter;
 
+    private final LangService lang;
+
     private RemoteWebDriver driver;
 
     /**
@@ -44,22 +47,28 @@ public class Browser implements WebDriver {
     private int waitElementSeconds;
 
     /**
-     * "Последний комментарий".
+     * "Описание действия".
      * Будет выведен при ошибке, для дебага.
      * Например: клиентский код запросил элемент:
-     * 1 comment("Нажатие кнопки входа")
+     * 1 actionComment("Нажатие кнопки входа")
      * 2 findElementBy();
      * Если элемент не будет найден, ошибка будет содержать текст последнего комментария
      * так быстрей устранить баг.
      */
     @Getter
-    private String comment;
+    private String actionComment;
 
-    public void setComment(String comment) {
+    /**
+     * Устанавливает комментарий к действия.
+     * Это помогает дебажить
+     *
+     * @param actionComment
+     */
+    public void setActionComment(String actionComment) {
 
-        log.info(comment);
+        log.info(actionComment);
 
-        this.comment = comment;
+        this.actionComment = actionComment;
     }
 
     /**
@@ -117,6 +126,12 @@ public class Browser implements WebDriver {
         return driver.findElements(by);
     }
 
+    /**
+     * Существует ли элемент?
+     *
+     * @param by
+     * @return true - если да, иначе - false
+     */
     public boolean isElementPresent(By by) {
         return isElementPresent(by, waitElementSeconds);
     }
@@ -130,9 +145,11 @@ public class Browser implements WebDriver {
      */
     public boolean isElementPresent(By by, int seconds) {
 
+        log.info("1");
         try {
+            log.info("2");
             waitElement(by, seconds);
-
+            log.info("3");
             return true;
         } catch (TimeoutException | NotFoundException e) {
             return false;
@@ -158,13 +175,10 @@ public class Browser implements WebDriver {
     public WebElement waitElement(By by, int seconds) {
 
         WebDriverWait wait = new WebDriverWait(driver, seconds);
-        wait.ignoring(ElementClickInterceptedException.class);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
-        //@todo, windows is mazimazed ...
-        JavascriptExecutor js = driver;
-        driver.manage().window().maximize();
-        js.executeScript("window.scrollBy(0,1000)");
+        wait.ignoring(ElementClickInterceptedException.class);
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
         return findElement(by);
     }
@@ -185,9 +199,7 @@ public class Browser implements WebDriver {
 
         } catch (NotFoundException e) {
             throw new BrowserBotException(
-                    "Не удалось найти элемент." +
-                            " Обратитесь к разработчику." +
-                            " Элемент:" + " `" + by + "`");
+                    lang.get("actions.cantfind_element", by.toString()));
         }
     }
 
@@ -247,7 +259,6 @@ public class Browser implements WebDriver {
      *
      * @return url на скриншот
      */
-    @SneakyThrows
     public String takeScreenshot() {
         return screenShooter.takeScreenshot(driver);
     }
@@ -266,7 +277,8 @@ public class Browser implements WebDriver {
 
             if (e.getMessage().equals("unknown error: net::ERR_CONNECTION_CLOSED")) {
 
-                fixBugErrConnectionClosed();
+                resetBrowser();
+
                 return true;
 
             } else {
@@ -276,17 +288,21 @@ public class Browser implements WebDriver {
     }
 
     /**
-     * Перезагрузка браузера.
-     * В случае его не доступности.
-     * Это избавлет от проблемы "unknown error: net::ERR_CONNECTION_CLOSED".
+     * Ожидает исчезновение элемента.
      *
-     * @todo auto restorn on cathc Exception!
+     * @param by Элемент ожидающий исчезновения
      */
-    public void fixBugErrConnectionClosed() {
+    public void waitElementDisappear(By by) {
 
-        resetBrowser();
+        while (isElementPresent(by, 1)) {
+            // nothing to do, just waiting
+            log.info("wait element: " + by.toString());
+        }
     }
 
+    /**
+     * Перезагрузка браузера.
+     */
     public void resetBrowser() {
 
         if (driver != null) driver.quit();
@@ -294,16 +310,5 @@ public class Browser implements WebDriver {
         driver = webDriverFactory.buildWebDriver();
 
         log.info("Web Driver перезапущен.");
-    }
-
-    public void waitElementDisappear(String xpathAdminSaveButton) {
-        //@Todo isNotPresent\waitForGoway?
-        log.info(takeScreenshot());
-        try {
-            Thread.sleep(60 * 1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        log.info(takeScreenshot());
     }
 }

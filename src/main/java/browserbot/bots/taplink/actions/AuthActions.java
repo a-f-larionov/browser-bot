@@ -34,7 +34,7 @@ public class AuthActions {
 
         logout();
 
-        browser.setComment(lang.get("actions.auth.openAuthPage", url));
+        browser.setActionComment(lang.get("actions.auth.openAuthPage", url));
         browser.get(url);
 
         enterLogin(login);
@@ -53,7 +53,7 @@ public class AuthActions {
      */
     private void logout() {
 
-        browser.setComment(lang.get("actions.auth.do_logout"));
+        browser.setActionComment(lang.get("actions.auth.do_logout"));
         browser.get(DataProvider.urlLogout);
     }
 
@@ -64,10 +64,10 @@ public class AuthActions {
      */
     private void enterLogin(String login) {
 
-        browser.setComment(lang.get("actions.auth.field_login_access"));
+        browser.setActionComment(lang.get("actions.auth.field_login_access"));
         we = browser.findElement(By.xpath(DataProvider.xpathSignInFieldLogin));
 
-        browser.setComment(lang.get("actions.auth.field_login_enter"));
+        browser.setActionComment(lang.get("actions.auth.field_login_enter"));
         we.sendKeys(login);
     }
 
@@ -78,10 +78,10 @@ public class AuthActions {
      */
     private void enterPassword(String password) {
 
-        browser.setComment(lang.get("actions.auth.field_password_access"));
+        browser.setActionComment(lang.get("actions.auth.field_password_access"));
         we = browser.findElement(By.xpath(DataProvider.xpathSigInFieldPassword));
 
-        browser.setComment(lang.get("actions.auth.field_password_enter"));
+        browser.setActionComment(lang.get("actions.auth.field_password_enter"));
         we.sendKeys(password);
     }
 
@@ -90,13 +90,13 @@ public class AuthActions {
      */
     private void authSubmit() {
 
-        browser.setComment(lang.get("actions.auth.button_submit_access"));
+        browser.setActionComment(lang.get("actions.auth.button_submit_access"));
         we = browser.findElement(By.xpath(DataProvider.xpathSignInButtonSubmit));
 
-        browser.setComment(lang.get("actions.auth.button_submit_click"));
+        browser.setActionComment(lang.get("actions.auth.button_submit_click"));
         we.click();
 
-        browser.setComment(lang.get("actions.auth.check_profile_icon"));
+        browser.setActionComment(lang.get("actions.auth.check_profile_icon"));
         browser.waitElement(By.xpath(DataProvider.xpathProfileIcon));
     }
 
@@ -110,7 +110,7 @@ public class AuthActions {
 
         String url = DataProvider.urlAccountSettings;
 
-        browser.setComment(lang.get("actions.get_url", url));
+        browser.setActionComment(lang.get("actions.get_url", url));
         browser.get(url);
 
         if (!browser.isElementPresent(By.xpath(DataProvider.xpathAccountSettingsEmailField))) {

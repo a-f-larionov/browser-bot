@@ -31,10 +31,10 @@ public class MultiPageActions {
             throw new BrowserBotException(lang.get("actions.phone_number_invalid", phoneNumber));
         }
 
-        browser.setComment(lang.get("actions.get_url", url));
+        browser.setActionComment(lang.get("actions.get_url", url));
         browser.get(url);
 
-        browser.setComment(lang.get("actions.multipage.whatsup_price"));
+        browser.setActionComment(lang.get("actions.multipage.whatsup_price"));
         we = browser.waitElement(By.xpath("/html/body/div/div[3]/div/div[2]/div[2]/div/main/div/div/div/div/div/div/div[7]/div/div/div/div/a"));
 
         if (!we.getText().equals(DataProvider.textWhatsUpPrice)) {
@@ -80,10 +80,10 @@ public class MultiPageActions {
 
         WebElement we;
 
-        browser.setComment(lang.get("actions.get_url", url));
+        browser.setActionComment(lang.get("actions.get_url", url));
         browser.get(url);
 
-        browser.setComment(lang.get("actions.multipage.whatsup_price"));
+        browser.setActionComment(lang.get("actions.multipage.whatsup_price"));
 
         we = browser.waitElement(By.xpath(DataProvider.xpathWhatsUpPrice));
 

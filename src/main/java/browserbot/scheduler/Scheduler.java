@@ -4,7 +4,6 @@ import browserbot.bots.taplink.Profile;
 import browserbot.telegram.CommandExecutor;
 import browserbot.telegram.commands.CheckAndExecuteRotator;
 import browserbot.telegram.commands.ControlMultiPage;
-import browserbot.telegram.commands.FixBugErrConnectionClosed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,8 +24,6 @@ public class Scheduler {
 
         log.info("tick");
 
-        onIdleTestBugErrConnectionClosed();
-
         onIdleManagerChange(Profile.Canvas);
 
         onIdleManagerChange(Profile.LadyArt);
@@ -34,11 +31,6 @@ public class Scheduler {
         onIdlePinger(Profile.Canvas);
 
         onIdlePinger(Profile.LadyArt);
-    }
-
-    private void onIdleTestBugErrConnectionClosed() {
-
-        commandExecutor.execute(FixBugErrConnectionClosed.class);
     }
 
     private void onIdleManagerChange(Profile profile) {

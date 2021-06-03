@@ -29,10 +29,10 @@ public class PhoneNumberActions {
 
         String url = DataProvider.urlTapLinkIndex;
 
-        browser.setComment(lang.get("actions.get_url"));
+        browser.setActionComment(lang.get("actions.get_url", url));
         browser.get(url);
 
-        browser.setComment(lang.get("actions.multipage.whatsup_price"));
+        browser.setActionComment(lang.get("actions.multipage.whatsup_price"));
         WebElement we = browser.waitElement(By.xpath(DataProvider.xpathAdminWhatsUpBlock));
 
         if (!we.isDisplayed()) {
@@ -43,24 +43,23 @@ public class PhoneNumberActions {
             throw new BrowserBotException(lang.get("actions.multipage.whatsup_text_failed"));
         }
 
-        browser.setComment(lang.get("actions.block_whatsup_click"));
+        browser.setActionComment(lang.get("actions.block_whatsup_click"));
         we.click();
 
-        browser.setComment(lang.get("actions.block_phone_number_access"));
+        browser.setActionComment(lang.get("actions.block_phone_number_access"));
         we = browser.waitElement(By.xpath(DataProvider.xpathAdminWhatsupPhoneElement));
 
-        browser.setComment("actions.phone_number_enter");
+        browser.setActionComment("actions.phone_number_enter");
         we.sendKeys("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
         we.sendKeys(phoneNumber);
 
-        browser.setComment(lang.get("actions.admin.save_button_access"));
+        browser.setActionComment(lang.get("actions.admin.save_button_access"));
         we = browser.waitElement(By.xpath(DataProvider.xpathAdminSaveButton));
 
-        browser.setComment(lang.get("actions.admin.save_button_click"));
+        browser.setActionComment(lang.get("actions.admin.save_button_click"));
         we.click();
 
-        browser.setComment(lang.get("actions.admin.wait_number_saved"));
-
-        browser.waitElementDisappear(DataProvider.xpathAdminSaveButton);
+        browser.setActionComment(lang.get("actions.admin.wait_number_saved"));
+        browser.waitElementDisappear(By.xpath(DataProvider.xpathAdminSaveButton));
     }
 }
