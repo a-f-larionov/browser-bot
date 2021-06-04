@@ -1,11 +1,12 @@
+//FIN
 package browserbot.services;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import browserbot.bots.taplink.Profile;
 import browserbot.entities.Setting;
 import browserbot.repositories.SettingsRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * Компонент хранит состояние значений
@@ -74,12 +75,12 @@ public class Settings {
         settingsRepository.save(setting);
     }
 
-    public int getManagerIndex(Profile profile) {
-        return getIntValue(profile, Setting.SETTING_LAST_MANAGER_INDEX);
+    public Long getManagerId(Profile profile) {
+        return getLongValue(profile, Setting.SETTING_MANAGER_ID);
     }
 
-    public void setManagerIndex(Profile profile, int lastIndex) {
-        saveIntValue(profile, Setting.SETTING_LAST_MANAGER_INDEX, lastIndex);
+    public void setManagerIndex(Profile profile, Long lastIndex) {
+        saveLongValue(profile, Setting.SETTING_MANAGER_ID, lastIndex);
     }
 
     public void setManagerInterval(Profile profile, long interval) {

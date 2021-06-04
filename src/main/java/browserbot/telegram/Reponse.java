@@ -9,7 +9,7 @@ import lombok.Getter;
  * в случае ошибки еще и Exception этой ошибки.
  */
 @Data
-public class Message {
+public class Reponse {
 
     public enum Type {
         INFO,
@@ -24,13 +24,13 @@ public class Message {
 
     private Exception exception;
 
-    public Message(String message, Type type) {
+    public Reponse(String message, Type type) {
 
         this.message = message;
         this.type = type;
     }
 
-    public Message(String message, Type type, Exception exception) {
+    public Reponse(String message, Type type, Exception exception) {
 
         this(message, type);
 
@@ -42,7 +42,7 @@ public class Message {
      */
     public String getDescription() {
         if (exception != null) {
-            return message + " Ошибка:" + exception.getMessage();
+            return message + "\r\nОшибка: " + exception.getMessage();
         } else {
             return message;
         }

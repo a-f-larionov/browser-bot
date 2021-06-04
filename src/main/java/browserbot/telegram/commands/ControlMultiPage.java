@@ -18,7 +18,7 @@ public class ControlMultiPage extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         botController.multiPageControl(msg.profile);
 

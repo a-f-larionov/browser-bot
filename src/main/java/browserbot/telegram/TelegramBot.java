@@ -123,12 +123,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     /**
-     * Отправить сообщение.
+     * Отправить оповещение.
      *
      * @param request
      * @param message
      */
-    public void notify(Request request, Message message) {
+    public void notify(Request request, Reponse message) {
         String infoChatId, alertChatId;
 
         // определим адресацию собщений
@@ -139,12 +139,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             alertChatId = this.alertChatId;
         }
 
+        //@Todo isnot that
         alertChatId = "149798103";
 
-        // отправим сообщение
+        // Отправим оповещение
         switch (message.getType()) {
             case ALERT:
-                sendMessage(message.getDescription() + "  " + browser.takeScreenshot(), alertChatId);
+                sendMessage(
+                        message.getDescription() + "  " +
+                                "\r\n " + browser.takeScreenshot() + " " +
+                                "\r\nПоследние действие: " + browser.getActionComment(), alertChatId);
                 break;
 
             case INFO:

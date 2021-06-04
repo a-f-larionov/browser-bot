@@ -1,14 +1,14 @@
 package browserbot.telegram.commands;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import browserbot.bots.taplink.BotController;
 import browserbot.browser.Browser;
 import browserbot.entities.Manager;
-import browserbot.services.ManagerRotator;
 import browserbot.scheduler.Trigger;
+import browserbot.services.ManagerRotator;
 import browserbot.telegram.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
@@ -32,13 +32,13 @@ public class CheckAndExecuteRotator extends Command {
     }
 
     @Override
-    public Message run(Request req) {
+    public Reponse run(Request req) {
 
         if (!trigger.isItTimeToChange(req.profile)) {
             return MessageBuilder.buildResult("Рано");
         }
 
-        Manager manager = rotator.getNextManager(req.profile);
+        Manager manager = rotator.getCurrentManager(req.profile);
 
         log.info("Установка менеджера(" + req.profile.name + "):" + manager.getDescription());
 
@@ -55,6 +55,8 @@ public class CheckAndExecuteRotator extends Command {
             ));
 
             trigger.updateLastTime(req.profile);
+
+            rotator.setNextManager(req.profile, manager.getId());
 
             browser.resetBrowser();
 

@@ -90,7 +90,7 @@ class ManagerControllerTest {
         mvc.perform(post("/managers/works-switch")
                 .param("managerId", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(lang.get("managers.works_changes")));
+                .andExpect(content().string(lang.get("managers.works_changed")));
 
     }
 }

@@ -19,7 +19,7 @@ public class WeekEndsAllow extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         settings.setAllowWeekEnds(msg.profile, true);
 

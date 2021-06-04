@@ -23,7 +23,7 @@ public class Help extends Command {
      * @todo рефакторинг
      */
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         StringBuilder builder = new StringBuilder();
 

@@ -18,7 +18,7 @@ public class ScreenShot extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
         return MessageBuilder.buildResult(browser.takeScreenshot());
     }
 }

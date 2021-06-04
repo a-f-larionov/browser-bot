@@ -3,9 +3,7 @@ package browserbot.telegram.commands;
 import browserbot.browser.Browser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import browserbot.bots.taplink.BotController;
 import browserbot.telegram.*;
-import org.springframework.validation.BindingResult;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class FixBugErrConnectionClosed extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         browser.testBugErrConnectionClosed();
 

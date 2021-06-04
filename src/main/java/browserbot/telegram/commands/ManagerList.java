@@ -22,7 +22,7 @@ public class ManagerList extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         StringBuilder builder = new StringBuilder();
 

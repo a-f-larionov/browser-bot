@@ -57,7 +57,7 @@ public class CommandExecutor {
      */
     synchronized public void execute(Request request) {
 
-        Message message;
+        Reponse message;
 
         try {
             if (!accessor.check(request)) throw new BrowserBotException("Нет доступа.");

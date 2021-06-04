@@ -1,3 +1,4 @@
+//FIN
 package browserbot.helpers;
 
 import java.util.regex.Matcher;
@@ -13,12 +14,9 @@ public class PhoneNumber {
      *
      * @param phoneNumber телефонный номер.
      * @return true - валидный номер, иначе - false.
-     * //@todo hibernate validation messages
      */
     public static boolean validate(String phoneNumber) {
-
-
-        //@Todo message from Hibernate validator
+        //@todo Hibernate validation apply
         Pattern pattern = Pattern.compile("^\\+7\\d{10}$");
 
         Matcher matcher = pattern.matcher(phoneNumber);

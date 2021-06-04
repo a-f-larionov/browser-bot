@@ -27,12 +27,9 @@ public class Manager {
     private boolean isWorking;
 
     /**
-     * ManagerRotator использует это
-     * //@todo
+     * Описание менеджера
+     * @return
      */
-    @Transient
-    private int index;
-
     public String getDescription() {
         return getComment() + " " + getPhone();
     }

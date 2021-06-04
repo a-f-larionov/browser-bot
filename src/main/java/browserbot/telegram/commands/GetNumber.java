@@ -22,7 +22,7 @@ public class GetNumber extends Command {
      * Получить текущий номер на мульте-странице.
      */
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
         String phoneNumber;
         long start, finish;
 

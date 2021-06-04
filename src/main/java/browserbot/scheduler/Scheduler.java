@@ -31,6 +31,8 @@ public class Scheduler {
         onIdlePinger(Profile.Canvas);
 
         onIdlePinger(Profile.LadyArt);
+
+        //commandExecutor.execute(InstagramLiker.class, profile);
     }
 
     private void onIdleManagerChange(Profile profile) {
@@ -41,6 +43,7 @@ public class Scheduler {
     private void onIdlePinger(Profile profile) {
 
         commandExecutor.execute(ControlMultiPage.class, profile);
+
     }
 }
 

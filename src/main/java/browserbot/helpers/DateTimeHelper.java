@@ -18,6 +18,12 @@ public class DateTimeHelper {
             Calendar.SATURDAY
     };
 
+    /**
+     * Кол-во часов
+     * @param millis
+     * @return
+     * //@Todo may not be CAlendar? analyze it
+     */
     public static int getHours(long millis) {
         Calendar c = Calendar.getInstance();
         if (millis != 0) c.setTimeInMillis(millis);

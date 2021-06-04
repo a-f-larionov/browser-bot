@@ -47,6 +47,6 @@ public class ManagerController {
 
         managerRepository.save(manager);
 
-        return ResponseEntity.ok(lang.get("managers.works_changes"));
+        return ResponseEntity.ok(lang.get("managers.works_changed"));
     }
 }

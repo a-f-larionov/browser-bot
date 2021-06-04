@@ -1,16 +1,16 @@
 //FIN
 package browserbot.bots.taplink.actions;
 
+import browserbot.BrowserBotException;
 import browserbot.bots.taplink.DataProvider;
 import browserbot.bots.taplink.Profile;
+import browserbot.browser.Browser;
+import browserbot.services.LangService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
-import browserbot.BrowserBotException;
-import browserbot.browser.Browser;
-import browserbot.services.LangService;
 
 @Component
 @RequiredArgsConstructor
@@ -61,12 +61,12 @@ public class MultiPageActions {
 
         log.info(browser.takeScreenshot());
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log.info(browser.takeScreenshot());
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        log.info(browser.takeScreenshot());
 
         browser.waitElement(By.xpath(DataProvider.xpathWhatsupApiPageMessage));
 

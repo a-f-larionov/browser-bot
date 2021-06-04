@@ -25,7 +25,7 @@ public class SetNumber extends Command {
      * @todo telegramBot to informator.send("message here",request.initiatorChatId);
      */
     @Override
-    public Message run(Request req) {
+    public Reponse run(Request req) {
 
         //@todo validation
         if (!req.arg1.matches("^\\+7\\d{10}$")) {

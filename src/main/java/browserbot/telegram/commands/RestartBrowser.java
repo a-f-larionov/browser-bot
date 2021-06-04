@@ -18,7 +18,7 @@ public class RestartBrowser extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         browser.resetBrowser();
 

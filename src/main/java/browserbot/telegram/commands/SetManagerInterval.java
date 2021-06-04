@@ -18,7 +18,7 @@ public class SetManagerInterval extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         long interval = Long.parseLong(msg.arg1);
 

@@ -1,11 +1,11 @@
 //FIN
 package browserbot.telegram.commands;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import browserbot.scheduler.Trigger;
 import browserbot.services.Settings;
 import browserbot.telegram.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 
@@ -24,7 +24,7 @@ public class Status extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Расписание: \t");
@@ -44,6 +44,11 @@ public class Status extends Command {
 
         builder.append("Интервал: ");
         builder.append(settings.getManagerInterval(msg.profile));
+
+        builder.append("\r\n");
+
+        builder.append("manager id:");
+        builder.append(settings.getManagerId(msg.profile));
 
         builder.append("\r\n");
 

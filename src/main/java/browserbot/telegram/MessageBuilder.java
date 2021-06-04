@@ -6,24 +6,24 @@ package browserbot.telegram;
  */
 public class MessageBuilder {
 
-    public static Message buildInfo(String message) {
-        return new Message(message, Message.Type.INFO);
+    public static Reponse buildInfo(String message) {
+        return new Reponse(message, Reponse.Type.INFO);
     }
 
-    public static Message buildResult() {
-        return new Message("Успешно.", Message.Type.RESULT);
+    public static Reponse buildResult() {
+        return new Reponse("Успешно.", Reponse.Type.RESULT);
     }
 
-    public static Message buildResult(String message) {
-        return new Message(message, Message.Type.RESULT);
+    public static Reponse buildResult(String message) {
+        return new Reponse(message, Reponse.Type.RESULT);
     }
 
-    public static Message buildAlert(String message) {
-        return new Message(message, Message.Type.ALERT);
+    public static Reponse buildAlert(String message) {
+        return new Reponse(message, Reponse.Type.ALERT);
     }
 
-    public static Message buildAlert(String message, Exception e) {
+    public static Reponse buildAlert(String message, Exception e) {
 
-        return new Message(message, Message.Type.ALERT, e);
+        return new Reponse(message, Reponse.Type.ALERT, e);
     }
 }

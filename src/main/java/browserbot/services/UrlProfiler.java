@@ -1,3 +1,4 @@
+//FIN
 package browserbot.services;
 
 import browserbot.entities.PageLoadTime;
@@ -16,7 +17,7 @@ public class UrlProfiler {
 
     private final URLProfilerRepository URLProfilerRepository;
 
-    private long start = 0;
+    private long start;
 
     private boolean inProgress = false;
 
@@ -24,7 +25,6 @@ public class UrlProfiler {
      * Начианет отсчёт времени перед запросом страницы.
      */
     public void start() {
-        //@todo test in Progress сбрасывается
         if (inProgress) {
             inProgress = false;
             log.info("Вложенный профайлинг старт");
@@ -41,7 +41,7 @@ public class UrlProfiler {
      */
     public void finish(String url) {
         if (!inProgress) {
-            log.info("Вложенный профайлинг финиш");
+            log.error("Вложенный профайлинг финиш");
             return;
         }
         long finish = System.currentTimeMillis();

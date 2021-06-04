@@ -2,7 +2,7 @@
 package browserbot.services;
 
 import browserbot.browser.Browser;
-import browserbot.telegram.Message;
+import browserbot.telegram.Reponse;
 import browserbot.telegram.MessageBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class ExceptionHandler {
      * @param e исключение
      * @return
      */
-    public Message handle(Exception e) {
+    public Reponse handle(Exception e) {
 
         System.err.println(e.getMessage());
         e.printStackTrace();

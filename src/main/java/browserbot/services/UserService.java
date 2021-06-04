@@ -1,3 +1,4 @@
+//FIN
 package browserbot.services;
 
 import browserbot.entities.User;
@@ -39,8 +40,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        //@Todo
-        //user.setRoles(Collections.singleton(new Role(1L, "USER_ROLE")));
+        //@Todo default user role
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
@@ -67,6 +67,7 @@ public class UserService implements UserDetailsService {
         } else {
             user = new User();
         }
+        // По причинам безопасности
         user.setPassword(null);
 
         return user;

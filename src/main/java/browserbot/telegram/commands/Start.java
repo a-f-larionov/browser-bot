@@ -22,7 +22,7 @@ public class Start extends Command {
     }
 
     @Override
-    public Message run(Request msg) {
+    public Reponse run(Request msg) {
 
         settings.schedulerSetActive(msg.profile, true);
 
