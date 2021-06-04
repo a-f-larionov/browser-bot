@@ -311,4 +311,8 @@ public class Browser implements WebDriver {
 
         log.info("Web Driver перезапущен.");
     }
+
+    public Object executeScript(String script, Object... args) {
+        return driver.executeScript(script, args);
+    }
 }
