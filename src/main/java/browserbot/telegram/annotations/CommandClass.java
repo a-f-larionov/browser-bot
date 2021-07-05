@@ -1,5 +1,5 @@
 //FIN
-package browserbot.telegram;
+package browserbot.telegram.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -27,12 +27,6 @@ public class Scheduler {
         onIdleManagerChange(Profile.Canvas);
 
         onIdleManagerChange(Profile.LadyArt);
-
-        onIdlePinger(Profile.Canvas);
-
-        onIdlePinger(Profile.LadyArt);
-
-        //commandExecutor.execute(InstagramLiker.class, profile);
     }
 
     private void onIdleManagerChange(Profile profile) {

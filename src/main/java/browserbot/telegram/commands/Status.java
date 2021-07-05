@@ -4,6 +4,7 @@ package browserbot.telegram.commands;
 import browserbot.scheduler.Trigger;
 import browserbot.services.Settings;
 import browserbot.telegram.*;
+import browserbot.telegram.annotations.CommandClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

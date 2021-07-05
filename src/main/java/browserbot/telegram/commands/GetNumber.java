@@ -1,6 +1,7 @@
 //FIN
 package browserbot.telegram.commands;
 
+import browserbot.telegram.annotations.CommandClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import browserbot.bots.taplink.BotController;

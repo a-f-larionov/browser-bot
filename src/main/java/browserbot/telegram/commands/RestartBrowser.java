@@ -2,6 +2,7 @@ package browserbot.telegram.commands;
 
 import browserbot.browser.Browser;
 import browserbot.telegram.*;
+import browserbot.telegram.annotations.CommandClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

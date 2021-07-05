@@ -1,5 +1,6 @@
 package browserbot.telegram;
 
+import browserbot.telegram.annotations.CommandClass;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

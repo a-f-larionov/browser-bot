@@ -6,6 +6,7 @@ import browserbot.entities.Manager;
 import browserbot.scheduler.Trigger;
 import browserbot.services.ManagerRotator;
 import browserbot.telegram.*;
+import browserbot.telegram.annotations.CommandClass;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -76,6 +76,66 @@ Vue.component("register-form", {
     }
 });
 
+Vue.component("buttons-form", {
+    template: "#templateButtons",
+
+    data: function () {
+        return {
+            "isRunning": false,
+            "status": {
+                "canvas": "-",
+                "ladyart": "-"
+            },
+        }
+    },
+    created: function () {
+        let self = this;
+
+        eventBus.$on(eventBus.EVENT_STATE_UPDATE, function () {
+            axios.get("/status/get/")
+                .then(function (answer) {
+
+                    self.status.canvas = answer.data.canvas.is_active ? "работает" : "не работает";
+
+                    self.status.ladyart = answer.data.ladyart.is_active ? "работает" : "не работает";
+                })
+                .catch(function () {
+                    alert("ERR: 103");
+                });
+        });
+    },
+    mounted: function () {
+        eventBus.$emit(eventBus.EVENT_STATE_UPDATE);
+    },
+    methods: {
+        canvasOnClickON: function () {
+            axios.get("/status/run-canvas")
+                .then(function () {
+                    eventBus.$emit(eventBus.EVENT_STATE_UPDATE);
+                })
+        },
+        ladyartOnClickON: function () {
+            axios.get("/status/run-ladyart")
+                .then(function () {
+                    eventBus.$emit(eventBus.EVENT_STATE_UPDATE);
+                })
+        },
+        canvasOnClickOFF: function () {
+            axios.get("/status/stop-canvas")
+                .then(function () {
+                    eventBus.$emit(eventBus.EVENT_STATE_UPDATE);
+                })
+        },
+        ladyartOnClickOFF: function () {
+            axios.get("/status/stop-ladyart")
+                .then(function () {
+                    eventBus.$emit(eventBus.EVENT_STATE_UPDATE);
+                })
+        }
+    }
+})
+;
+
 Vue.component("control-form", {
 
     template: "#templateControlForm",
@@ -142,6 +202,7 @@ let eventBus = new Vue();
 eventBus.EVENT_REQUEST_MANAGER_UPDATE = "requestManagerUpate";
 eventBus.EVENT_UPDATE_MANAGER_LIST = "updateManagerList";
 eventBus.EVENT_CHECK_AUTH = "CheckAuth";
+eventBus.EVENT_STATE_UPDATE = "stateUpdate";
 
 let app = new Vue({
 

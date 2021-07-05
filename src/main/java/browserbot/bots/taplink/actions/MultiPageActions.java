@@ -56,10 +56,10 @@ public class MultiPageActions {
             throw new BrowserBotException(lang.get("actions.multipage.whatsup_href_failed", hrefExpect, hrefFact));
         }
 
-        log.info(browser.takeScreenshot());
-        we.click();
+     //   log.info(browser.takeScreenshot());
+     //   we.click();
 
-        log.info(browser.takeScreenshot());
+     //   log.info(browser.takeScreenshot());
 
 //        try {
 //            Thread.sleep(5000);
@@ -68,7 +68,7 @@ public class MultiPageActions {
 //        }
 //        log.info(browser.takeScreenshot());
 
-        browser.waitElement(By.xpath(DataProvider.xpathWhatsupApiPageMessage));
+        //browser.waitElement(By.xpath(DataProvider.xpathWhatsupApiPageMessage));
 
         log.info(browser.takeScreenshot());
         return true;

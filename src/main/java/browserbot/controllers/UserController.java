@@ -19,7 +19,7 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/get")
-    public UserDTO getUserProfile() {
+    public UserDTO get() {
 
         return modelMapper.map(userService.getCurrentUser(), UserDTO.class);
     }

@@ -63,10 +63,44 @@
 
             <register-form v-if="false"></register-form>
 
+            <buttons-form v-if="controlFormShow"></buttons-form>
+
         </div>
 
     </div>
 </main>
+
+<template id="templateButtons">
+
+    <div class="bg-light p-5 rounded form-signin">
+
+
+        <div class="row">
+            <div class="coll mb-2">
+                Canvas:
+                <span>{{status.canvas}}</span>
+            </div>
+
+            <div class="coll">
+                <button type="button" class="btn btn-primary" v-on:click="canvasOnClickOFF">ВЫКЛ</button>
+                <button type="button" class="btn btn-primary" v-on:click="canvasOnClickON">ВКЛ</button>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="coll mb-2">
+                LadyArt:
+                <span>{{status.ladyart}}</span>
+            </div>
+            <div class="coll">
+                <button type="button" class="btn btn-primary" v-on:click="ladyartOnClickOFF">ВЫКЛ</button>
+                <button type="button" class="btn btn-primary" v-on:click="ladyartOnClickON">ВКЛ</button>
+            </div>
+        </div>
+
+    </div>
+
+</template>
 
 <template id="templateLoginForm">
 
