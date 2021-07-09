@@ -145,11 +145,10 @@ public class Browser implements WebDriver {
      */
     public boolean isElementPresent(By by, int seconds) {
 
-        log.info("1");
         try {
-            log.info("2");
+
             waitElement(by, seconds);
-            log.info("3");
+
             return true;
         } catch (TimeoutException | NotFoundException e) {
             return false;
