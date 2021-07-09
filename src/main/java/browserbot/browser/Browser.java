@@ -89,8 +89,6 @@ public class Browser implements WebDriver {
     public void get(String url) {
         urlProfiler.start();
 
-        log.info(url);
-
         driver.get(url);
 
         urlProfiler.finish(url);
@@ -190,8 +188,6 @@ public class Browser implements WebDriver {
      */
     @Override
     public WebElement findElement(By by) {
-
-        log.info(by.toString());
 
         try {
             return driver.findElement(by);
