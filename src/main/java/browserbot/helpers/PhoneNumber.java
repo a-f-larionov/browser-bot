@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.helpers;
 
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.telegram.commands;
 
 import browserbot.browser.Browser;

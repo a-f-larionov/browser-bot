@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.telegram.annotations;
 
 import java.lang.annotation.ElementType;

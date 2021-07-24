@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.config;
 
 import org.modelmapper.ModelMapper;

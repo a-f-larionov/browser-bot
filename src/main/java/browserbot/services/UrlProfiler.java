@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.services;
 
 import browserbot.entities.PageLoadTime;

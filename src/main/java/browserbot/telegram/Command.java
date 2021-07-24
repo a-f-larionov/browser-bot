@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.telegram;
 
 import lombok.AccessLevel;

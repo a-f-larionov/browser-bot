@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

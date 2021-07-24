@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.controllers;
 
 import lombok.RequiredArgsConstructor;

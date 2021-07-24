@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.entities;
 
 import browserbot.bots.taplink.Profile;

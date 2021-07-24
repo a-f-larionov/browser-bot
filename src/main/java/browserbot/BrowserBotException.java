@@ -1,4 +1,3 @@
-//FIN
 package browserbot;
 
 /**

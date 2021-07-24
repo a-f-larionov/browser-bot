@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.entities;
 
 import org.hibernate.annotations.CreationTimestamp;

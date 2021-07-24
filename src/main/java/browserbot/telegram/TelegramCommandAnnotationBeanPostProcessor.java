@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.telegram;
 
 import browserbot.telegram.annotations.CommandClass;

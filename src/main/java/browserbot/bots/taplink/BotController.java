@@ -1,4 +1,3 @@
-//FIN
 package browserbot.bots.taplink;
 
 import browserbot.BrowserBotException;

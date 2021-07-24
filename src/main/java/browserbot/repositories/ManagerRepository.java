@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.repositories;
 
 import browserbot.entities.Manager;

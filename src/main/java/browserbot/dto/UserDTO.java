@@ -1,4 +1,4 @@
-//FIN
+
 package browserbot.dto;
 
 import lombok.Data;
